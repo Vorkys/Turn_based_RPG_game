@@ -1,32 +1,32 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Erik Seguin\\source\\repos\\tahova_RPG_hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj": {}
+    "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Erik Seguin\\source\\repos\\tahova_RPG_hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj": {
+    "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Erik Seguin\\source\\repos\\tahova_RPG_hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
+        "projectUniqueName": "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
         "projectName": "tahova_RPG_hra",
-        "projectPath": "C:\\Users\\Erik Seguin\\source\\repos\\tahova_RPG_hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
-        "packagesPath": "C:\\Users\\Erik Seguin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Erik Seguin\\source\\repos\\tahova_RPG_hra\\tahova_RPG_hra\\obj\\",
+        "projectPath": "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
+        "packagesPath": "C:\\Users\\jukia\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Erik Seguin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jukia\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net5.0"
+          "net6.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net5.0": {
-            "targetAlias": "net5.0",
+          "net6.0": {
+            "targetAlias": "net6.0",
             "projectReferences": {}
           }
         },
@@ -34,27 +34,51 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net5.0": {
-          "targetAlias": "net5.0",
+        "net6.0": {
+          "targetAlias": "net6.0",
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.27, 6.0.27]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
