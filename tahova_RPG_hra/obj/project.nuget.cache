@@ -1,13 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3bo71VOSirk70NPIdGyKoxYVWgNKnxJaQi129Mxt4nyqYXVr79QEYVgTuo0b9OlhHKZISKwMCUiu2UGtY8hV3Q==",
+  "dgSpecHash": "N/fZKGisFu7ICdGAtAS/fgEK5+G7a3/GwxNtjOZPZATB6XHVFge76xKLnVAm+aD8ZsjfUNR2Y5BhaKw4myvqxg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\jukia\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\jukia\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\jukia\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512",
-    "C:\\Users\\jukia\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.27\\microsoft.netcore.app.host.win-x64.6.0.27.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\erik\\Source\\Repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

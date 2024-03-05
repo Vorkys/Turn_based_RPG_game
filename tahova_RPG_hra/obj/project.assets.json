@@ -8,19 +8,24 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\jukia\\.nuget\\packages\\": {}
+    "C:\\Users\\erik\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
+      "projectUniqueName": "C:\\Users\\erik\\Source\\Repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
       "projectName": "tahova_RPG_hra",
-      "projectPath": "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
-      "packagesPath": "C:\\Users\\jukia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jukia\\source\\repos\\tahova-RPG-hra\\tahova_RPG_hra\\obj\\",
+      "projectPath": "C:\\Users\\erik\\Source\\Repos\\tahova-RPG-hra\\tahova_RPG_hra\\tahova_RPG_hra.csproj",
+      "packagesPath": "C:\\Users\\erik\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\erik\\Source\\Repos\\tahova-RPG-hra\\tahova_RPG_hra\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\jukia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\erik\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -40,11 +45,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -56,35 +56,11 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.27, 6.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.27, 6.0.27]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.27, 6.0.27]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.27, 6.0.27]"
-          }
-        ],
-        "frameworkReferences": {
-          "Microsoft.NETCore.App": {
-            "privateAssets": "all"
-          }
-        },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.416\\RuntimeIdentifierGraph.json"
       }
     }
   }
