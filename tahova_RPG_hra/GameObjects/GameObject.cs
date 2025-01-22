@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tahova_RPG_hra.Maps
+namespace tahova_RPG_hra.GameObjects
 {
-    class Tile
+    internal class GameObject
     {
     }
 }

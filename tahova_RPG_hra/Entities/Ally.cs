@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tahova_RPG_hra.Characters
+namespace tahova_RPG_hra.Entities
 {
-    class Player
+    internal class Ally
     {
     }
 }
