@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tahova_RPG_hra.Entities
 {
-    internal class Enemy
+    internal class Enemy : Entity
     {
     }
 }

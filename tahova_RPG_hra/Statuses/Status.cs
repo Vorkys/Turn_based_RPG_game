@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tahova_RPG_hra.Entities
+namespace tahova_RPG_hra.Statuses
 {
-    internal class Ally : Entity
+    internal class Status
     {
     }
 }
