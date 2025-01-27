@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tahova_RPG_hra.Locations
+namespace tahova_RPG_hra.Game
 {
-    internal class LocationNode
+    internal class Game
     {
     }
 }

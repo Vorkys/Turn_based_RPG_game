@@ -53,89 +53,60 @@ namespace tahova_RPG_hra.Entities
             return health != tmpHealth ? true : false;
         }
 
-        public void AttackEnemy(Entity enemy, int damage) { }
+        public void AttackEnemy(Entity enemy) { }
 
-        public bool RemoveItem(Item item, int amout = 1)
+        public void AttackEnemy(Entity enemy, Spell spell) { }
+
+        public bool RemoveItem(Item item, int amount = 1)
         {
-            int tmpAmout = amout;
+            int tmpamount = amount;
 
             for (int i = 0; i < inventory.Length; i++)
             {
                 if (inventory[i].Name == item.Name)
                 {
-                    inventory[i].Quantity -= amout;
+                    inventory[i].Quantity -= amount;
+                    amount = 0;
 
                     if (inventory[i].Quantity < 0)
                     {
-                        amout = -inventory[i].Quantity;
+                        amount = -inventory[i].Quantity;
                         inventory[i] = null;
                     }
                 }
 
-                if (amout == 0)
+                if (amount == 0)
                     break;
             }
 
             // true = success, false = failed
-            return amout == 0 ? true : false;
+            return amount == 0 ? true : false;
         }
 
-        public bool AddItem(Item item, int amout = 1)
+        public bool AddItem(Item item, int amount = 1)
         {
-            int tmpAmout = amout;
+            int tmpamount = amount;
 
             for (int i = 0;i < inventory.Length;i++)
             {
-                if (inventory[i].Name == item.Name)
+                if (inventory[i].Name == item.Name || inventory[i] == null)
                 {
-                    inventory[i].Quantity += amout;
+                    inventory[i].Quantity += amount;
+                    amount = 0;
 
                     if (inventory[i].Quantity > inventory[i].MaxQuantity)
                     {
-                        amout = inventory[i].Quantity - inventory[i].MaxQuantity;
-                        inventory[i].Quantity -= amout;
+                        amount = inventory[i].Quantity - inventory[i].MaxQuantity;
+                        inventory[i].Quantity -= amount;
                     }
                 }
-
-                if (amout == 0)
+                
+                if (amount == 0)
                     break;
             }
 
-            //foreach (Item _item in inventory)
-            //{
-            //    //searched item is found and has free quantity
-            //    if (_item.Name == item.Name && _item.Quantity < _item.MaxQuantity)
-            //    {
-            //        _item.Quantity += amout;
-            //        amout = 0;
-
-            //        //if max quantity is exceeded given amout is restored and is searching for other free space
-            //        if (_item.Quantity > _item.MaxQuantity)
-            //        {
-            //            amout = _item.Quantity - _item.MaxQuantity;
-            //            _item.Quantity -= amout;
-            //        }
-            //    }
-            //    //empty inventory slot
-            //    else if (_item == null)
-            //    {
-            //        _item.Quantity += amout;
-            //        amout = 0;
-
-            //        //if max quantity is exceeded given amout is restored and is searching for other free space
-            //        if (_item.Quantity > _item.MaxQuantity)
-            //        {
-            //            amout = _item.Quantity - _item.MaxQuantity;
-            //            _item.Quantity -= amout;
-            //        }
-            //    }
-
-            //    if (amout == 0)
-            //        break;
-            //}
-
-            //true = amout has changed (some item looted), false = amout hasnt changed (nothing looted)
-            return tmpAmout != amout ? true : false;
+            //true = amount has changed (some item looted), false = amount hasnt changed (nothing looted)
+            return tmpamount != amount ? true : false;
         }
 
         public bool UseItem()
