@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Locations\Maps\" />
+    <Compile Remove="Source\Locations\Maps\**" />
+    <EmbeddedResource Remove="Source\Locations\Maps\**" />
+    <None Remove="Source\Locations\Maps\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GameAssets\map1\" />
   </ItemGroup>
 </Project>
