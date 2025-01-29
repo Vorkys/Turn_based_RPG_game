@@ -1,17 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Source\Locations\Maps\**" />
-    <EmbeddedResource Remove="Source\Locations\Maps\**" />
-    <None Remove="Source\Locations\Maps\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="GameAssets\map1\" />
-  </ItemGroup>
 </Project>
