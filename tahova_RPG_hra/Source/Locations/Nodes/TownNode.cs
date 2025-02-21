@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
@@ -23,9 +24,9 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         }
 
         //TODO
-        public override void Traverse()
+        public override void Traverse(Game game)
         {
-            base.Traverse();
+            game.openTown(name, description, townSprite, townPeople);
         }
     }
 }

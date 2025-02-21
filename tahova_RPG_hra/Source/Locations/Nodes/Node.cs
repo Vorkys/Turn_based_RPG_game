@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Core;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
     internal class Node
     {
-        //private GameState type;
         private char nodeChar;
         private string foregroundColor;
         private string backgroundColor;
@@ -24,6 +24,10 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             this.isMovable = isMovable;
         }
 
+        //TODO possible performance upgrade (dont always store default console colors)
+        /// <summary>
+        /// Print node when player is exploring.
+        /// </summary>
         public void Write()
         {
             //save default console colors
@@ -49,14 +53,31 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             Console.BackgroundColor = originalBackgroundColor;
         }
 
-        //TODO
-        public virtual void MapWrite()
+        /// <summary>
+        /// Print node background color. Used when showing big map in 1:4.
+        /// </summary>
+        public void MapWrite()
         {
+            //save default console color
+            ConsoleColor originalBackgroundColor = Console.BackgroundColor;
 
+            //validate colors
+            bool validBackgroundColor = Enum.TryParse(backgroundColor, true, out ConsoleColor consoleBackgroundColor);
+
+            if (validBackgroundColor)
+            {
+                Console.BackgroundColor = consoleBackgroundColor;
+
+                Console.Write(" ");
+            }
+            else
+                Console.WriteLine("Invalid color");
+
+            //return original color
+            Console.BackgroundColor = originalBackgroundColor;
         }
 
-        //TODO
-        public virtual void Traverse()
-        { }
+        //TODO - used for overriding only??
+        public virtual void Traverse(Game game) { }
     }
 }

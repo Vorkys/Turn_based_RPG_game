@@ -8,5 +8,9 @@ namespace tahova_RPG_hra.Source.Locations
 {
     internal class Location
     {
+        private int entryX;
+        private int entryY;
+        private int playerX;
+        private int playerY;
     }
 }

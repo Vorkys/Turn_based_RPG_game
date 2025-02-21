@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
@@ -23,6 +24,22 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         }
 
         //TODO
-        public override void Traverse() { }
+        public override void Traverse(Game game)
+        {
+            Random rand = new Random();
+
+            int spawnRoll = rand.Next(1, 101);
+
+            //TODO - implement imune steps after successfull combat
+            //enemy spawn roll is positive combat iniciated
+            if (spawnRoll <= spawnRate)
+            {
+                int randLvl = rand.Next(minEnemyLvl, maxEnemyLvl + 1);
+                Enemy randEnemy = enemyToSpawn[rand.Next(0, enemyToSpawn.Length)];
+                randEnemy.setLvlTo(randLvl);
+
+                game.startCombat(randEnemy);
+            }
+        }
     }
 }

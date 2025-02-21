@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Core;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
@@ -15,6 +16,9 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             this.locationId = locationId;
         }
 
-        public override void Traverse() { }
+        public override void Traverse(Game game)
+        {
+            game.changeLocation(locationId);
+        }
     }
 }

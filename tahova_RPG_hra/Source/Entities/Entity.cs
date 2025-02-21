@@ -25,6 +25,8 @@ namespace tahova_RPG_hra.Source.Entities
         private int maxMana;
         private Spell[] spells;
         private int damage;
+        private int criticalHitChance;
+        private int missChance;
         private int armor;
         private int speed;
         private Status[] statuses;
@@ -32,7 +34,7 @@ namespace tahova_RPG_hra.Source.Entities
         private string[] leaveDialog;
         private int? money;
 
-        public Entity(string name, string[] sprite, Item[] inventory, Item[] equipment, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int armor, int speed, Status[] statuses, string[] entryDialog, string[] leaveDialog, int? money)
+        public Entity(string name, string[] sprite, Item[] inventory, Item[] equipment, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, Status[] statuses, string[] entryDialog, string[] leaveDialog, int? money)
         {
             this.name = name;
             this.sprite = sprite;
@@ -47,12 +49,20 @@ namespace tahova_RPG_hra.Source.Entities
             this.maxMana = maxMana;
             this.spells = spells;
             this.damage = damage;
+            this.criticalHitChance = criticalHitChance;
+            this.missChance = missChance;
             this.armor = armor;
             this.speed = speed;
             this.statuses = statuses;
             this.entryDialog = entryDialog;
             this.leaveDialog = leaveDialog;
             this.money = money;
+        }
+
+        public int Level
+        {
+            get { return level; }
+            set { level = value; }
         }
 
         public bool TakeDamage(int damage)
