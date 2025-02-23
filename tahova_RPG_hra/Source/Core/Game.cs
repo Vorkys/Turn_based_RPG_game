@@ -11,6 +11,7 @@ namespace tahova_RPG_hra.Source.Core
     {
         private int activeLocation;
         private Player player;
+        private Enemy enemy;
 
         public Player Player
         {
@@ -18,6 +19,11 @@ namespace tahova_RPG_hra.Source.Core
             set { Player = value; }
         }
 
+        public Player Enemy
+        {
+            get { return Enemy; }
+            set { Enemy = value; }
+        }
 
         public void openDialog(string[] dialog)
         {

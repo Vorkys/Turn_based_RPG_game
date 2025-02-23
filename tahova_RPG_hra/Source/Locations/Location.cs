@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Locations.Nodes;
 
 namespace tahova_RPG_hra.Source.Locations
 {
@@ -34,10 +35,10 @@ namespace tahova_RPG_hra.Source.Locations
 
         public void writeMap()
         {
-            foreach (Node mapRow in location)
+            for (int x = 0; x < location.GetLength(0); x++)
             {
-                foreach (Nodes mapNode in mapRow)
-                    mapNode.write();
+                for (int y = 0; y < location.GetLength(1); y++)
+                    location[x, y].Write();
 
                 Console.WriteLine();
             }

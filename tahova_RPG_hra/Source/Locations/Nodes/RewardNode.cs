@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.GameObjects;
+using tahova_RPG_hra.Source.GameObjects.Items;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {

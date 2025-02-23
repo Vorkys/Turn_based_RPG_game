@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
-using tahova_RPG_hra.Source.GameObjects;
+using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.Spells;
 using tahova_RPG_hra.Source.Statuses;
 
