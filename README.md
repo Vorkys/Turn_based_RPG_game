@@ -7,3 +7,5 @@ Playtester form:
 - what he liked
 - what he didnt like
 - what would he recommend/change
+Nodes info
+https://docs.google.com/spreadsheets/d/1gUhlrCLBu2qNzamf21vJsLRPSi-7dqDCMxIDyiMQlVk/edit?gid=0#gid=0
