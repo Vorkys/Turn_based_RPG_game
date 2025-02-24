@@ -19,12 +19,24 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             this.visited = false;
         }
 
+        public string[] Dialog
+        {
+            get { return Dialog; }
+            set { Dialog = value; }
+        }
+
+        public bool Visited
+        {
+            get { return Visited; }
+            set { Visited = value; }
+        }
+
         public override void Traverse(Game game)
         {
             if (!visited)
             {
-                game.openDialog(dialog);
-                visited = true;
+                game.openDialog(Dialog);
+                Visited = true;
             }
         }
     }

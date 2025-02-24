@@ -26,7 +26,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         //TODO
         public override void Traverse(Game game)
         {
-            game.openTown(name, description, townSprite, townPeople);
+            game.openTown(this);
         }
     }
 }

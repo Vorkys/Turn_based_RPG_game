@@ -73,12 +73,6 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
             set { maxQuantity = value; }
         }
 
-        public bool AddQuantity(int amout)
-        {
-            quantity += amout;
-            return true;
-        }
-
         //TODO
         public virtual void Use() { }
 

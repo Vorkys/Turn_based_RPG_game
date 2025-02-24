@@ -8,21 +8,30 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.GameObjects.Items
 {
-    class Equipable : Item
+    class Equippable : Item
     {
-        private int equippableSlot;
+        public enum EquippableSlot
+        {
+            Helm,
+            Body,
+            Legs,
+            Ring,
+            Main_Hand,
+            Off_Hand,
+        };
+        private EquippableSlot slot;
         private int strength;
 
-        public Equipable(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int equippableSlot, int strength) : base(name, description, buyPrice, sellPrice, maxQuantity)
+        public Equippable(string name, string description, int buyPrice, int sellPrice, EquippableSlot slot, int strength) : base(name, description, buyPrice, sellPrice, 1)
         {
-            this.equippableSlot = equippableSlot;
+            this.slot = slot;
             this.strength = strength;
         }
 
-        public int EquippableSlot
+        public EquippableSlot Slot
         {
-            get { return EquippableSlot; }
-            set { EquippableSlot = value; }
+            get { return Slot; }
+            set { Slot = value; }
         }
 
         public int Strength
@@ -33,77 +42,69 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 
         public void WriteInfo()
         {
-            string slot = "";
-            switch (EquippableSlot)
+            string _slot = "";
+            switch (Slot)
             {
-                case -1:
-                    slot = "cannot be equiped";
+                case EquippableSlot.Helm:
+                    _slot = "helm";
                     break;
-                case 0:
-                    slot = "helm";
+                case EquippableSlot.Body:
+                    _slot = "body";
                     break;
-                case 1:
-                    slot = "body";
+                case EquippableSlot.Legs:
+                    _slot = "legs";
                     break;
-                case 2:
-                    slot = "legs";
+                case EquippableSlot.Ring:
+                    _slot = "ring";
                     break;
-                case 3:
-                    slot = "ring";
+                case EquippableSlot.Main_Hand:
+                    _slot = "main hand";
                     break;
-                case 4:
-                    slot = "main hand";
-                    break;
-                case 5:
-                    slot = "off hand";
-                    break;
-                case 6:
-                    slot = "usable in inventory or combat (usable)";
+                case EquippableSlot.Off_Hand:
+                    _slot = "off hand";
                     break;
             }
 
-            Console.WriteLine($"Name: {Name}\nDescritpion: {Description}\nSlot: {slot}\nStrength: {Strength}\nPrice buy/sell: {BuyPrice}/{SellPrice}\nQuantity: {Quantity}/{MaxQuantity}");
+            Console.WriteLine($"Name: {Name}\nDescritpion: {Description}\nSlot: {_slot}\nStrength: {Strength}\nPrice buy/sell: {BuyPrice}/{SellPrice}\nQuantity: {Quantity}/{MaxQuantity}");
         }
 
         //TODO - awaiting implementation of Game
         public override void Use(Game game)
         {
-            switch (EquippableSlot)
+            switch (Slot)
             {
-                //Cannot be equipped
-                case -1:
+                case EquippableSlot.Helm:
+                    ////switch items
+                    //Item tmpItem = player.Equipment[0];
+                    //Game.Player.Equipment[0] = this;
+                    //Game.Player.RemoveItem(this);
+                    //Game.Player.AddItem(tmpItem);
                     break;
-                case 0:
+                case EquippableSlot.Body:
                     ////switch items
                     //Item tmpItem = player.Equipment[0];
                     //Game.Player.Equipment[0] = this;
                     //Game.Player.AddItem(tmpItem);
                     break;
-                case 1:
+                case EquippableSlot.Legs:
                     ////switch items
                     //Item tmpItem = player.Equipment[0];
                     //Game.Player.Equipment[0] = this;
                     //Game.Player.AddItem(tmpItem);
                     break;
-                case 2:
+                case EquippableSlot.Ring:
                     ////switch items
                     //Item tmpItem = player.Equipment[0];
                     //Game.Player.Equipment[0] = this;
                     //Game.Player.AddItem(tmpItem);
                     break;
-                case 3:
+                case EquippableSlot.Main_Hand:
                     ////switch items
                     //Item tmpItem = player.Equipment[0];
                     //Game.Player.Equipment[0] = this;
                     //Game.Player.AddItem(tmpItem);
                     break;
-                case 4:
-                    ////switch items
-                    //Item tmpItem = player.Equipment[0];
-                    //Game.Player.Equipment[0] = this;
-                    //Game.Player.AddItem(tmpItem);
-                    break;
-                case 5:
+                case EquippableSlot.Off_Hand:
                     ////switch items
                     //Item tmpItem = player.Equipment[0];
                     //Game.Player.Equipment[0] = this;
