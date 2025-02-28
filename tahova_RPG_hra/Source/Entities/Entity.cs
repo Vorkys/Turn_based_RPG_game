@@ -16,6 +16,7 @@ namespace tahova_RPG_hra.Source.Entities
         private string[] sprite;
         private Item[] inventory;
         private Item[] equipment;
+        private Entity target;
         private int level;
         private int entityXP;
         private int XPtoLevelUp;
@@ -34,12 +35,13 @@ namespace tahova_RPG_hra.Source.Entities
         private string[] leaveDialog;
         private int? money;
 
-        public Entity(string name, string[] sprite, Item[] inventory, Item[] equipment, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, Status[] statuses, string[] entryDialog, string[] leaveDialog, int? money)
+        public Entity(string name, string[] sprite, Item[] inventory, Item[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, Status[] statuses, string[] entryDialog, string[] leaveDialog, int? money)
         {
             this.name = name;
             this.sprite = sprite;
             this.inventory = inventory;
             this.equipment = equipment;
+            this.target = target;
             this.level = level;
             this.entityXP = entityXP;
             this.XPtoLevelUp = xPtoLevelUp;
@@ -65,7 +67,13 @@ namespace tahova_RPG_hra.Source.Entities
             set { level = value; }
         }
 
-        public bool TakeDamage(int damage)
+        public Entity Target
+        {
+            get { return target; }
+            set { target = value; }
+        }
+
+        public bool ReduceHealth(int damage)
         {
             health -= damage;
 
@@ -73,7 +81,7 @@ namespace tahova_RPG_hra.Source.Entities
             return health <= 0 ? true : false;
         }
 
-        public bool Heal(int heal)
+        public bool IncreaseHealth(int heal)
         {
             int tmpHealth = health;
 
@@ -86,9 +94,25 @@ namespace tahova_RPG_hra.Source.Entities
             return health != tmpHealth ? true : false;
         }
 
-        public void AttackEnemy(Entity enemy) { }
+        public bool ReduceMana(int amount)
+        {
+            if (mana < amount)
+                return false;
+            else
+                mana -= amount;
 
-        public void AttackEnemy(Entity enemy, Spell spell) { }
+            return true;
+        }
+
+        public bool IncreaseMana(int amount)
+        {
+            mana += amount;
+
+            if (mana > maxMana)
+                mana = maxMana;
+
+            return true;
+        }
 
         public bool RemoveItem(Item item, int amount = 1)
         {

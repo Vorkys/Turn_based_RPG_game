@@ -69,14 +69,14 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
         }
 
         //TODO - awaiting implementation of Game
-        public override void Use(Game game)
+        public override void Use()
         {
             switch (Slot)
             {
                 case EquippableSlot.Helm:
                     ////switch items
-                    //Item tmpItem = player.Equipment[0];
-                    //Game.Player.Equipment[0] = this;
+                    //Item tmpItem = player.Equipment[EquippableSlot.Helm];
+                    //Owner.Equipment[EquippableSlot.Helm] = this;
                     //Game.Player.RemoveItem(this);
                     //Game.Player.AddItem(tmpItem);
                     break;

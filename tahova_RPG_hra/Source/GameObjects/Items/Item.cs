@@ -10,6 +10,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 {
     internal class Item : GameObject
     {
+        private Entity owner;
         private string name;
         private string description;
         private int buyPrice;
@@ -17,8 +18,31 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
         private int quantity;
         private int maxQuantity;
 
+        public Item(Entity owner, string name, string description, int buyPrice, int sellPrice, int quantity, int maxQuantity)
+        {
+            this.owner = owner;
+            this.name = name;
+            this.description = description;
+            this.buyPrice = buyPrice;
+            this.sellPrice = sellPrice;
+            this.quantity = quantity;
+            this.maxQuantity = maxQuantity;
+        }
+
+        public Item(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity)
+        {
+            this.owner = owner;
+            this.name = name;
+            this.description = description;
+            this.buyPrice = buyPrice;
+            this.sellPrice = sellPrice;
+            this.quantity = 1;
+            this.maxQuantity = maxQuantity;
+        }
+
         public Item(string name, string description, int buyPrice, int sellPrice, int quantity, int maxQuantity)
         {
+            this.owner = null;
             this.name = name;
             this.description = description;
             this.buyPrice = buyPrice;
@@ -29,12 +53,19 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 
         public Item(string name, string description, int buyPrice, int sellPrice, int maxQuantity)
         {
+            this.owner = null;
             this.name = name;
             this.description = description;
             this.buyPrice = buyPrice;
             this.sellPrice = sellPrice;
             this.quantity = 1;
             this.maxQuantity = maxQuantity;
+        }
+
+        public Entity Owner
+        {
+            get { return owner; }
+            set { owner = value; }
         }
 
         public string Name
@@ -75,7 +106,5 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 
         //TODO
         public virtual void Use() { }
-
-        public virtual void Use(Game game) { }
     }
 }

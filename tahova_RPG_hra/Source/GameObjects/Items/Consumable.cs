@@ -10,50 +10,24 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 {
     class Consumable : Item
     {
-        private bool forPlayer;
+        private int power;
 
-        public Consumable(string name, string description, int buyPrice, int sellPrice, int maxQuantity, bool forPlayer) : base(name, description, buyPrice, sellPrice, maxQuantity)
+        public Consumable(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity)
         {
-            this.forPlayer = forPlayer;
+            this.power = power;
         }
 
-        public Consumable(string name, string description, int buyPrice, int sellPrice, int quantity, int maxQuantity, bool forPlayer) : base(name, description, buyPrice, sellPrice, quantity, maxQuantity)
+        public Consumable(Entity owner, string name, string description, int buyPrice, int sellPrice, int quantity, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, quantity, maxQuantity)
         {
-            this.forPlayer = forPlayer;
+            this.power = power;
         }
 
-        public override void Use(Game game)
+        public int Power
         {
-            if (forPlayer)
-            {
-                switch (Name)
-                {
-                    case "Small health potion":
-                        game.Player.Heal(5);
-                        break;
-                    case "Medium health potion":
-                        game.Player.Heal(15);
-                        break;
-                    case "Big health potion":
-                        game.Player.Heal(25);
-                        break;
-                }
-            }
-            else
-            {
-                switch (Name)
-                {
-                    case "Molotov":
-                        game.Enemy.TakeDamage(5);
-                        break;
-                    case "Bomb":
-                        game.Enemy.TakeDamage(25);
-                        break;
-                    case "Dynamite":
-                        game.Enemy.TakeDamage(50);
-                        break;
-                }
-            }
+            get { return power; }
+            set { power = value; }
         }
+
+        public override void Use() { }
     }
 }
