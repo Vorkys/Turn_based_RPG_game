@@ -4,15 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Entities;
+using tahova_RPG_hra.Source.GameObjects.Items;
+using tahova_RPG_hra.Source.Locations;
 using tahova_RPG_hra.Source.Locations.Nodes;
+using tahova_RPG_hra.Source.Quests;
 
 namespace tahova_RPG_hra.Source.Core
 {
     internal class Game
     {
+        private Location[,] Maps;
         private int activeLocation;
+        private int gameState;
         private Player player;
-        private Enemy enemy;
+        private Quest[] activeQuests;
 
         public Player Player
         {
@@ -42,6 +47,26 @@ namespace tahova_RPG_hra.Source.Core
         }
 
         public void openTown(TownNode town)
+        {
+            //TODO
+        }
+
+        public void openExploration()
+        {
+            //TODO
+        }
+
+        public void EndTurn()
+        {
+            //TODO
+        }
+
+        public void AddQuest(Quest quest)
+        {
+            //TODO
+        }
+
+        public void openShop(Item[] wares)
         {
             //TODO
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Entities;
+using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 
 namespace tahova_RPG_hra.Source.GameObjects.Items
 {

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.GameObjects.Items;
+using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Spells;
 using tahova_RPG_hra.Source.Statuses;
 
@@ -15,7 +17,7 @@ namespace tahova_RPG_hra.Source.Entities
         private string name;
         private string[] sprite;
         private Item[] inventory;
-        private Item[] equipment;
+        private Equippable[] equipment;
         private Entity target;
         private int level;
         private int entityXP;
@@ -30,86 +32,89 @@ namespace tahova_RPG_hra.Source.Entities
         private int missChance;
         private int armor;
         private int speed;
-        private Status[] statuses;
-        private string[] entryDialog;
-        private string[] leaveDialog;
+        //private Status[] statuses;
         private int? money;
 
-        public Entity(string name, string[] sprite, Item[] inventory, Item[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, Status[] statuses, string[] entryDialog, string[] leaveDialog, int? money)
+        public Entity(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money)
         {
-            this.name = name;
-            this.sprite = sprite;
-            this.inventory = inventory;
-            this.equipment = equipment;
-            this.target = target;
-            this.level = level;
-            this.entityXP = entityXP;
-            this.XPtoLevelUp = xPtoLevelUp;
-            this.health = health;
-            this.maxHealth = maxHealth;
-            this.mana = mana;
-            this.maxMana = maxMana;
-            this.spells = spells;
-            this.damage = damage;
-            this.criticalHitChance = criticalHitChance;
-            this.missChance = missChance;
-            this.armor = armor;
-            this.speed = speed;
-            this.statuses = statuses;
-            this.entryDialog = entryDialog;
-            this.leaveDialog = leaveDialog;
-            this.money = money;
+            this.Name = name;
+            this.Sprite = sprite;
+            this.Inventory = inventory;
+            this.Equipment = equipment;
+            this.Target = target;
+            this.Level = level;
+            this.EntityXP = entityXP;
+            this.XPtoLevelUp1 = xPtoLevelUp;
+            this.Health = health;
+            this.MaxHealth = maxHealth;
+            this.Mana = mana;
+            this.MaxMana = maxMana;
+            this.Spells = spells;
+            this.Damage = damage;
+            this.CriticalHitChance = criticalHitChance;
+            this.MissChance = missChance;
+            this.Armor = armor;
+            this.Speed = speed;
+            this.Money = money;
         }
 
-        public int Level
-        {
-            get { return level; }
-            set { level = value; }
-        }
-
-        public Entity Target
-        {
-            get { return target; }
-            set { target = value; }
-        }
+        public string Name { get => name; set => name = value; }
+        public string[] Sprite { get => sprite; set => sprite = value; }
+        internal Item[] Inventory { get => inventory; set => inventory = value; }
+        internal Equippable[] Equipment { get => equipment; set => equipment = value; }
+        internal Entity Target { get => target; set => target = value; }
+        public int Level { get => level; set => level = value; }
+        public int EntityXP { get => entityXP; set => entityXP = value; }
+        public int XPtoLevelUp1 { get => XPtoLevelUp; set => XPtoLevelUp = value; }
+        public int Health { get => health; set => health = value; }
+        public int MaxHealth { get => maxHealth; set => maxHealth = value; }
+        public int Mana { get => mana; set => mana = value; }
+        public int MaxMana { get => maxMana; set => maxMana = value; }
+        internal Spell[] Spells { get => spells; set => spells = value; }
+        public int Damage { get => damage; set => damage = value; }
+        public int CriticalHitChance { get => criticalHitChance; set => criticalHitChance = value; }
+        public int MissChance { get => missChance; set => missChance = value; }
+        public int Armor { get => armor; set => armor = value; }
+        public int Speed { get => speed; set => speed = value; }
+        public int? Money { get => money; set => money = value; }
 
         public bool ReduceHealth(int damage)
         {
-            health -= damage;
+            Health -= damage;
 
             //true = entity died, false = entity survived
-            return health <= 0 ? true : false;
+            return Health <= 0 ? true : false;
         }
 
         public bool IncreaseHealth(int heal)
         {
-            int tmpHealth = health;
+            int tmpHealth = Health;
 
             //overheal
-            if (health + heal > maxHealth)
-                health = maxHealth;
-            else health += heal;
+            if (Health + heal > MaxHealth)
+                Health = MaxHealth;
+            else Health += heal;
 
             // true = heal was successfull, false = heal wasnt successfull
-            return health != tmpHealth ? true : false;
+            return Health != tmpHealth ? true : false;
         }
 
         public bool ReduceMana(int amount)
         {
-            if (mana < amount)
+            if (Mana < amount)
                 return false;
             else
-                mana -= amount;
+                Mana -= amount;
 
             return true;
         }
 
         public bool IncreaseMana(int amount)
         {
-            mana += amount;
+            Mana += amount;
 
-            if (mana > maxMana)
-                mana = maxMana;
+            if (Mana > MaxMana)
+                Mana = MaxMana;
 
             return true;
         }
@@ -118,17 +123,17 @@ namespace tahova_RPG_hra.Source.Entities
         {
             int tmpamount = amount;
 
-            for (int i = 0; i < inventory.Length; i++)
+            for (int i = 0; i < Inventory.Length; i++)
             {
-                if (inventory[i].Name == item.Name)
+                if (Inventory[i].Name == item.Name)
                 {
-                    inventory[i].Quantity -= amount;
+                    Inventory[i].Quantity -= amount;
                     amount = 0;
 
-                    if (inventory[i].Quantity < 0)
+                    if (Inventory[i].Quantity < 0)
                     {
-                        amount = -inventory[i].Quantity;
-                        inventory[i] = null;
+                        amount = -Inventory[i].Quantity;
+                        Inventory[i] = null;
                     }
                 }
 
@@ -144,17 +149,17 @@ namespace tahova_RPG_hra.Source.Entities
         {
             int tmpamount = amount;
 
-            for (int i = 0; i < inventory.Length; i++)
+            for (int i = 0; i < Inventory.Length; i++)
             {
-                if (inventory[i].Name == item.Name || inventory[i] == null)
+                if (Inventory[i].Name == item.Name || Inventory[i] == null)
                 {
-                    inventory[i].Quantity += amount;
+                    Inventory[i].Quantity += amount;
                     amount = 0;
 
-                    if (inventory[i].Quantity > inventory[i].MaxQuantity)
+                    if (Inventory[i].Quantity > Inventory[i].MaxQuantity)
                     {
-                        amount = inventory[i].Quantity - inventory[i].MaxQuantity;
-                        inventory[i].Quantity -= amount;
+                        amount = Inventory[i].Quantity - Inventory[i].MaxQuantity;
+                        Inventory[i].Quantity -= amount;
                     }
                 }
 
@@ -166,19 +171,12 @@ namespace tahova_RPG_hra.Source.Entities
             return tmpamount != amount ? true : false;
         }
 
-        public bool UseItem()
+        public void Equip(Equippable item)
         {
-            return true;
-        }
-
-        public bool TalkEntry()
-        {
-            return true;
-        }
-
-        public bool TalkEnd()
-        {
-            return true;
+            Equippable tmpItem = this.Equipment[(int)item.Slot];
+            this.Equipment[(int)item.Slot] = item;
+            this.RemoveItem(item);
+            this.AddItem(tmpItem);
         }
     }
 }

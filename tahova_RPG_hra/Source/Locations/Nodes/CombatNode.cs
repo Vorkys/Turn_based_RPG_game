@@ -26,19 +26,22 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         //TODO
         public override void Traverse(Game game)
         {
-            Random rand = new Random();
-
-            int spawnRoll = rand.Next(1, 101);
-
-            //TODO - implement imune steps after successfull combat
-            //enemy spawn roll is positive combat iniciated
-            if (spawnRoll <= spawnRate)
+            if (game.Player.ImuneMoves !> 0)
             {
-                int randLvl = rand.Next(minEnemyLvl, maxEnemyLvl + 1);
-                Enemy randEnemy = enemyToSpawn[rand.Next(0, enemyToSpawn.Length)];
-                randEnemy.setLvlTo(randLvl);
+                Random rand = new Random();
 
-                game.startCombat(randEnemy);
+                int spawnRoll = rand.Next(1, 101);
+
+                //TODO - implement imune steps after successfull combat
+                //enemy spawn roll is positive combat iniciated
+                if (spawnRoll <= spawnRate)
+                {
+                    int randLvl = rand.Next(minEnemyLvl, maxEnemyLvl + 1);
+                    Enemy randEnemy = enemyToSpawn[rand.Next(0, enemyToSpawn.Length)];
+                    randEnemy.Level = randLvl;
+
+                    game.startCombat(randEnemy);
+                }
             }
         }
     }
