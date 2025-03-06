@@ -27,7 +27,5 @@ namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
             get { return power; }
             set { power = value; }
         }
-
-        public override void Use() { }
     }
 }

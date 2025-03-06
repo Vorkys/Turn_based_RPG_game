@@ -105,6 +105,6 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
         }
 
         //TODO
-        public virtual void Use() { }
+        public virtual bool Use() { return false; }
     }
 }

@@ -69,7 +69,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
         }
 
         //TODO - awaiting implementation of Game
-        public override void Use()
+        public override bool Use()
         {
             switch (Slot)
             {
@@ -111,6 +111,8 @@ namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
                     //Game.Player.AddItem(tmpItem);
                     break;
             }
+
+            return false;
         }
     }
 }

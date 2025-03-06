@@ -14,10 +14,11 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
         {
         }
 
-        public override void Use()
+        public override bool Use()
         {
             Owner.IncreaseHealth(Power);
             Owner.RemoveItem(this);
+            return true;
         }
     }
 
@@ -27,10 +28,11 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
         {
         }
 
-        public override void Use()
+        public override bool Use()
         {
             Owner.IncreaseMana(Power);
             Owner.RemoveItem(this);
+            return true;
         }
     }
 
@@ -40,24 +42,40 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
         {
         }
 
-        public override void Use()
+        public override bool Use()
         {
             Owner.IncreaseHealth(Power);
             Owner.IncreaseMana(Power);
             Owner.RemoveItem(this);
+            return true;
         }
     }
 
-    class DamagingItem : Consumable
+    class DamageItem : Consumable
     {
-        public DamagingItem(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
+        public DamageItem(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
         {
         }
 
-        public override void Use()
+        public override bool Use()
         {
             Owner.Target.ReduceHealth(Power);
             Owner.RemoveItem(this);
+            return true;
+        }
+    }
+
+    class ReduceMana : Consumable
+    {
+        public ReduceMana(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
+        {
+        }
+
+        public override bool Use()
+        {
+            Owner.Target.ReduceMana(Power);
+            Owner.RemoveItem(this);
+            return true;
         }
     }
 }
