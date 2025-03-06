@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tahova_RPG_hra.Source.Quests
 {
-    internal class Quest
+    public class Quest
     {
         public bool isActive()
         {
