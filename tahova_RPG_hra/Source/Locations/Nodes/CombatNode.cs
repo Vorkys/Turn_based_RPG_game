@@ -26,7 +26,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         //TODO
         public override void Traverse(Game game)
         {
-            if (game.Player.ImuneMoves !> 0)
+            if (game.Player.ImmuneMoves !> 0)
             {
                 Random rand = new Random();
 
