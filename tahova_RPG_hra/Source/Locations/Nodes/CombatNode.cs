@@ -13,15 +13,20 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         private int spawnRate;
         private int minEnemyLvl;
         private int maxEnemyLvl;
-        private Enemy[] enemyToSpawn;
+        private List<Enemy> enemyToSpawn;
 
-        public CombatNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, int spawnRate, int minEnemyLvl, int maxEnemyLvl, Enemy[] enemyToSpawn) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public CombatNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, int spawnRate, int minEnemyLvl, int maxEnemyLvl, List<Enemy> enemyToSpawn) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
-            this.spawnRate = spawnRate;
-            this.minEnemyLvl = minEnemyLvl;
-            this.maxEnemyLvl = maxEnemyLvl;
-            this.enemyToSpawn = enemyToSpawn;
+            this.SpawnRate = spawnRate;
+            this.MinEnemyLvl = minEnemyLvl;
+            this.MaxEnemyLvl = maxEnemyLvl;
+            this.EnemyToSpawn = enemyToSpawn;
         }
+
+        public int SpawnRate { get => spawnRate; set => spawnRate = value; }
+        public int MinEnemyLvl { get => minEnemyLvl; set => minEnemyLvl = value; }
+        public int MaxEnemyLvl { get => maxEnemyLvl; set => maxEnemyLvl = value; }
+        internal List<Enemy> EnemyToSpawn { get => enemyToSpawn; set => enemyToSpawn = value; }
 
         //TODO
         public override void Traverse(Game game)
@@ -34,10 +39,10 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
                 //TODO - implement imune steps after successfull combat
                 //enemy spawn roll is positive combat iniciated
-                if (spawnRoll <= spawnRate)
+                if (spawnRoll <= SpawnRate)
                 {
-                    int randLvl = rand.Next(minEnemyLvl, maxEnemyLvl + 1);
-                    Enemy randEnemy = enemyToSpawn[rand.Next(0, enemyToSpawn.Length)];
+                    int randLvl = rand.Next(MinEnemyLvl, MaxEnemyLvl + 1);
+                    Enemy randEnemy = EnemyToSpawn[rand.Next(0, EnemyToSpawn.Count)];
                     randEnemy.Level = randLvl;
 
                     game.startCombat(randEnemy);

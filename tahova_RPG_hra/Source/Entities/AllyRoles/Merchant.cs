@@ -12,16 +12,18 @@ namespace tahova_RPG_hra.Source.Entities.AllyRoles
 {
     class Merchant : Ally
     {
-        private Item[] wares;
+        private List<Item> wares;
 
-        public Merchant(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money, Item[] wares) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public Merchant(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money, List<Item> wares) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
         {
-            this.wares = wares;
+            this.Wares = wares;
         }
+
+        internal List<Item> Wares { get => wares; set => wares = value; }
 
         public override void Talk(Game game)
         {
-            game.openShop(wares);
+            game.openShop(Wares);
         }
     }
 }

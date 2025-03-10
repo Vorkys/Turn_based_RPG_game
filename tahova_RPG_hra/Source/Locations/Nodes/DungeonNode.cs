@@ -13,14 +13,10 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
         public DungeonNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, int locationId) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
-            this.locationId = locationId;
+            this.LocationId = locationId;
         }
 
-        public int LocationId
-        {
-            get { return LocationId; }
-            set { LocationId = value; }
-        }
+        public int LocationId { get => locationId; set => locationId = value; }
 
         public override void Traverse(Game game)
         {

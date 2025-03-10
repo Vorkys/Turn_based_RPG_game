@@ -10,25 +10,35 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 {
     internal class BossNode : Node
     {
-        private string[]? openDialog;
-        private string[]? endDialog;
+        private List<string> openDialog;
+        private List<string> endDialog;
         private Enemy boss;
+        private bool visited;
 
-        public BossNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, string[] openDialog, string[] endDialog, Enemy boss) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public BossNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, List<string> openDialog, List<string> endDialog, Enemy boss, bool visited) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
-            this.openDialog = openDialog;
-            this.endDialog = endDialog;
-            this.boss = boss;
+            this.OpenDialog = openDialog;
+            this.EndDialog = endDialog;
+            this.Boss = boss;
+            this.Visited = visited;
         }
+
+        public List<string> OpenDialog { get => openDialog; set => openDialog = value; }
+        public List<string> EndDialog { get => endDialog; set => endDialog = value; }
+        public bool Visited { get => visited; set => visited = value; }
+        internal Enemy Boss { get => boss; set => boss = value; }
 
         //TODO - uncomment when Game implemented
         public override void Traverse(Game game)
         {
-            game.openDialog(openDialog);
+            if (Visited)
+                return;
 
-            game.startCombat(boss);
+            game.openDialog(OpenDialog);
 
-            game.openDialog(endDialog);
+            game.startCombat(Boss);
+
+            game.openDialog(EndDialog);
         }
     }
 }

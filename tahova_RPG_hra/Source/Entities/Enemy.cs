@@ -17,7 +17,7 @@ namespace tahova_RPG_hra.Source.Entities
         private int escapeChance;
         private int xpDrop;
 
-        public Enemy(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money, Item[] drops, int escapeChance, int xpDrop) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public Enemy(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money, Item[] drops, int escapeChance, int xpDrop) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
         {
             this.drops = drops;
             this.escapeChance = escapeChance;
@@ -60,7 +60,7 @@ namespace tahova_RPG_hra.Source.Entities
             }
             else if (random == 1)
                 while (true) {
-                    random = rand.Next(0, Spells.Length);
+                    random = rand.Next(0, Spells.Count);
 
                     if (Spells[random].Cost <= this.Mana)
                     {

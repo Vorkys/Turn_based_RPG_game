@@ -11,17 +11,22 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
     internal class TownNode : Node
     {
         private string name;
-        public string description;
-        private string[] townSprite;
+        private string description;
+        private string townSprite;
         private Ally[] townPeople;
 
-        public TownNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, string name, string description, string[] townSprite, Ally[] townPeople) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public TownNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, string name, string description, string townSprite, Ally[] townPeople) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
-            this.name = name;
-            this.description = description;
-            this.townSprite = townSprite;
-            this.townPeople = townPeople;
+            this.Name = name;
+            this.Description = description;
+            this.TownSprite = townSprite;
+            this.TownPeople = townPeople;
         }
+
+        public string Name { get => name; set => name = value; }
+        public string Description { get => description; set => description = value; }
+        public string TownSprite { get => townSprite; set => townSprite = value; }
+        internal Ally[] TownPeople { get => townPeople; set => townPeople = value; }
 
         //TODO
         public override void Traverse(Game game)

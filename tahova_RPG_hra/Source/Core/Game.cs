@@ -17,21 +17,15 @@ namespace tahova_RPG_hra.Source.Core
         private int activeLocation;
         private int gameState;
         private Player player;
-        private Quest[] activeQuests;
+        private List<Quest> activeQuests;
 
-        public Player Player
-        {
-            get { return Player; }
-            set { Player = value; }
-        }
+        internal Location[,] Maps1 { get => Maps; set => Maps = value; }
+        public int ActiveLocation { get => activeLocation; set => activeLocation = value; }
+        public int GameState { get => gameState; set => gameState = value; }
+        internal Player Player { get => player; set => player = value; }
+        public List<Quest> ActiveQuests { get => activeQuests; set => activeQuests = value; }
 
-        public Player Enemy
-        {
-            get { return Enemy; }
-            set { Enemy = value; }
-        }
-
-        public void openDialog(string[] dialog)
+        public void openDialog(List<string> dialog)
         {
             //TODO
         }
@@ -66,7 +60,7 @@ namespace tahova_RPG_hra.Source.Core
             //TODO
         }
 
-        public void openShop(Item[] wares)
+        public void openShop(List<Item> wares)
         {
             //TODO
         }

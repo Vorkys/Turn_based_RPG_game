@@ -26,7 +26,7 @@ namespace tahova_RPG_hra.Source.Entities
         private int maxHealth;
         private int mana;
         private int maxMana;
-        private Spell[] spells;
+        private List<Spell> spells;
         private int damage;
         private int criticalHitChance;
         private int missChance;
@@ -35,7 +35,7 @@ namespace tahova_RPG_hra.Source.Entities
         //private Status[] statuses;
         private int? money;
 
-        public Entity(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money)
+        public Entity(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money)
         {
             this.Name = name;
             this.Sprite = sprite;
@@ -70,7 +70,7 @@ namespace tahova_RPG_hra.Source.Entities
         public int MaxHealth { get => maxHealth; set => maxHealth = value; }
         public int Mana { get => mana; set => mana = value; }
         public int MaxMana { get => maxMana; set => maxMana = value; }
-        internal Spell[] Spells { get => spells; set => spells = value; }
+        internal List<Spell> Spells { get => spells; set => spells = value; }
         public int Damage { get => damage; set => damage = value; }
         public int CriticalHitChance { get => criticalHitChance; set => criticalHitChance = value; }
         public int MissChance { get => missChance; set => missChance = value; }

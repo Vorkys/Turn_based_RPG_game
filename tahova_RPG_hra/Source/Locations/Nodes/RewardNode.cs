@@ -15,14 +15,17 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
         public RewardNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, Item[] rewards) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
-            this.rewards = rewards;
-            this.visited = false;
+            this.Rewards = rewards;
+            this.Visited = false;
         }
+
+        public bool Visited { get => visited; set => visited = value; }
+        internal Item[] Rewards { get => rewards; set => rewards = value; }
 
         //TODO
         public override void Traverse(Game game)
         {
-            foreach (Item _item in rewards)
+            foreach (Item _item in Rewards)
             {
                 bool loot = game.Player.AddItem(_item);
 

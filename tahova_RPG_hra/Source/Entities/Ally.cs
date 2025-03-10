@@ -14,15 +14,18 @@ namespace tahova_RPG_hra.Source.Entities
 {
     internal class Ally : Entity
     {
-        private string role;
-        private string[] entryDialog;
+        private List<string> entryDialog;
 
-        public Ally(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, Spell[] spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public Ally(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
         {
         }
 
-        public string Role { get => role; set => role = value; }
-        public string[] EntryDialog { get => entryDialog; set => entryDialog = value; }
+        public Ally(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money, List<string> entryDialog) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        {
+            this.entryDialog = entryDialog;
+        }
+
+        public List<string> EntryDialog { get => entryDialog; set => entryDialog = value; }        
 
         public virtual void Talk(Game game) { }
     }

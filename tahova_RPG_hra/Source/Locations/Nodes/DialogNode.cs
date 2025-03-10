@@ -10,30 +10,21 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 {
     internal class DialogNode : Node
     {
-        private string[] dialog;
+        private List<string> dialog;
         private bool visited;
 
-        public DialogNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, string[] dialog) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public DialogNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, List<string> dialog) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
-            this.dialog = dialog;
-            this.visited = false;
+            this.Dialog = dialog;
+            this.Visited = false;
         }
 
-        public string[] Dialog
-        {
-            get { return Dialog; }
-            set { Dialog = value; }
-        }
-
-        public bool Visited
-        {
-            get { return Visited; }
-            set { Visited = value; }
-        }
+        public List<string> Dialog { get => dialog; set => dialog = value; }
+        public bool Visited { get => visited; set => visited = value; }
 
         public override void Traverse(Game game)
         {
-            if (!visited)
+            if (!Visited)
             {
                 game.openDialog(Dialog);
                 Visited = true;
