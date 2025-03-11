@@ -18,9 +18,9 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
         public int LocationId { get => locationId; set => locationId = value; }
 
-        public override void Traverse(Game game)
+        public override void Traverse()
         {
-            game.changeLocation(LocationId);
+            Game.Instance.changeLocation(LocationId);
         }
     }
 }

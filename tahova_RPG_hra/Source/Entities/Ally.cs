@@ -27,6 +27,6 @@ namespace tahova_RPG_hra.Source.Entities
 
         public List<string> EntryDialog { get => entryDialog; set => entryDialog = value; }        
 
-        public virtual void Talk(Game game) { }
+        public virtual void Talk() { }
     }
 }

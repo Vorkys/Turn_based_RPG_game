@@ -24,7 +24,7 @@ namespace tahova_RPG_hra.Source.Entities
             this.xpDrop = xpDrop;
         }
 
-        public bool ChooseMove(Game game)
+        public bool ChooseMove()
         {
             int healthPercentage = (this.Health * 100) / this.MaxHealth;
 
@@ -73,15 +73,15 @@ namespace tahova_RPG_hra.Source.Entities
             return false;
         }
 
-        public void Defeated(Game game)
+        public void Defeated()
         {
-            game.Player.EntityXP += this.xpDrop;
+            Game.Instance.Player.EntityXP += this.xpDrop;
 
             foreach (Item item in drops)
-                game.Player.AddItem(item, item.Quantity);
+                Game.Instance.Player.AddItem(item, item.Quantity);
 
             //TODO this or change gameState?
-            game.openExploration();
+            Game.Instance.openExploration();
         }
     }
 }

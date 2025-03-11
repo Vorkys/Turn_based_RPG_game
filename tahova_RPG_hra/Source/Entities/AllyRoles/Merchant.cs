@@ -21,9 +21,9 @@ namespace tahova_RPG_hra.Source.Entities.AllyRoles
 
         internal List<Item> Wares { get => wares; set => wares = value; }
 
-        public override void Talk(Game game)
+        public override void Talk()
         {
-            game.openShop(Wares);
+            Game.Instance.openShop(Wares);
         }
     }
 }

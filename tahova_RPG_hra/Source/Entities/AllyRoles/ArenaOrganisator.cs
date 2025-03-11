@@ -22,14 +22,14 @@ namespace tahova_RPG_hra.Source.Entities.AllyRoles
 
         internal List<Enemy> Enemies { get => enemies; set => enemies = value; }
 
-        public override void Talk(Game game)
+        public override void Talk()
         {
             Random rand = new Random();
 
             int randomEnemyId = rand.Next(0, Enemies.Count);
             Enemy enemy = Enemies[randomEnemyId];
 
-            game.startCombat(enemy);
+            Game.Instance.startCombat(enemy);
         }
     }
 }

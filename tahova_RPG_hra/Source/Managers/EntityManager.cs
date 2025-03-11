@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tahova_RPG_hra.Source.Managers
 {
-    internal class InputManager
+    class EntityManager
     {
     }
 }

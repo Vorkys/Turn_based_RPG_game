@@ -78,6 +78,6 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         }
 
         //TODO - used for overriding only??
-        public virtual void Traverse(Game game) { }
+        public virtual void Traverse() { }
     }
 }

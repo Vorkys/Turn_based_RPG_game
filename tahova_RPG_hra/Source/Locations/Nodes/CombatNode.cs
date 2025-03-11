@@ -29,9 +29,9 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         internal List<Enemy> EnemyToSpawn { get => enemyToSpawn; set => enemyToSpawn = value; }
 
         //TODO
-        public override void Traverse(Game game)
+        public override void Traverse()
         {
-            if (game.Player.ImmuneMoves !> 0)
+            if (Game.Instance.Player.ImmuneMoves !> 0)
             {
                 Random rand = new Random();
 
@@ -45,7 +45,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
                     Enemy randEnemy = EnemyToSpawn[rand.Next(0, EnemyToSpawn.Count)];
                     randEnemy.Level = randLvl;
 
-                    game.startCombat(randEnemy);
+                    Game.Instance.startCombat(randEnemy);
                 }
             }
         }

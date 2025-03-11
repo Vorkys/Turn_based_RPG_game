@@ -29,9 +29,9 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         internal Ally[] TownPeople { get => townPeople; set => townPeople = value; }
 
         //TODO
-        public override void Traverse(Game game)
+        public override void Traverse()
         {
-            game.openTown(this);
+            Game.Instance.openTown(this);
         }
     }
 }

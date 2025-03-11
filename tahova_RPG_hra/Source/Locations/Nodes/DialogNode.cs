@@ -22,11 +22,11 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         public List<string> Dialog { get => dialog; set => dialog = value; }
         public bool Visited { get => visited; set => visited = value; }
 
-        public override void Traverse(Game game)
+        public override void Traverse()
         {
             if (!Visited)
             {
-                game.openDialog(Dialog);
+                Game.Instance.openDialog(Dialog);
                 Visited = true;
             }
         }

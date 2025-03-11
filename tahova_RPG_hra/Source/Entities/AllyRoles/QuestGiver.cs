@@ -22,13 +22,13 @@ namespace tahova_RPG_hra.Source.Entities.AllyRoles
 
         internal List<Quest> Quests { get => quests; set => quests = value; }
 
-        public override void Talk(Game game)
+        public override void Talk()
         {
-            game.openDialog(EntryDialog);
+            Game.Instance.openDialog(EntryDialog);
 
             foreach (Quest quest in quests)
                 if (quest.isOpen())
-                    game.AddQuest(quest);
+                    Game.Instance.AddQuest(quest);
 
             Console.WriteLine("New quest(s) are added.");
         }

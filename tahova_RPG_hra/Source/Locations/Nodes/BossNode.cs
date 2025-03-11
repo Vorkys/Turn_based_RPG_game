@@ -29,16 +29,16 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         internal Enemy Boss { get => boss; set => boss = value; }
 
         //TODO - uncomment when Game implemented
-        public override void Traverse(Game game)
+        public override void Traverse()
         {
             if (Visited)
                 return;
 
-            game.openDialog(OpenDialog);
+            Game.Instance.openDialog(OpenDialog);
 
-            game.startCombat(Boss);
+            Game.Instance.startCombat(Boss);
 
-            game.openDialog(EndDialog);
+            Game.Instance.openDialog(EndDialog);
         }
     }
 }

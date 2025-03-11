@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Core.GameStates;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.Locations;
@@ -13,17 +14,50 @@ namespace tahova_RPG_hra.Source.Core
 {
     internal class Game
     {
-        private Location[,] Maps;
-        private int activeLocation;
-        private int gameState;
+        private static readonly Game _instance = new Game();
+        private GameState gameState;
+        private Location[,] maps;
+        private int activeMap;
         private Player player;
         private List<Quest> activeQuests;
 
-        internal Location[,] Maps1 { get => Maps; set => Maps = value; }
-        public int ActiveLocation { get => activeLocation; set => activeLocation = value; }
-        public int GameState { get => gameState; set => gameState = value; }
+        private Game() { }
+
+        public GameState GameState { get => gameState; set => gameState = value; }
+        internal Location[,] Maps { get => maps; set => maps = value; }
+        public int ActiveMap { get => activeMap; set => activeMap = value; }
         internal Player Player { get => player; set => player = value; }
         public List<Quest> ActiveQuests { get => activeQuests; set => activeQuests = value; }
+
+        //singleton pattern to have one instance of game accessible from everywhere
+        public static Game Instance
+        {
+            get
+            {
+                return _instance;
+            }
+        }
+
+        public void Save()
+        {
+            //serialize
+        }
+
+        public void Load()
+        {
+            //deserialize
+        }
+
+        public bool Init()
+        {
+            //init all managers and return true if successful, false if fail somewhere
+            return true;
+        }
+
+        public void ChangeState()
+        {
+            //TODO
+        }
 
         public void openDialog(List<string> dialog)
         {

@@ -23,11 +23,11 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         internal Item[] Rewards { get => rewards; set => rewards = value; }
 
         //TODO
-        public override void Traverse(Game game)
+        public override void Traverse()
         {
             foreach (Item _item in Rewards)
             {
-                bool loot = game.Player.AddItem(_item);
+                bool loot = Game.Instance.Player.AddItem(_item);
 
                 if (!loot)
                     Console.WriteLine($"inventory is full. {_item.Name} wasnt looted.");
