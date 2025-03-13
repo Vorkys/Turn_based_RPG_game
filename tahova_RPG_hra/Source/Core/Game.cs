@@ -12,18 +12,44 @@ using tahova_RPG_hra.Source.Quests;
 
 namespace tahova_RPG_hra.Source.Core
 {
+    public enum GameStateType
+    {
+        Menu,
+        Pause,
+        Exploration,
+        Combat,
+        Dialog,
+        Inventory
+    }
+
     internal class Game
     {
         private static readonly Game _instance = new Game();
+        private Dictionary<GameStateType, GameState> gameStateMap;
         private GameState gameState;
         private Location[,] maps;
         private int activeMap;
         private Player player;
         private List<Quest> activeQuests;
 
-        private Game() { }
+        private Game()
+        {
+            GameStateMap = new Dictionary<GameStateType, GameState>
+            {
+                { GameStateType.Menu, new MenuState() },
+                { GameStateType.Pause, new PauseState() },
+                { GameStateType.Exploration, new ExplorationState() },
+                { GameStateType.Combat, new CombatState() },
+                { GameStateType.Dialog, new DialogState() },
+                { GameStateType.Inventory, new InventoryState() }
+            };
 
-        public GameState GameState { get => gameState; set => gameState = value; }
+            //Default gameState
+            GameState = gameStateMap[GameStateType.Menu];
+        }
+
+        internal Dictionary<GameStateType, GameState> GameStateMap { get => gameStateMap; set => gameStateMap = value; }
+        internal GameState GameState { get => gameState; set => gameState = value; }
         internal Location[,] Maps { get => maps; set => maps = value; }
         public int ActiveMap { get => activeMap; set => activeMap = value; }
         internal Player Player { get => player; set => player = value; }
@@ -54,7 +80,19 @@ namespace tahova_RPG_hra.Source.Core
             return true;
         }
 
-        public void ChangeState()
+        public void ChangeState(GameStateType stateType)
+        {
+            //TODO
+            if (GameStateMap.TryGetValue(stateType, out GameState newState))
+            {
+                GameState = newState;
+                Console.WriteLine($"GameState changed to: {GameState.GetType().Name}");
+            }
+            else
+                Console.WriteLine($"Invalid GameState");
+        }
+
+        public void Pause()
         {
             //TODO
         }
