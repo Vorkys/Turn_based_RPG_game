@@ -17,12 +17,19 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
         public Node(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable)
         {
-            this.nodeChar = nodeChar;
-            this.foregroundColor = foregroundColor;
-            this.backgroundColor = backgroundColor;
-            this.mapColor = mapColor;
-            this.isMovable = isMovable;
+            NodeChar = nodeChar;
+            ForegroundColor = foregroundColor;
+            BackgroundColor = backgroundColor;
+            MapColor = mapColor;
+            IsMovable = isMovable;
         }
+
+        public char NodeChar { get => nodeChar; set => nodeChar = value; }
+        public string ForegroundColor { get => foregroundColor; set => foregroundColor = value; }
+        public string BackgroundColor { get => backgroundColor; set => backgroundColor = value; }
+        public string MapColor { get => mapColor; set => mapColor = value; }
+        public bool IsMovable { get => isMovable; set => isMovable = value; }
+
 
         //TODO possible performance upgrade (dont always store default console colors)
         /// <summary>
@@ -35,15 +42,15 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             ConsoleColor originalBackgroundColor = Console.BackgroundColor;
 
             //validate colors
-            bool validForegroundColor = Enum.TryParse(foregroundColor, true, out ConsoleColor consoleForegroundColor);
-            bool validBackgroundColor = Enum.TryParse(backgroundColor, true, out ConsoleColor consoleBackgroundColor);
+            bool validForegroundColor = Enum.TryParse(ForegroundColor, true, out ConsoleColor consoleForegroundColor);
+            bool validBackgroundColor = Enum.TryParse(BackgroundColor, true, out ConsoleColor consoleBackgroundColor);
 
             if (validForegroundColor && validBackgroundColor)
             {
                 Console.ForegroundColor = consoleForegroundColor;
                 Console.BackgroundColor = consoleBackgroundColor;
 
-                Console.Write(nodeChar);
+                Console.Write(NodeChar);
             }
             else
                 Console.WriteLine("Invalid color");
@@ -62,7 +69,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             ConsoleColor originalBackgroundColor = Console.BackgroundColor;
 
             //validate colors
-            bool validBackgroundColor = Enum.TryParse(backgroundColor, true, out ConsoleColor consoleBackgroundColor);
+            bool validBackgroundColor = Enum.TryParse(BackgroundColor, true, out ConsoleColor consoleBackgroundColor);
 
             if (validBackgroundColor)
             {

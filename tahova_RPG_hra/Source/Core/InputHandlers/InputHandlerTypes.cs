@@ -33,19 +33,13 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
             switch (inputKey)
             {
                 case ConsoleKey.Escape:
-                    Game.Instance.Pause();
-                    break;
+                    Game.Instance.Resume();
+                        break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
                     break;
-                case ConsoleKey.RightArrow:
-                case ConsoleKey.D:
-                    break;
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
-                    break;
-                case ConsoleKey.LeftArrow:
-                case ConsoleKey.A:
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
@@ -65,15 +59,19 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                     break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
-                    break;
-                case ConsoleKey.RightArrow:
-                case ConsoleKey.D:
+                    Game.Instance.MovePlayerUp();
                     break;
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
+                    Game.Instance.MovePlayerDown();
                     break;
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:
+                    Game.Instance.MovePlayerLeft();
+                    break;
+                case ConsoleKey.RightArrow:
+                case ConsoleKey.D:
+                    Game.Instance.MovePlayerRight();
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
@@ -94,14 +92,8 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
                     break;
-                case ConsoleKey.RightArrow:
-                case ConsoleKey.D:
-                    break;
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
-                    break;
-                case ConsoleKey.LeftArrow:
-                case ConsoleKey.A:
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
@@ -130,7 +122,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
             switch (inputKey)
             {
                 case ConsoleKey.Escape:
-                    Game.Instance.ChangeState();
+                    Game.Instance.ChangeState(GameStateType.Exploration);
                     break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
@@ -143,6 +135,72 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                     break;
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:
+                    break;
+                case ConsoleKey.Spacebar:
+                case ConsoleKey.Enter:
+                    break;
+            }
+        }
+    }
+
+    class JournalHandler : InputHandler
+    {
+        public override void handle(ConsoleKey inputKey)
+        {
+            switch (inputKey)
+            {
+                case ConsoleKey.Escape:
+                    Game.Instance.ChangeState(GameStateType.Exploration);
+                    break;
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.W:
+                    break;
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
+                    break;
+                case ConsoleKey.Spacebar:
+                case ConsoleKey.Enter:
+                    break;
+            }
+        }
+    }
+
+    class TownHandler : InputHandler
+    {
+        public override void handle(ConsoleKey inputKey)
+        {
+            switch (inputKey)
+            {
+                case ConsoleKey.Escape:
+                    Game.Instance.ChangeState(GameStateType.Exploration);
+                    break;
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.W:
+                    break;
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
+                    break;
+                case ConsoleKey.Spacebar:
+                case ConsoleKey.Enter:
+                    break;
+            }
+        }
+    }
+
+    class TradingHandler : InputHandler
+    {
+        public override void handle(ConsoleKey inputKey)
+        {
+            switch (inputKey)
+            {
+                case ConsoleKey.Escape:
+                    Game.Instance.ChangeState(GameStateType.Exploration);
+                    break;
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.W:
+                    break;
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
