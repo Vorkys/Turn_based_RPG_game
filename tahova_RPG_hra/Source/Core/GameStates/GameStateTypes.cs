@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core.InputHandlers;
 using tahova_RPG_hra.Source.Utils;
+using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
@@ -75,10 +76,15 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
     class CombatState : GameState
     {
-        public CombatState()
+        private Enemy enemy;
+
+        public CombatState(Enemy enemy)
         {
             InputHandler = new CombatHandler();
+            Enemy = enemy;
         }
+
+        internal Enemy Enemy { get => enemy; set => enemy = value; }
 
         public override void Render()
         {
@@ -88,10 +94,15 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
     class DialogState : GameState
     {
-        public DialogState()
+        private List<string> dialog;
+
+        public DialogState(List<string> dialog)
         {
             InputHandler = new DialogHandler();
+            Dialog = dialog;
         }
+
+        public List<string> Dialog { get => dialog; set => dialog = value; }
 
         public override void Render()
         {
@@ -104,6 +115,45 @@ namespace tahova_RPG_hra.Source.Core.GameStates
         public InventoryState()
         {
             InputHandler = new InventoryHandler();
+        }
+
+        public override void Render()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class JournalState : GameState
+    {
+        public JournalState()
+        {
+            InputHandler = new JournalHandler();
+        }
+
+        public override void Render()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class TownState : GameState
+    {
+        public TownState()
+        {
+            InputHandler = new TownHandler();
+        }
+
+        public override void Render()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    class TradingState : GameState
+    {
+        public TradingState()
+        {
+            InputHandler = new TradingHandler();
         }
 
         public override void Render()
