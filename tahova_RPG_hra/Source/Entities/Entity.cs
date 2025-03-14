@@ -15,7 +15,7 @@ namespace tahova_RPG_hra.Source.Entities
     internal class Entity
     {
         private string name;
-        private string[] sprite;
+        private string sprite;
         private Item[] inventory;
         private Equippable[] equipment;
         private Entity target;
@@ -35,7 +35,7 @@ namespace tahova_RPG_hra.Source.Entities
         //private Status[] statuses;
         private int? money;
 
-        public Entity(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money)
+        public Entity(string name, string sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money)
         {
             this.Name = name;
             this.Sprite = sprite;
@@ -59,7 +59,7 @@ namespace tahova_RPG_hra.Source.Entities
         }
 
         public string Name { get => name; set => name = value; }
-        public string[] Sprite { get => sprite; set => sprite = value; }
+        public string Sprite { get => sprite; set => sprite = value; }
         internal Item[] Inventory { get => inventory; set => inventory = value; }
         internal Equippable[] Equipment { get => equipment; set => equipment = value; }
         internal Entity Target { get => target; set => target = value; }

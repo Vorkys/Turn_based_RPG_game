@@ -27,7 +27,7 @@ namespace tahova_RPG_hra.Source.Core
         private static readonly Game _instance = new Game();
         private Dictionary<GameStateType, GameState> gameStateMap;
         private GameState gameState;
-        private Location[,] maps;
+        private Location[] maps;
         private int activeMap;
         private Player player;
         private List<Quest> activeQuests;
@@ -50,8 +50,8 @@ namespace tahova_RPG_hra.Source.Core
 
         internal Dictionary<GameStateType, GameState> GameStateMap { get => gameStateMap; set => gameStateMap = value; }
         internal GameState GameState { get => gameState; set => gameState = value; }
-        internal Location[,] Maps { get => maps; set => maps = value; }
-        public int ActiveMap { get => activeMap; set => activeMap = value; }
+        internal Location[] Maps { get => maps; set => maps = value; }
+        internal int ActiveMap { get => activeMap; set => activeMap = value; }
         internal Player Player { get => player; set => player = value; }
         public List<Quest> ActiveQuests { get => activeQuests; set => activeQuests = value; }
 
@@ -63,6 +63,8 @@ namespace tahova_RPG_hra.Source.Core
                 return _instance;
             }
         }
+
+        public int ActiveMap1 { get => activeMap; set => activeMap = value; }
 
         public void Save()
         {

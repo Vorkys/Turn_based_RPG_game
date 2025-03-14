@@ -15,7 +15,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         private string townSprite;
         private Ally[] townPeople;
 
-        public TownNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, string name, string description, string townSprite, Ally[] townPeople) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public TownNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, string name, string description, string townSprite, Ally[] townPeople) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
             this.Name = name;
             this.Description = description;

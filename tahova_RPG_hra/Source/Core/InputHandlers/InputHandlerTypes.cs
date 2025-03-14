@@ -130,7 +130,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
             switch (inputKey)
             {
                 case ConsoleKey.Escape:
-                    Game.Instance.ChangeState();
+                    Game.Instance.ChangeState(GameStateType.Exploration);
                     break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:

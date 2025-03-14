@@ -11,7 +11,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
     {
         private int locationId;
 
-        public DungeonNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, int locationId) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public DungeonNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, int locationId) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
             this.LocationId = locationId;
         }

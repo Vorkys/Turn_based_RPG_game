@@ -13,7 +13,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         private List<string> dialog;
         private bool visited;
 
-        public DialogNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, List<string> dialog) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public DialogNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> dialog) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
             this.Dialog = dialog;
             this.Visited = false;

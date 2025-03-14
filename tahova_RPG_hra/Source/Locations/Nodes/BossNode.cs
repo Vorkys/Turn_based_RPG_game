@@ -15,7 +15,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         private Enemy boss;
         private bool visited;
 
-        public BossNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, List<string> openDialog, List<string> endDialog, Enemy boss, bool visited) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public BossNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> openDialog, List<string> endDialog, Enemy boss, bool visited) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
             this.OpenDialog = openDialog;
             this.EndDialog = endDialog;

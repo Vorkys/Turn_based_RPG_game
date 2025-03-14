@@ -10,16 +10,16 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
     internal class Node
     {
         private char nodeChar;
-        private string foregroundColor;
         private string backgroundColor;
+        private string foregroundColor;
         private string mapColor;
         private bool isMovable;
 
-        public Node(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable)
+        public Node(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable)
         {
             this.nodeChar = nodeChar;
-            this.foregroundColor = foregroundColor;
             this.backgroundColor = backgroundColor;
+            this.foregroundColor = foregroundColor;
             this.mapColor = mapColor;
             this.isMovable = isMovable;
         }

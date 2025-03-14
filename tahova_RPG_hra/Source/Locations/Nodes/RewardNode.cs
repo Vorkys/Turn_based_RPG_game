@@ -13,7 +13,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         private Item[] rewards;
         private bool visited;
 
-        public RewardNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, Item[] rewards) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public RewardNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, Item[] rewards) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
             this.Rewards = rewards;
             this.Visited = false;

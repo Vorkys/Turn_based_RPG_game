@@ -15,7 +15,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         private int maxEnemyLvl;
         private List<Enemy> enemyToSpawn;
 
-        public CombatNode(char nodeChar, string foregroundColor, string backgroundColor, string mapColor, bool isMovable, int spawnRate, int minEnemyLvl, int maxEnemyLvl, List<Enemy> enemyToSpawn) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public CombatNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, int spawnRate, int minEnemyLvl, int maxEnemyLvl, List<Enemy> enemyToSpawn) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
             this.SpawnRate = spawnRate;
             this.MinEnemyLvl = minEnemyLvl;
