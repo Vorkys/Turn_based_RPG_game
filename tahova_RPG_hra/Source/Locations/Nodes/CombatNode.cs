@@ -8,14 +8,14 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
-    internal class CombatNode : Node
+    public class CombatNode : Node
     {
         private int spawnRate;
         private int minEnemyLvl;
         private int maxEnemyLvl;
         private List<Enemy> enemyToSpawn;
 
-        public CombatNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, int spawnRate, int minEnemyLvl, int maxEnemyLvl, List<Enemy> enemyToSpawn) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public CombatNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, int spawnRate, int minEnemyLvl, int maxEnemyLvl, List<Enemy> enemyToSpawn) : base(nodeChar, backgroundColor, foregroundColor, mapColor, isMovable)
         {
             this.SpawnRate = spawnRate;
             this.MinEnemyLvl = minEnemyLvl;
@@ -26,27 +26,30 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         public int SpawnRate { get => spawnRate; set => spawnRate = value; }
         public int MinEnemyLvl { get => minEnemyLvl; set => minEnemyLvl = value; }
         public int MaxEnemyLvl { get => maxEnemyLvl; set => maxEnemyLvl = value; }
-        internal List<Enemy> EnemyToSpawn { get => enemyToSpawn; set => enemyToSpawn = value; }
+        public List<Enemy> EnemyToSpawn { get => enemyToSpawn; set => enemyToSpawn = value; }
 
         //TODO
         public override void Traverse()
         {
-            if (Game.Instance.Player.ImmuneMoves !> 0)
+            base.Traverse();
+
+            if (Game.Instance.Player.ImmuneMoves > 0)
+                return;
+            
+            Random rand = new Random();
+
+            int spawnRoll = rand.Next(1, 101);
+
+            //TODO - implement imune steps after successfull combat
+            //enemy spawn roll is positive combat iniciated
+            if (spawnRoll <= SpawnRate)
             {
-                Random rand = new Random();
+                int randLvl = rand.Next(MinEnemyLvl, MaxEnemyLvl + 1);
+                Enemy randEnemy = EnemyToSpawn[rand.Next(0, EnemyToSpawn.Count)];
+                randEnemy.SetLvl(randLvl);
 
-                int spawnRoll = rand.Next(1, 101);
-
-                //TODO - implement imune steps after successfull combat
-                //enemy spawn roll is positive combat iniciated
-                if (spawnRoll <= SpawnRate)
-                {
-                    int randLvl = rand.Next(MinEnemyLvl, MaxEnemyLvl + 1);
-                    Enemy randEnemy = EnemyToSpawn[rand.Next(0, EnemyToSpawn.Count)];
-                    randEnemy.Level = randLvl;
-
-                    Game.Instance.startCombat(randEnemy);
-                }
+                Game.Instance.startCombat(randEnemy);
+                Game.Instance.Player.ImmuneMoves = 4;
             }
         }
     }

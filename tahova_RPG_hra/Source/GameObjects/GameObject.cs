@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace tahova_RPG_hra.Source.GameObjects
 {
-    internal class GameObject
+    public class GameObject
     {
         private static int nextID = 1;
 

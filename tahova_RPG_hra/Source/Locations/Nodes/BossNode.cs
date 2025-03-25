@@ -8,7 +8,7 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
-    internal class BossNode : Node
+    public class BossNode : Node
     {
         private List<string> openDialog;
         private List<string> endDialog;
@@ -26,7 +26,7 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         public List<string> OpenDialog { get => openDialog; set => openDialog = value; }
         public List<string> EndDialog { get => endDialog; set => endDialog = value; }
         public bool Visited { get => visited; set => visited = value; }
-        internal Enemy Boss { get => boss; set => boss = value; }
+        public Enemy Boss { get => boss; set => boss = value; }
 
         //TODO - uncomment when Game implemented
         public override void Traverse()
@@ -39,6 +39,8 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             Game.Instance.startCombat(Boss);
 
             Game.Instance.openDialog(EndDialog);
+
+            Game.Instance.Player.ImmuneMoves = 4;
         }
     }
 }

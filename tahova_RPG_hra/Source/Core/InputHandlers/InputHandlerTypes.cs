@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using tahova_RPG_hra.Source.Core.GameStates;
+using tahova_RPG_hra.Source.Entities;
+using tahova_RPG_hra.Source.Managers;
 
 namespace tahova_RPG_hra.Source.Core.InputHandlers
 {
     class MenuHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey) 
             {
@@ -22,13 +25,17 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class PauseHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
@@ -44,13 +51,17 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class ExplorationHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
@@ -75,49 +86,112 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
+                    Game.Instance.startCombat(EntityManager.SmallGoblin);
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class CombatHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
                 case ConsoleKey.Escape:
-                    Game.Instance.Pause();
+                    if (Game.Instance.GameState is CombatState)
+                    {
+                        CombatState castGameState = (CombatState)Game.Instance.GameState;
+
+                        if (!castGameState.ToConfirmAction)
+                            Game.Instance.Pause();
+                    }
                     break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
+                    if (Game.Instance.GameState is CombatState)
+                    {
+                        CombatState castGameState = (CombatState)Game.Instance.GameState;
+
+                        if (castGameState.ToConfirmAction)
+                            return false;
+                        else
+                        {
+                            if (Game.Instance.Player.Target is Enemy)
+                            {
+                                Enemy castTarget = (Enemy)Game.Instance.Player.Target;
+                                //castTarget.ChooseMove();
+                                Game.Instance.Player.ReduceHealth(1);
+                                Game.Instance.Player.ReduceMana(1);
+                            }
+                        }
+                    }
                     break;
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
+                    if (Game.Instance.GameState is CombatState)
+                    {
+                        CombatState castGameState = (CombatState)Game.Instance.GameState;
+
+                        if (castGameState.ToConfirmAction)
+                            return false;
+                        else
+                        {
+                            if (Game.Instance.Player.Target is Enemy)
+                            {
+                                Enemy castTarget = (Enemy)Game.Instance.Player.Target;
+                                castTarget.ReduceHealth(1);
+                            }
+                        }
+                    }
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
+                    if (Game.Instance.GameState is CombatState)
+                    {
+                        CombatState castGameState = (CombatState)Game.Instance.GameState;
+
+                        if (castGameState.ToConfirmAction)
+                            return false;
+                        else
+                        {
+                            Game.Instance.Player.IncreaseLvl();
+                        }
+                    }
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class DialogHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
+                case ConsoleKey.Escape:
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class InventoryHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
@@ -139,13 +213,17 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class JournalHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
@@ -161,13 +239,17 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class TownHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
@@ -183,13 +265,17 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 
     class TradingHandler : InputHandler
     {
-        public override void handle(ConsoleKey inputKey)
+        public override bool handle(ConsoleKey inputKey)
         {
             switch (inputKey)
             {
@@ -205,7 +291,11 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     break;
+                default:
+                    return false;
             }
+
+            return true;
         }
     }
 }

@@ -8,7 +8,7 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
-    internal class TownNode : Node
+    public class TownNode : Node
     {
         private string name;
         private string description;
@@ -26,11 +26,12 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }
         public string TownSprite { get => townSprite; set => townSprite = value; }
-        internal Ally[] TownPeople { get => townPeople; set => townPeople = value; }
+        public Ally[] TownPeople { get => townPeople; set => townPeople = value; }
 
-        //TODO
         public override void Traverse()
         {
+            base.Traverse();
+
             Game.Instance.openTown(this);
         }
     }

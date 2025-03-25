@@ -12,6 +12,7 @@ using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.Locations;
 using tahova_RPG_hra.Source.Locations.Nodes;
+using tahova_RPG_hra.Source.Managers;
 using tahova_RPG_hra.Source.Quests;
 
 namespace tahova_RPG_hra.Source.Core
@@ -34,7 +35,7 @@ namespace tahova_RPG_hra.Source.Core
         private static readonly Game _instance = new Game();
         private Dictionary<GameStateType, GameState> gameStateMap;
         private GameState gameState;
-        private Location[] maps;
+        private List<Location> maps;
         private int activeMap;
         private Player player;
         private List<Quest> activeQuests;
@@ -43,26 +44,31 @@ namespace tahova_RPG_hra.Source.Core
         {
             GameStateMap = new Dictionary<GameStateType, GameState>
             {
+                //default values
                 { GameStateType.Menu, new MenuState() },
                 { GameStateType.Pause, new PauseState() },
                 { GameStateType.Exploration, new ExplorationState() },
-                { GameStateType.Combat, new CombatState(null) },
+                { GameStateType.Combat, new CombatState() },
                 { GameStateType.Dialog, new DialogState(new List<string> {"Default"}) },
                 { GameStateType.Inventory, new InventoryState() },
                 { GameStateType.Journal, new JournalState() },
                 { GameStateType.Town, new TownState() },
                 { GameStateType.Trading, new TradingState() }
             };
-
             //Default gameState
-            GameState = gameStateMap[GameStateType.Menu];
+            GameState = gameStateMap[GameStateType.Exploration];
+
+            Maps = new List<Location>();
+            ActiveMap = 0;
+            Player = EntityManager.Player;
+            ActiveQuests = new List<Quest>();
         }
 
-        internal Dictionary<GameStateType, GameState> GameStateMap { get => gameStateMap; set => gameStateMap = value; }
-        internal GameState GameState { get => gameState; set => gameState = value; }
-        internal Location[] Maps { get => maps; set => maps = value; }
+        public Dictionary<GameStateType, GameState> GameStateMap { get => gameStateMap; set => gameStateMap = value; }
+        public GameState GameState { get => gameState; set => gameState = value; }
+        public List<Location> Maps { get => maps; set => maps = value; }
         public int ActiveMap { get => activeMap; set => activeMap = value; }
-        internal Player Player { get => player; set => player = value; }
+        public Player Player { get => player; set => player = value; }
         public List<Quest> ActiveQuests { get => activeQuests; set => activeQuests = value; }
 
         //singleton pattern to have one instance of game accessible from everywhere
@@ -73,8 +79,6 @@ namespace tahova_RPG_hra.Source.Core
                 return _instance;
             }
         }
-
-        public int ActiveMap1 { get => activeMap; set => activeMap = value; }
 
         public void Save()
         {
@@ -91,9 +95,25 @@ namespace tahova_RPG_hra.Source.Core
             File.WriteAllText(filePath, jsonString);
         }
 
-        public void Load()
+        public void Load(string _fileName)
         {
             //deserialize
+            try
+            {
+                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Maps");
+                string fileName = Path.Combine(folderPath, _fileName);
+
+                string json = File.ReadAllText(fileName);
+
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                var deserializedList = JsonSerializer.Deserialize<List<List<Node>>>(json, options);
+                Location map = new(deserializedList, 23,78, 23, 78);
+                Maps.Add(map);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         public bool Init()
@@ -104,13 +124,13 @@ namespace tahova_RPG_hra.Source.Core
 
         public void ChangeState(GameStateType stateType, params object[] parameters)
         {
-            //TODO
+            //TODO - dynamic values
             GameState newState = stateType switch
             {
                 GameStateType.Menu => new MenuState(),
                 GameStateType.Pause => new PauseState(),
                 GameStateType.Exploration => new ExplorationState(),
-                GameStateType.Combat => new CombatState((Enemy)parameters[0]),
+                GameStateType.Combat => new CombatState(),
                 GameStateType.Dialog => new DialogState((List<string>)parameters[0]),
                 GameStateType.Inventory => new InventoryState(),
                 GameStateType.Journal => new JournalState(),
@@ -135,55 +155,56 @@ namespace tahova_RPG_hra.Source.Core
 
         public void Resume()
         {
-            if (Instance.Player.Target == null)
-                Instance.ChangeState(GameStateType.Combat);
+            //TODO - enemy instead of NULL
+            if (Instance.Player.Target != null)
+                Instance.ChangeState(GameStateType.Combat, Instance.Player.Target);
             else
                 Instance.ChangeState(GameStateType.Exploration);
         }
 
         public void MovePlayer(int destinationX, int destinationY)
         {
-            if (Instance.Maps[ActiveMap].Map[destinationX, destinationY].IsMovable)
+            if (Instance.Maps[ActiveMap].Map[destinationX][destinationY].IsMovable)
             {
                 Instance.Maps[ActiveMap].PlayerX = destinationX;
                 Instance.Maps[ActiveMap].PlayerY = destinationY;
-                Instance.Maps[ActiveMap].Map[destinationX, destinationY].Traverse();
+                Instance.Maps[ActiveMap].Map[destinationX][destinationY].Traverse();
             }
         }
 
         public void MovePlayerUp()
         {
             //Handle out of bound
-            if ((Instance.Maps[ActiveMap].PlayerY - 1) < 0)
+            if ((Instance.Maps[ActiveMap].PlayerX - 1) < 0)
                 return;
-            MovePlayer(Instance.Maps[ActiveMap].PlayerX, Instance.Maps[ActiveMap].PlayerY - 1);
+            MovePlayer(Instance.Maps[ActiveMap].PlayerX - 1, Instance.Maps[ActiveMap].PlayerY);
         }
 
         public void MovePlayerDown()
         {
             //Handle out of bound
-            if ((Instance.Maps[ActiveMap].PlayerY + 1) >= Instance.Maps[ActiveMap].Map.GetLength(0))
+            if ((Instance.Maps[ActiveMap].PlayerX + 1) >= Instance.Maps[ActiveMap].Map.Count)
                 return;
 
-            MovePlayer(Instance.Maps[ActiveMap].PlayerX, Instance.Maps[ActiveMap].PlayerY + 1);
+            MovePlayer(Instance.Maps[ActiveMap].PlayerX + 1, Instance.Maps[ActiveMap].PlayerY);
         }
 
         public void MovePlayerLeft()
         {
             //Handle out of bound
-            if ((Instance.Maps[ActiveMap].PlayerX - 1) < 0)
+            if ((Instance.Maps[ActiveMap].PlayerY - 1) < 0)
                 return;
 
-            MovePlayer(Instance.Maps[ActiveMap].PlayerX - 1, Instance.Maps[ActiveMap].PlayerY);
+            MovePlayer(Instance.Maps[ActiveMap].PlayerX, Instance.Maps[ActiveMap].PlayerY - 1);
         }
 
         public void MovePlayerRight()
         {
             //Handle out of bound
-            if ((Instance.Maps[ActiveMap].PlayerX + 1) >= Instance.Maps[ActiveMap].Map.GetLength(1))
+            if ((Instance.Maps[ActiveMap].PlayerY + 1) >= Instance.Maps[ActiveMap].Map[Instance.Maps[ActiveMap].PlayerX].Count)
                 return;
 
-            MovePlayer(Instance.Maps[ActiveMap].PlayerX + 1, Instance.Maps[ActiveMap].PlayerY);
+            MovePlayer(Instance.Maps[ActiveMap].PlayerX, Instance.Maps[ActiveMap].PlayerY + 1);
         }
 
         public void openDialog(List<string> dialog)
@@ -193,7 +214,9 @@ namespace tahova_RPG_hra.Source.Core
 
         public void startCombat(Enemy enemy)
         {
-            Instance.ChangeState(GameStateType.Combat, enemy);
+            Instance.Player.Target = enemy;
+            Instance.Player.Target.Target = Instance.Player;
+            Instance.ChangeState(GameStateType.Combat);
         }
 
         public void changeLocation(int locationId)

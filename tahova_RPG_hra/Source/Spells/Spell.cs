@@ -8,7 +8,7 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Spells
 {
-    internal abstract class Spell
+    public abstract class Spell
     {
         private Entity caster;
         private string name;

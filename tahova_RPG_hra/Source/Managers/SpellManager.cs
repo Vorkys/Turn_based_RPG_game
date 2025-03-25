@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tahova_RPG_hra.Source.Locations.MapData
+namespace tahova_RPG_hra.Source.Managers
 {
-    class GlobalMap
+    class SpellManager
     {
     }
 }

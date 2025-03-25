@@ -8,7 +8,7 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
 {
-    class Equippable : Item
+    public class Equippable : Item
     {
         public enum EquippableSlot
         {
@@ -24,21 +24,12 @@ namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
 
         public Equippable(string name, string description, int buyPrice, int sellPrice, EquippableSlot slot, int strength) : base(name, description, buyPrice, sellPrice, 1)
         {
-            this.slot = slot;
-            this.strength = strength;
+            this.Slot = slot;
+            this.Strength = strength;
         }
 
-        public EquippableSlot Slot
-        {
-            get { return Slot; }
-            set { Slot = value; }
-        }
-
-        public int Strength
-        {
-            get { return Strength; }
-            set { Strength = value; }
-        }
+        public EquippableSlot Slot { get => slot; set => slot = value; }
+        public int Strength { get => strength; set => strength = value; }
 
         public void WriteInfo()
         {
@@ -68,51 +59,52 @@ namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
             Console.WriteLine($"Name: {Name}\nDescritpion: {Description}\nSlot: {_slot}\nStrength: {Strength}\nPrice buy/sell: {BuyPrice}/{SellPrice}\nQuantity: {Quantity}/{MaxQuantity}");
         }
 
-        //TODO - awaiting implementation of Game
         public override bool Use()
         {
+            Item tmpItem;
+
             switch (Slot)
             {
                 case EquippableSlot.Helm:
                     ////switch items
-                    //Item tmpItem = player.Equipment[EquippableSlot.Helm];
-                    //Owner.Equipment[EquippableSlot.Helm] = this;
-                    //Game.Player.RemoveItem(this);
-                    //Game.Player.AddItem(tmpItem);
+                    tmpItem = Game.Instance.Player.Equipment[(int)EquippableSlot.Helm];
+                    Owner.Equipment[(int)EquippableSlot.Helm] = this;
+                    Game.Instance.Player.RemoveItem(this);
+                    Game.Instance.Player.AddItem(tmpItem);
                     break;
                 case EquippableSlot.Body:
-                    ////switch items
-                    //Item tmpItem = player.Equipment[0];
-                    //Game.Player.Equipment[0] = this;
-                    //Game.Player.AddItem(tmpItem);
+                    tmpItem = Game.Instance.Player.Equipment[(int)EquippableSlot.Body];
+                    Owner.Equipment[(int)EquippableSlot.Body] = this;
+                    Game.Instance.Player.RemoveItem(this);
+                    Game.Instance.Player.AddItem(tmpItem);
                     break;
                 case EquippableSlot.Legs:
-                    ////switch items
-                    //Item tmpItem = player.Equipment[0];
-                    //Game.Player.Equipment[0] = this;
-                    //Game.Player.AddItem(tmpItem);
+                    tmpItem = Game.Instance.Player.Equipment[(int)EquippableSlot.Legs];
+                    Owner.Equipment[(int)EquippableSlot.Legs] = this;
+                    Game.Instance.Player.RemoveItem(this);
+                    Game.Instance.Player.AddItem(tmpItem);
                     break;
                 case EquippableSlot.Ring:
-                    ////switch items
-                    //Item tmpItem = player.Equipment[0];
-                    //Game.Player.Equipment[0] = this;
-                    //Game.Player.AddItem(tmpItem);
+                    tmpItem = Game.Instance.Player.Equipment[(int)EquippableSlot.Ring];
+                    Owner.Equipment[(int)EquippableSlot.Ring] = this;
+                    Game.Instance.Player.RemoveItem(this);
+                    Game.Instance.Player.AddItem(tmpItem);
                     break;
                 case EquippableSlot.Main_Hand:
-                    ////switch items
-                    //Item tmpItem = player.Equipment[0];
-                    //Game.Player.Equipment[0] = this;
-                    //Game.Player.AddItem(tmpItem);
+                    tmpItem = Game.Instance.Player.Equipment[(int)EquippableSlot.Main_Hand];
+                    Owner.Equipment[(int)EquippableSlot.Main_Hand] = this;
+                    Game.Instance.Player.RemoveItem(this);
+                    Game.Instance.Player.AddItem(tmpItem);
                     break;
                 case EquippableSlot.Off_Hand:
-                    ////switch items
-                    //Item tmpItem = player.Equipment[0];
-                    //Game.Player.Equipment[0] = this;
-                    //Game.Player.AddItem(tmpItem);
+                    tmpItem = Game.Instance.Player.Equipment[(int)EquippableSlot.Off_Hand];
+                    Owner.Equipment[(int)EquippableSlot.Off_Hand] = this;
+                    Game.Instance.Player.RemoveItem(this);
+                    Game.Instance.Player.AddItem(tmpItem);
                     break;
             }
 
-            return false;
+            return true;
         }
     }
 }

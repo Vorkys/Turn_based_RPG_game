@@ -1,13 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core;
+using tahova_RPG_hra.Source.Utils;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
-    internal class Node
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(Node), nameof(Node))]
+    [JsonDerivedType(typeof(CombatNode), nameof(CombatNode))]
+    [JsonDerivedType(typeof(BossNode), nameof(BossNode))]
+    [JsonDerivedType(typeof(DialogNode), nameof(DialogNode))]
+    [JsonDerivedType(typeof(DungeonNode), nameof(DungeonNode))]
+    [JsonDerivedType(typeof(RewardNode), nameof(RewardNode))]
+    [JsonDerivedType(typeof(TownNode), nameof(TownNode))]
+    public class Node
     {
         private char nodeChar;
         private string backgroundColor;
@@ -35,56 +46,26 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         /// <summary>
         /// Print node when player is exploring.
         /// </summary>
-        public void Write()
+        public void Write(bool player = false)
         {
-            //save default console colors
-            ConsoleColor originalForegroundColor = Console.ForegroundColor;
-            ConsoleColor originalBackgroundColor = Console.BackgroundColor;
-
-            //validate colors
-            bool validForegroundColor = Enum.TryParse(ForegroundColor, true, out ConsoleColor consoleForegroundColor);
-            bool validBackgroundColor = Enum.TryParse(BackgroundColor, true, out ConsoleColor consoleBackgroundColor);
-
-            if (validForegroundColor && validBackgroundColor)
+            if (!player)
             {
-                Console.ForegroundColor = consoleForegroundColor;
-                Console.BackgroundColor = consoleBackgroundColor;
-
-                Console.Write(NodeChar);
+                Console.BackgroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), backgroundColor, true);
+                Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), foregroundColor, true);
+                Console.Write(nodeChar);
             }
             else
-                Console.WriteLine("Invalid color");
-
-            //return original colors
-            Console.ForegroundColor = originalForegroundColor;
-            Console.BackgroundColor = originalBackgroundColor;
-        }
-
-        /// <summary>
-        /// Print node background color. Used when showing big map in 1:4.
-        /// </summary>
-        public void MapWrite()
-        {
-            //save default console color
-            ConsoleColor originalBackgroundColor = Console.BackgroundColor;
-
-            //validate colors
-            bool validBackgroundColor = Enum.TryParse(BackgroundColor, true, out ConsoleColor consoleBackgroundColor);
-
-            if (validBackgroundColor)
             {
-                Console.BackgroundColor = consoleBackgroundColor;
-
-                Console.Write(" ");
+                Console.BackgroundColor = ConsoleColor.Magenta;
+                Console.Write('P');
             }
-            else
-                Console.WriteLine("Invalid color");
 
-            //return original color
-            Console.BackgroundColor = originalBackgroundColor;
+            Console.ResetColor();
         }
 
-        //TODO - used for overriding only??
-        public virtual void Traverse() { }
+        public virtual void Traverse()
+        {
+            Game.Instance.Player.ImmuneMoves--;
+        }
     }
 }

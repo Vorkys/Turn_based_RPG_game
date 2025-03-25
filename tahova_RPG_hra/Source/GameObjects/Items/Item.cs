@@ -8,7 +8,7 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.GameObjects.Items
 {
-    internal class Item : GameObject
+    public class Item : GameObject
     {
         private Entity owner;
         private string name;
@@ -62,7 +62,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
             this.MaxQuantity = maxQuantity;
         }
 
-        internal Entity Owner { get => owner; set => owner = value; }
+        public Entity Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }
         public int BuyPrice { get => buyPrice; set => buyPrice = value; }

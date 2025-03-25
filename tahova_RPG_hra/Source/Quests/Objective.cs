@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items;
+using static tahova_RPG_hra.Source.Entities.Enemy;
 
 namespace tahova_RPG_hra.Source.Quests
 {
-    class Objective
+    public class Objective
     {
         private bool isCompleted;
         private string description;
@@ -23,6 +24,6 @@ namespace tahova_RPG_hra.Source.Quests
         public string Description { get => description; set => description = value; }
 
         public virtual void UpdateObjective(Enemy enemy) { }
-        public virtual void UpdateObjective(List<Item> items) { }
+        public virtual void UpdateObjective(List<Drop> items) { }
     }
 }

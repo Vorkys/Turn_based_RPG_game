@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.GameObjects.Items;
 
 namespace tahova_RPG_hra.Source.Quests
@@ -28,8 +29,8 @@ namespace tahova_RPG_hra.Source.Quests
         public List<Quest> Prerequisities { get => prerequisities; set => prerequisities = value; }
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }
-        internal List<Objective> Objectives { get => objectives; set => objectives = value; }
-        internal List<Item> Rewards { get => rewards; set => rewards = value; }
+        public List<Objective> Objectives { get => objectives; set => objectives = value; }
+        public List<Item> Rewards { get => rewards; set => rewards = value; }
 
         public void CheckStatus()
         {
@@ -55,6 +56,10 @@ namespace tahova_RPG_hra.Source.Quests
                     return;
 
             //TODO - get reward and close quest
+            foreach (Item item in rewards)
+                Game.Instance.Player.AddItem(item, item.Quantity);
+
+            this.status = Status.Close;
         }
     }
 }

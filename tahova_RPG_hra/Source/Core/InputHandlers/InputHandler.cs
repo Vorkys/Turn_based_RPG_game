@@ -9,6 +9,6 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
 {
     abstract class InputHandler
     {
-        public abstract void handle(ConsoleKey inputKey);
+        public abstract bool handle(ConsoleKey inputKey);
     }
 }

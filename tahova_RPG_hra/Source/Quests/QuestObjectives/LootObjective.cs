@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.GameObjects.Items;
+using static tahova_RPG_hra.Source.Entities.Enemy;
 
 namespace tahova_RPG_hra.Source.Quests.QuestObjective
 {
@@ -25,24 +26,24 @@ namespace tahova_RPG_hra.Source.Quests.QuestObjective
         public int RequiredAmount { get => requiredAmount; set => requiredAmount = value; }
         public int CurrentAmount { get => currentAmount; set => currentAmount = value; }
 
-        public override void UpdateObjective(List<Item> items)
+        public override void UpdateObjective(List<Drop> items)
         {
             if (IsCompleted)
                 return;
 
-            foreach (Item item in items)
+            foreach (Drop item in items)
             {
-                if (item.Name.ToLower().Contains(ItemName.ToLower()))
+                if (item.Item.Name.ToLower().Contains(ItemName.ToLower()))
                 {
-                    if (item.Quantity <= (RequiredAmount - CurrentAmount))
+                    if (item.Item.Quantity <= (RequiredAmount - CurrentAmount))
                     {
-                        CurrentAmount += item.Quantity;
-                        item.Quantity = 0;
+                        CurrentAmount += item.Item.Quantity;
+                        item.Item.Quantity = 0;
                     }
                     else
                     {
                         CurrentAmount += (RequiredAmount - CurrentAmount);
-                        item.Quantity -= (RequiredAmount - CurrentAmount);
+                        item.Item.Quantity -= (RequiredAmount - CurrentAmount);
                     }
 
                     if (CurrentAmount >= RequiredAmount)

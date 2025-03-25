@@ -15,11 +15,53 @@ namespace tahova_RPG_hra.Source.Entities
     {
         private int immuneMoves;
 
-        public Player(string name, string sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public Player(string name, string spritePath, Item[] inventory, Equippable[] equipment, int level, int xPtoLevelUp, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int money) : base(name, spritePath, inventory, equipment, level, xPtoLevelUp, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
         {
-            this.ImmuneMoves = 10;
+            this.ImmuneMoves = 4;
         }
 
         public int ImmuneMoves { get => immuneMoves; set => immuneMoves = value; }
+
+        public virtual void IncreaseLvl(int numberOfLvls = 1)
+        {
+            if (Level == MaxLevel)
+                return;
+
+            while (numberOfLvls > 0)
+            {
+                //huge upgrade
+                if (this.Level % 5 == 0)
+                {
+                    this.MaxHealth += 2;
+                    this.MaxMana += 2;
+                    this.Damage += 1;
+                    this.Armor += 1;
+                    this.Speed += 1;
+                }
+                //mid upgrade
+                else if (this.Level % 3 == 0)
+                {
+                    this.MaxHealth += 2;
+                    this.MaxMana += 1;
+                    this.Damage += 1;
+                    this.Speed += 1;
+                }
+                //average upgrade
+                else if (this.Level % 2 == 0)
+                {
+                    this.MaxHealth += 1;
+                    this.MaxMana += 1;
+                }
+                //basic upgrade
+                else
+                    this.MaxHealth += 1;
+
+                this.Level++;
+                numberOfLvls--;
+            }
+
+            this.Health = MaxHealth;
+            this.Mana = MaxMana;
+        }
     }
 }

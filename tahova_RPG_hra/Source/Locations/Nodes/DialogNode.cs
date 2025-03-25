@@ -8,7 +8,7 @@ using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
-    internal class DialogNode : Node
+    public class DialogNode : Node
     {
         private List<string> dialog;
         private bool visited;
@@ -24,6 +24,8 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
         public override void Traverse()
         {
+            base.Traverse();
+
             if (!Visited)
             {
                 Game.Instance.openDialog(Dialog);

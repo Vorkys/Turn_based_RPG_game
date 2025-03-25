@@ -8,7 +8,7 @@ using tahova_RPG_hra.Source.GameObjects.Items;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
-    internal class RewardNode : Node
+    public class RewardNode : Node
     {
         private Item[] rewards;
         private bool visited;
@@ -20,11 +20,13 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         }
 
         public bool Visited { get => visited; set => visited = value; }
-        internal Item[] Rewards { get => rewards; set => rewards = value; }
+        public Item[] Rewards { get => rewards; set => rewards = value; }
 
         //TODO
         public override void Traverse()
         {
+            base.Traverse();
+
             foreach (Item _item in Rewards)
             {
                 bool loot = Game.Instance.Player.AddItem(_item);

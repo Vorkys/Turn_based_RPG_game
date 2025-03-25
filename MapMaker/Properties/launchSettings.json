@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MapMaker": {
+      "commandName": "Project",
+      "commandLineArgs": "mainMap.txt"
+    }
+  }
+}

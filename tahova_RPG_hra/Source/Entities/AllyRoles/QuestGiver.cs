@@ -15,12 +15,12 @@ namespace tahova_RPG_hra.Source.Entities.AllyRoles
     {
         private List<Quest> quests;
 
-        public QuestGiver(string name, string[] sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int? money, List<Quest> quests) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public QuestGiver(string name, string sprite, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int money, List<Quest> quests) : base(name, sprite, inventory, equipment, target, level, entityXP, xPtoLevelUp, health, maxHealth, mana, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
         {
             this.Quests = quests;
         }
 
-        internal List<Quest> Quests { get => quests; set => quests = value; }
+        public List<Quest> Quests { get => quests; set => quests = value; }
 
         public override void Talk()
         {

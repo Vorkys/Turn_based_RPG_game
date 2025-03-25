@@ -14,7 +14,7 @@ namespace tahova_RPG_hra.Source.Utils
         {
             int roll = _random.Next(0, 101);
 
-            if (roll < percent)
+            if (roll <= percent)
                 return true;
             else
                 return false;

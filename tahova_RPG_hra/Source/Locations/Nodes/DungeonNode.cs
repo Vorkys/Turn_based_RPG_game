@@ -7,7 +7,7 @@ using tahova_RPG_hra.Source.Core;
 
 namespace tahova_RPG_hra.Source.Locations.Nodes
 {
-    internal class DungeonNode : Node
+    public class DungeonNode : Node
     {
         private int locationId;
 
@@ -20,6 +20,8 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
         public override void Traverse()
         {
+            base.Traverse();
+
             Game.Instance.changeLocation(LocationId);
         }
     }

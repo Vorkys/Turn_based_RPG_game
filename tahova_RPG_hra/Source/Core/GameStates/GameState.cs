@@ -12,7 +12,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
         //TODO
         private InputHandler inputHandler;
 
-        internal InputHandler InputHandler { get => inputHandler; set => inputHandler = value; }
+        public InputHandler InputHandler { get => inputHandler; set => inputHandler = value; }
 
         public abstract void Render();
     }
