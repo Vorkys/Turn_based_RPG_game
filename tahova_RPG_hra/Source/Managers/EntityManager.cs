@@ -14,7 +14,6 @@ namespace tahova_RPG_hra.Source.Managers
     //factory pattern
     class EntityManager
     {
-        //("Player", "asd", null, null, null, 1, 0, 70, 14, 14, 8, 8, null, 5, 5, 2, 1, 6, 0);
         public static Player Player = new(
             name: "Player",
             spritePath: "human.txt",
@@ -32,6 +31,7 @@ namespace tahova_RPG_hra.Source.Managers
             speed: 14,
             money: 0
             );
+
         public static Goblin SmallGoblin = new(
             name: "Small goblin",
             spritePath: "small_goblin.txt",
@@ -102,8 +102,8 @@ namespace tahova_RPG_hra.Source.Managers
         );
 
         public static Human Bandit = new(
-            name: "Small goblin",
-            spritePath: "small_goblin.txt",
+            name: "Bandit",
+            spritePath: "human.txt",
             level: 9,
             maxHealth: 24,
             maxMana: 6,

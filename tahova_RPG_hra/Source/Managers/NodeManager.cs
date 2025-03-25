@@ -40,10 +40,10 @@ namespace tahova_RPG_hra.Source.Managers
 
         //Combat node
         public static CombatNode CombatGrass = new(' ', "Green", "Green", "Green", true, 15, 1, 3, new List<Enemy> { EntityManager.SmallGoblin });
-        public static CombatNode CombatGrassWithPebles = new('.', "Green", "Gray", "Green", true, 15, 1, 3, new List<Enemy> { EntityManager.SmallGoblin });
+        public static CombatNode CombatGrassWithPebles = new('.', "Green", "Gray", "Green", true, 15, 1, 3, new List<Enemy> { EntityManager.SmallGoblin, EntityManager.Goblin });
         public static CombatNode CombatGrassWithBranch = new('-', "Green", "DarkRed", "Green", true, 15, 1, 3, new List<Enemy> { EntityManager.SmallGoblin });
-        public static CombatNode CombatForestA = new('A', "Green", "DarkGreen", "DarkGreen", true, 15, 6, 12, new List<Enemy> { EntityManager.BlackWolve });
-        public static CombatNode CombatForestB = new('T', "Green", "DarkGreen", "DarkGreen", true, 15, 6, 12, new List<Enemy> { EntityManager.BlackWolve });
+        public static CombatNode CombatForestA = new('A', "Green", "DarkGreen", "DarkGreen", true, 15, 6, 12, new List<Enemy> { EntityManager.BlackWolve, EntityManager.BigGoblin });
+        public static CombatNode CombatForestB = new('T', "Green", "DarkGreen", "DarkGreen", true, 15, 6, 12, new List<Enemy> { EntityManager.BlackWolve, EntityManager.Bandit });
 
         //Structures
         public static Node Village = new('m', "Green", "Magenta", "Magenta", true);

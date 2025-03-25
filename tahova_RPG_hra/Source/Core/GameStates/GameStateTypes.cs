@@ -124,7 +124,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
 
             Console.Clear();
-            
+
             //Print dynamic render box
             for (int x = 0; x < consoleRenderBoxHeight; x++)
             {

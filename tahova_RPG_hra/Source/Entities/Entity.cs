@@ -91,7 +91,7 @@ namespace tahova_RPG_hra.Source.Entities
         public Entity(string name, string spritePath, int level, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed)
         {
             this.Name = name;
-            this.SpritePath = null;
+            this.SpritePath = spritePath;
             this.Inventory = null;
             this.Equipment = null;
             this.Target = null;

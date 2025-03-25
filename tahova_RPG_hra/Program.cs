@@ -19,6 +19,7 @@ namespace tahova_RPG_hra
 
             for (int i = 0; i < GlobalConstants.consoleSizeWidth; i++)
                 Console.Write("=");
+            //TODO - add vertical line
 
             Console.WriteLine("\nIf the line above doesnt take exactly 1 line please adapt the size.\n\nWhen done press Enter...");
             Console.ReadLine();
