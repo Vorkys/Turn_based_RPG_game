@@ -111,6 +111,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                             Game.Instance.Pause();
                     }
                     break;
+                //Enemy attack
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
                     if (Game.Instance.GameState is CombatState)
@@ -124,13 +125,12 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                             if (Game.Instance.Player.Target is Enemy)
                             {
                                 Enemy castTarget = (Enemy)Game.Instance.Player.Target;
-                                //castTarget.ChooseMove();
-                                Game.Instance.Player.ReduceHealth(1);
-                                Game.Instance.Player.ReduceMana(1);
+                                castTarget.ChooseMove();
                             }
                         }
                     }
                     break;
+                //Player attack
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
                     if (Game.Instance.GameState is CombatState)
@@ -145,23 +145,22 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                             {
                                 Enemy castTarget = (Enemy)Game.Instance.Player.Target;
                                 castTarget.ReduceHealth(1);
+
+                                if (castTarget.Health <= 0)
+                                    castTarget.Defeated();
                             }
                         }
                     }
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
-                    if (Game.Instance.GameState is CombatState)
-                    {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
+                    //if (Game.Instance.GameState is CombatState)
+                    //{
+                    //    CombatState castGameState = (CombatState)Game.Instance.GameState;
 
-                        if (castGameState.ToConfirmAction)
-                            return false;
-                        else
-                        {
-                            Game.Instance.Player.IncreaseLvl();
-                        }
-                    }
+                    //    if (castGameState.ToConfirmAction)
+                    //        return false;
+                    //}
                     break;
                 default:
                     return false;

@@ -12,16 +12,51 @@ namespace tahova_RPG_hra
     {
         public static void Main(string[] args)
         {
-            Console.SetWindowSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
+            Console.SetWindowSize(GlobalConstants.consoleSizeWidth, GlobalConstants.consoleSizeHeight);
             Console.Clear();
 
-            Console.WriteLine($"Before continuing please make sure the console window size is: {GlobalConstants.consoleSizeWidth}, {GlobalConstants.consoleSizeHeight}.");
+            for (int i = 0; i < GlobalConstants.consoleSizeHeight - 1; i++)
+            {
+                if (i == 0)
+                    Console.WriteLine(new string('=', GlobalConstants.consoleSizeWidth));
+                else if (i == GlobalConstants.consoleSizeHeight - 2)
+                {
+                    Console.Write("H");
+                    break;
+                }
 
-            for (int i = 0; i < GlobalConstants.consoleSizeWidth; i++)
-                Console.Write("=");
-            //TODO - add vertical line
+                for (int k = 0; k < GlobalConstants.consoleSizeWidth; k++)
+                {
+                    if (k == 0)
+                        Console.Write('H');
 
-            Console.WriteLine("\nIf the line above doesnt take exactly 1 line please adapt the size.\n\nWhen done press Enter...");
+                    string text;
+
+                    switch (i)
+                    {
+                        case 1:
+                            text = $" Before continuin please make sure the console window size has width: {GlobalConstants.consoleSizeWidth}, height: {GlobalConstants.consoleSizeHeight}";
+                            Console.Write(text);
+                            k += text.Length - 1;
+                            break;
+                        case 2:
+                            text = " Use the line on top and line on left as markers.";
+                            Console.Write(text);
+                            k += text.Length - 1;
+                            break;
+                        case 4:
+                            text = " When done press Enter...";
+                            Console.Write(text);
+                            k += text.Length - 1;
+                            break;
+                    }
+
+                    break;
+                }
+
+                Console.WriteLine();
+            }
+            
             Console.ReadLine();
             Console.Clear();
 

@@ -231,11 +231,15 @@ namespace tahova_RPG_hra.Source.Entities
             if (lvlDif == 0 || lvlDif == 1)
                 Game.Instance.Player.EntityXP += this.XpDrop;
             //player smaller lvl than enemy and add bonus xp
-            else if (lvlDif <= -3)
+            else if (lvlDif >= -3 && lvlDif < 0)
                 Game.Instance.Player.EntityXP += this.XpDrop + ((this.XpDrop / 10) * -lvlDif);
             //player bigger lvl than enemy then remove some xp up to 80%
             else if (lvlDif > 1 && lvlDif <= 5)
                 Game.Instance.Player.EntityXP += this.XpDrop - ((this.XpDrop / 16) * lvlDif);
+
+            //Check if player level up
+            if (Game.Instance.Player.EntityXP >= Game.Instance.Player.XPtoLevelUp)
+                Game.Instance.Player.IncreaseLvl();
 
             //player add Gold
             Random rand = new Random();

@@ -263,6 +263,9 @@ namespace tahova_RPG_hra.Source.Entities
 
         public bool AddItem(Item item, int amount = 1)
         {
+            if (Inventory == null)
+                return false;
+
             int tmpamount = amount;
 
             for (int i = 0; i < Inventory.Length; i++)
