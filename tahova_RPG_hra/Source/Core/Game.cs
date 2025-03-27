@@ -219,6 +219,21 @@ namespace tahova_RPG_hra.Source.Core
             Instance.ChangeState(GameStateType.Combat);
         }
 
+        public void GameOver()
+        {
+            //this.openDialog([$"You were killed by a {Game.Instance.Player.Target.Name}. :("]);
+            Console.Clear();
+            Console.WriteLine($"You were killed by a {Game.Instance.Player.Target.Name}. :(");
+            Console.WriteLine();
+            Console.WriteLine($"Your name was {this.Player.Name} and your level was {this.Player.Level}.");
+            Console.WriteLine($"Your enemy level was {this.Player.Target.Level} and had {this.Player.Target.Health} HP left.");
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to exit the game...");
+            Console.ReadKey();
+            Environment.Exit(0);
+        }
+
         public void changeLocation(int locationId)
         {
             //TODO

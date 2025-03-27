@@ -325,7 +325,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                     else if (x >= (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length - 1))
                     {
                         //line is pre penultimate of player render box => line has name, lvl and part of sprite
-                        if (x == (consoleRenderBoxHeight - 4))
+                        if (x == (consoleRenderBoxHeight - 5))
                         {
                             //add sprite line
                             string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
@@ -339,8 +339,8 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             Console.Write(line);
                             y += line.Length - 1;
                         }
-                        //line is penultimate of player render box => line has part of sprite, hp(%) and amount of hp
-                        else if (x == (consoleRenderBoxHeight - 3))
+                        //line is pre pre penultimate of player render box => line has part of sprite, hp(%) and amount of hp
+                        else if (x == (consoleRenderBoxHeight - 4))
                         {
                             //add sprite part
                             string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
@@ -351,15 +351,15 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             else
                                 line += $"({new string('=', healthPercent)}{new string('-', 30 - healthPercent)})";
                             //add health counter
-                            line += $" {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}";
+                            line += $" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}";
                             //add white spaces
                             line += new string(' ', consoleRenderBoxWidth - line.Length);
 
                             Console.Write(line);
                             y += line.Length - 1;
                         }
-                        //line is penultimate of player render box => line has part of sprite, mana(%) and amount of mana
-                        else if (x == (consoleRenderBoxHeight - 2))
+                        //line is pre penultimate of player render box => line has part of sprite, mana(%) and amount of mana
+                        else if (x == (consoleRenderBoxHeight - 3))
                         {
                             //add sprite part
                             string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
@@ -370,7 +370,26 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             else
                                 line += $"({new string('~', healthPercent)}{new string('-', 30 - healthPercent)})";
                             //add health counter
-                            line += $" {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}";
+                            line += $" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}";
+                            //add white spaces
+                            line += new string(' ', consoleRenderBoxWidth - line.Length);
+
+                            Console.Write(line);
+                            y += line.Length - 1;
+                        }
+                        //line is penultimate of player render box => line has part of sprite, xp(%) and amount of xp
+                        else if (x == (consoleRenderBoxHeight - 2))
+                        {
+                            //add sprite part
+                            string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
+                            //add life in percentage
+                            int healthPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
+                            if (healthPercent < 0)
+                                line += $"({new string('-', 30)})";
+                            else
+                                line += $"|{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}|";
+                            //add health counter
+                            line += $" XP: {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}";
                             //add white spaces
                             line += new string(' ', consoleRenderBoxWidth - line.Length);
 

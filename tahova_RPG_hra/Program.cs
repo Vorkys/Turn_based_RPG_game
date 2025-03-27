@@ -15,10 +15,13 @@ namespace tahova_RPG_hra
             Console.SetWindowSize(GlobalConstants.consoleSizeWidth, GlobalConstants.consoleSizeHeight);
             Console.Clear();
 
-            for (int i = 0; i < GlobalConstants.consoleSizeHeight - 1; i++)
+            for (int i = 0; i < GlobalConstants.consoleSizeHeight; i++)
             {
                 if (i == 0)
+                {
                     Console.WriteLine(new string('=', GlobalConstants.consoleSizeWidth));
+                    continue;
+                }
                 else if (i == GlobalConstants.consoleSizeHeight - 2)
                 {
                     Console.Write("H");

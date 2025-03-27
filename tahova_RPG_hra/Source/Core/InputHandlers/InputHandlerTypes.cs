@@ -126,6 +126,8 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                             {
                                 Enemy castTarget = (Enemy)Game.Instance.Player.Target;
                                 castTarget.ChooseMove();
+                                if (Game.Instance.Player.Health <= 0)
+                                    Game.Instance.GameOver();
                             }
                         }
                     }

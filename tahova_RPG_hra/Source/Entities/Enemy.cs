@@ -230,7 +230,7 @@ namespace tahova_RPG_hra.Source.Entities
             //player same lvl as enemy
             if (lvlDif == 0 || lvlDif == 1)
                 Game.Instance.Player.EntityXP += this.XpDrop;
-            //player smaller lvl than enemy and add bonus xp
+            //player smaller lvl than enemy and add bonus xp up to 30%
             else if (lvlDif >= -3 && lvlDif < 0)
                 Game.Instance.Player.EntityXP += this.XpDrop + ((this.XpDrop / 10) * -lvlDif);
             //player bigger lvl than enemy then remove some xp up to 80%

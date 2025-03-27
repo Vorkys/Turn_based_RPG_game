@@ -27,6 +27,8 @@ namespace tahova_RPG_hra.Source.Entities
             if (Level == MaxLevel)
                 return;
 
+            int xpOverflow = EntityXP - XPtoLevelUp;
+
             while (numberOfLvls > 0)
             {
                 //huge upgrade
@@ -62,6 +64,7 @@ namespace tahova_RPG_hra.Source.Entities
 
             this.Health = MaxHealth;
             this.Mana = MaxMana;
+            this.EntityXP = xpOverflow;
         }
     }
 }
