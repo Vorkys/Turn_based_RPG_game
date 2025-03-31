@@ -316,24 +316,30 @@ namespace tahova_RPG_hra.Source.Entities
         {
             bool miss = Roll.RollDice(MissChance);
 
+            Player test1 = Game.Instance.Player;
+            Enemy test2 = (Enemy)Game.Instance.Player.Target;
+
             if (miss)
                 Target.ReduceHealth(0);
 
-            double attackDif = 0;
-            int percentilChange = 10;
+            double attackDif;
             Random rand = new Random();
 
             //rand num 0.9 || 1.0 || 1.1
-            attackDif = rand.Next(9, 12) / percentilChange;
+            attackDif = rand.Next(9, 12) / 10.0;
 
-            int change = Convert.ToInt32(damage * attackDif);
+            double _change = (damage * attackDif) - Damage;
+            int change = Convert.ToInt32(_change);
 
             bool critical = Roll.RollDice(CriticalHitChance);
 
             if (critical)
-                Target.ReduceHealth(2 * change);
+                Target.ReduceHealth(2 * (Damage + change));
             else
-                Target.ReduceHealth(change);
+                Target.ReduceHealth(Damage + change);
+
+            test1 = Game.Instance.Player;
+            test2 = (Enemy)Game.Instance.Player.Target;
         }
     }
 }

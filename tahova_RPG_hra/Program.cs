@@ -63,9 +63,20 @@ namespace tahova_RPG_hra
             Console.ReadLine();
             Console.Clear();
 
-            string _fileName = "SERIALIZED_mainMap.json";
+            string _fileName = null;
 
-            Game.Instance.Load(_fileName);
+            Console.WriteLine("Insert name of map you want to load (make sure the map is located in: *yourProgramFolder*/Maps/): ");
+            _fileName = Console.ReadLine();
+
+            if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", _fileName)))
+                Game.Instance.Load(_fileName);
+            else
+            {
+                Console.WriteLine("Invalid file name. Please make sure the map name is SAME as your input.");
+                Console.WriteLine("Press any key to exit program...");
+                Console.ReadKey();
+                Environment.Exit(1);
+            }
 
             while (true)
             {
