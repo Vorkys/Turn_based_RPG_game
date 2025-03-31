@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core.InputHandlers;
 using tahova_RPG_hra.Source.Utils;
 using tahova_RPG_hra.Source.Entities;
+using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
@@ -220,17 +221,27 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
     class CombatState : GameState
     {
-        private string entityAction;
+        private string combatDialog;
         private bool toConfirmAction;
+        private bool showSpells;
+        private bool showItems;
+        private int listElementId;
 
         public CombatState()
         {
             InputHandler = new CombatHandler();
-            EntityAction = null;
+            CombatDialog = null;
+            ToConfirmDialog = false;
+            ShowSpells = false;
+            ShowItems = false;
+            ListElementId = 0;
         }
 
-        public string EntityAction { get => entityAction; set => entityAction = value; }
-        public bool ToConfirmAction { get => toConfirmAction; set => toConfirmAction = value; }
+        public string CombatDialog { get => combatDialog; set => combatDialog = value; }
+        public bool ToConfirmDialog { get => toConfirmAction; set => toConfirmAction = value; }
+        public bool ShowSpells { get => showSpells; set => showSpells = value; }
+        public bool ShowItems { get => showItems; set => showItems = value; }
+        public int ListElementId { get => listElementId; set => listElementId = value; }
 
         public override void Render()
         {
@@ -288,9 +299,9 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             //add life in percentage
                             int healthPercent = (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth;
                             if (healthPercent < 0)
-                                line += $"({new string('-', 30)})";
+                                line += $"<{new string('-', 30)}>";
                             else
-                                line += $"({new string('=', healthPercent)}{new string('-', 30 - healthPercent)})";
+                                line += $"<{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}>";
 
                             line += Game.Instance.Player.Target.Sprite[x - 1];
 
@@ -347,9 +358,9 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             //add life in percentage
                             int healthPercent = (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth;
                             if (healthPercent < 0)
-                                line += $"({new string('-', 30)})";
+                                line += $"<{new string('-', 30)}>";
                             else
-                                line += $"({new string('=', healthPercent)}{new string('-', 30 - healthPercent)})";
+                                line += $"<{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}>";
                             //add health counter
                             line += $" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}";
                             //add white spaces
@@ -366,9 +377,9 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             //add life in percentage
                             int healthPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
                             if (healthPercent < 0)
-                                line += $"({new string('-', 30)})";
+                                line += $"<{new string('-', 30)}>";
                             else
-                                line += $"({new string('~', healthPercent)}{new string('-', 30 - healthPercent)})";
+                                line += $"<{new string('~', healthPercent)}{new string('-', 30 - healthPercent)}>";
                             //add health counter
                             line += $" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}";
                             //add white spaces
@@ -384,10 +395,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
                             //add life in percentage
                             int healthPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
-                            if (healthPercent < 0)
-                                line += $"({new string('-', 30)})";
-                            else
-                                line += $"|{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}|";
+                            line += $"|{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}|";
                             //add health counter
                             line += $" XP: {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}";
                             //add white spaces
@@ -421,15 +429,35 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
             string[] keybinds;
 
-            if (EntityAction != null)
-                ToConfirmAction = true;
-            else
-                ToConfirmAction = false;
+            //if (CombatDialog != null)
+            //    ToConfirmDialog = true;
+            //else
+            //    ToConfirmDialog = false;
 
-            if (!ToConfirmAction)
-                keybinds = ["[ESC] - Pause", "[Spacebar/Enter] - Confirm"];
-            else
+            ToConfirmDialog = false;
+
+            if (ToConfirmDialog)
                 keybinds = ["[ESC/SpaceBar/Enter] - Confirm"];
+            else if (ShowSpells)
+            {
+                keybinds = ["[A/<] - Previous spell", "[D/>] - Next spell", "[SpaceBar/Enter] - Cast", "[ESC] - back"];
+                if (Game.Instance.Player.Spells.Count > 0)
+                    CombatDialog = $"{Game.Instance.Player.Spells[ListElementId].Name} ({Game.Instance.Player.Spells[ListElementId].Cost}): {Game.Instance.Player.Spells[ListElementId].Description} ({Game.Instance.Player.Spells[ListElementId].Power}).";
+                else
+                    CombatDialog = "You have no spells.";
+            }
+            else if (ShowItems)
+            {
+                if (Game.Instance.Player.Inventory[ListElementId] is Consumable)
+                    keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[SpaceBar/Enter] - Use", "[ESC] - back"];
+                else
+                    keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[ESC] - back"];
+
+                CombatDialog = $"{Game.Instance.Player.Inventory[ListElementId].Name}: {Game.Instance.Player.Inventory[ListElementId].Description}.";
+            }
+            else
+                keybinds = ["[Q] - Attack enemy", "[W] - Show spells", "[E] - Show items", "[ESC] - Pause", "[Spacebar/Enter] - Confirm"];
+
             int tmpId = 0;
 
             //print informations box
@@ -447,14 +475,14 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                     //border 'H'
                     if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
-                    //print entity action
-                    else if (EntityAction != null)
+                    //print combat dialog
+                    else if (CombatDialog != null)
                     {
-                        if (EntityAction.Length < (GlobalConstants.consoleSizeWidth - y))
+                        if (CombatDialog.Length < (GlobalConstants.consoleSizeWidth - y))
                         {
-                            Console.Write($" {EntityAction} ");
-                            y += EntityAction.Length + 1;
-                            EntityAction = null;
+                            Console.Write($" {CombatDialog} ");
+                            y += CombatDialog.Length + 1;
+                            CombatDialog = null;
                         }
                     }
                     //print keybinds
@@ -473,6 +501,30 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 }
 
                 Console.WriteLine();
+            }
+        }
+
+        public void NextElement()
+        {
+            if (ShowSpells && ListElementId < Game.Instance.Player.Spells.Count - 1)
+            {
+                ListElementId++;
+            }
+            else if (ShowItems && ListElementId < Game.Instance.Player.Inventory.Length - 1)
+            {
+                ListElementId++;
+            }
+        }
+
+        public void PreviousElement()
+        {
+            if (ShowSpells && ListElementId > 0)
+            {
+                ListElementId--;
+            }
+            else if (ShowItems && ListElementId > 0)
+            {
+                ListElementId--;
             }
         }
     }

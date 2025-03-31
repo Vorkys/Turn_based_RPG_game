@@ -11,6 +11,7 @@ using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Spells;
 using tahova_RPG_hra.Source.Statuses;
+using tahova_RPG_hra.Source.Utils;
 
 namespace tahova_RPG_hra.Source.Entities
 {
@@ -296,6 +297,30 @@ namespace tahova_RPG_hra.Source.Entities
             this.Equipment[(int)item.Slot] = item;
             this.RemoveItem(item);
             this.AddItem(tmpItem);
+        }
+
+        public virtual void AttackTarget(int damage)
+        {
+            bool miss = Roll.RollDice(MissChance);
+
+            if (miss)
+                Target.ReduceHealth(0);
+
+            double attackDif = 0;
+            int percentilChange = 10;
+            Random rand = new Random();
+
+            //rand num 0.9 || 1.0 || 1.1
+            attackDif = rand.Next(9, 12) / percentilChange;
+
+            int change = Convert.ToInt32(damage * attackDif);
+
+            bool critical = Roll.RollDice(CriticalHitChance);
+
+            if (critical)
+                Target.ReduceHealth(2 * change);
+            else
+                Target.ReduceHealth(change);
         }
     }
 }

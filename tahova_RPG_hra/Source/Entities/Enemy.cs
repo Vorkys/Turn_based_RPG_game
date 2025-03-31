@@ -152,7 +152,7 @@ namespace tahova_RPG_hra.Source.Entities
                         {
                             //TODO - BP text "cast"
                             CombatState castGameState = (CombatState)Game.Instance.GameState;
-                            castGameState.EntityAction = $"{Name} used {Inventory[id].Name}.";
+                            castGameState.CombatDialog = $"{Name} used {Inventory[id].Name}.";
                         }
 
                         this.RemoveItem(Inventory[id]);
@@ -177,12 +177,12 @@ namespace tahova_RPG_hra.Source.Entities
             //attack
             if (random == 0)
             {
-                this.Target.ReduceHealth(this.Damage);
+                this.AttackTarget(this.Damage);
 
                 if (Game.Instance.GameState is CombatState)
                 {
                     CombatState castGameState = (CombatState)Game.Instance.GameState;
-                    castGameState.EntityAction = $"{Name} attacked {Game.Instance.Player.Name}.";
+                    castGameState.CombatDialog = $"{Name} attacked {Game.Instance.Player.Name}.";
                 }
 
                 return true;
@@ -198,7 +198,7 @@ namespace tahova_RPG_hra.Source.Entities
                         if (Game.Instance.GameState is CombatState)
                         {
                             CombatState castGameState = (CombatState)Game.Instance.GameState;
-                            castGameState.EntityAction = $"{Name} casted {Spells[random].Name}.";
+                            castGameState.CombatDialog = $"{Name} casted {Spells[random].Name}.";
                         }
                         return true;
                     }
@@ -255,6 +255,16 @@ namespace tahova_RPG_hra.Source.Entities
 
             Game.Instance.Player.Target = null;
             Game.Instance.ChangeState(GameStateType.Exploration);
+        }
+
+        public override void AttackTarget(int damage)
+        {
+            base.AttackTarget(damage);
+
+            if (this.Target.Health <= 0)
+                Game.Instance.GameOver();
+            else if (this.Health <= 0)
+                this.Defeated();
         }
     }
 }
