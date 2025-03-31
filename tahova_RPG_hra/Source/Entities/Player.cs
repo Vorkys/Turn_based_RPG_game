@@ -13,7 +13,7 @@ using tahova_RPG_hra.Source.Statuses;
 
 namespace tahova_RPG_hra.Source.Entities
 {
-    internal class Player : Entity
+    public class Player : Entity
     {
         private int immuneMoves;
 
@@ -23,7 +23,9 @@ namespace tahova_RPG_hra.Source.Entities
             Spells = new List<Spell>();
             Inventory = [null, null, null, null, null, null];
 
-            this.AddItem(ItemManager.SmallHealthPotion, 3);
+            this.AddItem(ItemManager.SmallHealthPotion);
+            this.AddItem(ItemManager.SmallHealthPotion);
+            this.AddItem(ItemManager.SmallHealthPotion);
         }
 
         public int ImmuneMoves { get => immuneMoves; set => immuneMoves = value; }

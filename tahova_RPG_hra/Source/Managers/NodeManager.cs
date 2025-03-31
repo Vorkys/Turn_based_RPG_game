@@ -47,7 +47,8 @@ namespace tahova_RPG_hra.Source.Managers
 
         //Structures
         public static Node Village = new('m', "Green", "Magenta", "Magenta", true);
-        public static Node Town1 = new('M', "Green", "Magenta", "Magenta", true);
+        //public static Node Town1 = new('M', "Green", "Magenta", "Magenta", true);
+        public static TownNode Town1 = new('M', "Green", "Magenta", "Magenta", true, "Organa", "A medium sized town.", "organa.txt", null);
         public static Node Town2 = new('M', "Green", "Magenta", "Magenta", true);
         public static Node Town3 = new('M', "Yellow", "Magenta", "Magenta", true);
         public static Node Town4 = new('m', "Gray", "Magenta", "Magenta", true);

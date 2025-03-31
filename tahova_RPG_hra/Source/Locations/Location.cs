@@ -7,19 +7,13 @@ using tahova_RPG_hra.Source.Locations.Nodes;
 
 namespace tahova_RPG_hra.Source.Locations
 {
-    internal class Location
+    public class Location
     {
         private List<List<Node>> map;
         private int entryX;
         private int entryY;
         private int playerX;
         private int playerY;
-
-        public List<List<Node>> Map { get => map; set => map = value; }
-        public int EntryX { get => entryX; set => entryX = value; }
-        public int EntryY { get => entryY; set => entryY = value; }
-        public int PlayerX { get => playerX; set => playerX = value; }
-        public int PlayerY { get => playerY; set => playerY = value; }
 
         public Location(List<List<Node>> location, int entryX, int entryY, int playerX, int playerY)
         {
@@ -38,6 +32,12 @@ namespace tahova_RPG_hra.Source.Locations
             this.PlayerX = -1;
             this.PlayerY = -1;
         }
+
+        public List<List<Node>> Map { get => map; set => map = value; }
+        public int EntryX { get => entryX; set => entryX = value; }
+        public int EntryY { get => entryY; set => entryY = value; }
+        public int PlayerX { get => playerX; set => playerX = value; }
+        public int PlayerY { get => playerY; set => playerY = value; }
 
         public void writeMap()
         {

@@ -8,6 +8,7 @@ using tahova_RPG_hra.Source.Utils;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.GameObjects.Items;
+using tahova_RPG_hra.Source.Locations.Nodes;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
@@ -454,12 +455,12 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 if (Game.Instance.Player.Inventory[ListElementId] is Consumable)
                 {
                     keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[SpaceBar/Enter] - Use", "[ESC] - back"];
-                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}: {Game.Instance.Player.Inventory[ListElementId].Description}";
+                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}({Game.Instance.Player.Inventory[ListElementId].Quantity}): {Game.Instance.Player.Inventory[ListElementId].Description}";
                 }
                 else if (Game.Instance.Player.Inventory[ListElementId] is Item)
                 {
                     keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[ESC] - back"];
-                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}: {Game.Instance.Player.Inventory[ListElementId].Description}";
+                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}({Game.Instance.Player.Inventory[ListElementId].Quantity}): {Game.Instance.Player.Inventory[ListElementId].Description}";
                 }
                 else
                 {
@@ -731,7 +732,84 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
-            throw new NotImplementedException();
+            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
+            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
+
+            Console.Clear();
+
+            //Print dynamic render box
+            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            {
+                //divider '='
+                if (x == 0 || x == (consoleRenderBoxHeight - 1))
+                {
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+
+                    if (x != (GlobalConstants.consoleSizeHeight - 1))
+                        Console.WriteLine();
+
+                    continue;
+                }
+
+                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                {
+                    //border 'H'
+                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
+                        Console.Write('H');
+                    else if ((x - 1) == consoleRenderBoxHeight / 2)
+                    {
+                        int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
+                        int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
+                        TownNode town = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX][playerPosY];
+
+                        string text = $"{town.Name} - {town.Description}";
+                        string line = $"{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}{text}{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}";
+                        Console.Write(line);
+                        y += line.Length - 1;
+                    }
+                    else
+                        Console.Write(' ');
+                }
+
+                Console.WriteLine();
+            }
+
+            //string[] keybinds = ["[Q] - Organised combat", $"[W] - Tavern (heal)", $"[E] - Save game", "[ESC] - Exit Town"];
+            string[] keybinds = ["[W] - Tavern (heal)", "[ESC] - Exit Town"];
+            int tmpId = 0;
+
+            //print informations box
+            for (int x = 0; x < 4; x++)
+            {
+                //divider '='
+                if (x == 3)
+                {
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                    continue;
+                }
+
+                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                {
+                    //border 'H'
+                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
+                        Console.Write('H');
+                    //print keybinds
+                    else if (tmpId < keybinds.Length)
+                    {
+                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
+                        {
+                            Console.Write($" {keybinds[tmpId]} ");
+                            y += keybinds[tmpId].Length + 1;
+                            tmpId++;
+                        }
+                    }
+                    //empty
+                    else
+                        Console.Write(' ');
+                }
+
+                Console.WriteLine();
+            }
         }
     }
 

@@ -64,30 +64,6 @@ namespace tahova_RPG_hra.Source.Entities
             this.Money = money;
         }
 
-        //Ally ct
-        public Entity(string name, string spritePath, Item[] inventory, Equippable[] equipment, Entity target, int level, int entityXP, int xPtoLevelUp, int health, int maxHealth, int mana, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int money)
-        {
-            this.Name = name;
-            this.SpritePath = spritePath;
-            this.Inventory = inventory;
-            this.Equipment = equipment;
-            this.Target = target;
-            this.Level = level;
-            this.EntityXP = entityXP;
-            this.XPtoLevelUp = xPtoLevelUp;
-            this.Health = health;
-            this.MaxHealth = maxHealth;
-            this.Mana = mana;
-            this.MaxMana = maxMana;
-            this.Spells = spells;
-            this.Damage = damage;
-            this.CriticalHitChance = criticalHitChance;
-            this.MissChance = missChance;
-            this.Armor = armor;
-            this.Speed = speed;
-            this.Money = money;
-        }
-
         //Enemy ct
         public Entity(string name, string spritePath, int level, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed)
         {
@@ -264,11 +240,10 @@ namespace tahova_RPG_hra.Source.Entities
 
         public bool AddItem(Item item, int amount = 1)
         {
-            if (Inventory == null)
+            if (Inventory == null || item == null)
                 return false;
 
             int tmpAmount = amount;
-            item.Owner = this;
 
             for (int i = 0; i < Inventory.Length; i++)
             {
@@ -283,7 +258,7 @@ namespace tahova_RPG_hra.Source.Entities
                         Inventory[i].Quantity -= amount;
                     }
                 }
-                else if (Inventory[i].Name == item.Name)
+                else if (Inventory[i].Name == item.Name && Inventory[i].Quantity < Inventory[i].MaxQuantity)
                 {
                     Inventory[i].Quantity += amount;
                     amount = 0;

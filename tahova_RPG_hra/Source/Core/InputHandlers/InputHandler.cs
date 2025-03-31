@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace tahova_RPG_hra.Source.Core.InputHandlers
 {
-    abstract class InputHandler
+    public abstract class InputHandler
     {
         public abstract bool handle(ConsoleKey inputKey);
     }

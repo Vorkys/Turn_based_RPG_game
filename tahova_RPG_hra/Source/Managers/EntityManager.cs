@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.Entities;
+using tahova_RPG_hra.Source.Entities.AllyRoles;
 using tahova_RPG_hra.Source.Entities.EnemyTypes;
 using tahova_RPG_hra.Source.Spells;
 using static tahova_RPG_hra.Source.Entities.Enemy;
@@ -30,6 +31,26 @@ namespace tahova_RPG_hra.Source.Managers
             armor: 2,
             speed: 14,
             money: 0
+            );
+
+        public static ArenaOrganisator Organisator = new(
+            name: "Town arena organisator",
+            spritePath: "human.txt",
+            inventory: null,
+            equipment: null,
+            level: 1,
+            xPtoLevelUp: 70,
+            maxHealth: 14,
+            maxMana: 7,
+            spells: null,
+            damage: 6,
+            criticalHitChance: 4,
+            missChance: 2,
+            armor: 2,
+            speed: 14,
+            money: 0,
+            quests: null,
+            enemies: new List<Enemy>{SmallGoblin, Goblin}
             );
 
         public static Goblin SmallGoblin = new(

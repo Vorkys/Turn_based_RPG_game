@@ -69,6 +69,8 @@ namespace tahova_RPG_hra
             _fileName = Console.ReadLine();
 
             if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", _fileName)))
+                Game.Instance.LoadMap(_fileName);
+            else if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "savefiles", _fileName)))
                 Game.Instance.Load(_fileName);
             else
             {
@@ -77,6 +79,8 @@ namespace tahova_RPG_hra
                 Console.ReadKey();
                 Environment.Exit(1);
             }
+
+            //Game tmp = Game.Instance;
 
             while (true)
             {

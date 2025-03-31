@@ -65,7 +65,8 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
 
         public virtual void Traverse()
         {
-            Game.Instance.Player.ImmuneMoves--;
+            if (Game.Instance.Player.ImmuneMoves > 0)
+                Game.Instance.Player.ImmuneMoves--;
         }
     }
 }

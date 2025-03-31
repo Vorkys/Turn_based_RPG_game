@@ -29,13 +29,13 @@ namespace tahova_RPG_hra.Source.Spells
             this.MissChance = missChance;
         }
 
+        internal Entity Caster { get => caster; set => caster = value; }
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }
         public int Cost { get => cost; set => cost = value; }
         public int Power { get => power; set => power = value; }
         public int CriticalHitChance { get => criticalHitChance; set => criticalHitChance = value; }
         public int MissChance { get => missChance; set => missChance = value; }
-        internal Entity Caster { get => caster; set => caster = value; }
 
         public abstract int Cast();
     }

@@ -7,7 +7,7 @@ using tahova_RPG_hra.Source.Core.InputHandlers;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
-    abstract class GameState
+    public abstract class GameState
     {
         //TODO
         private InputHandler inputHandler;

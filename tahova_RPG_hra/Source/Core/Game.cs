@@ -14,6 +14,7 @@ using tahova_RPG_hra.Source.Locations;
 using tahova_RPG_hra.Source.Locations.Nodes;
 using tahova_RPG_hra.Source.Managers;
 using tahova_RPG_hra.Source.Quests;
+using tahova_RPG_hra.Source.Spells;
 
 namespace tahova_RPG_hra.Source.Core
 {
@@ -30,7 +31,7 @@ namespace tahova_RPG_hra.Source.Core
         Trading
     }
 
-    internal class Game
+    public class Game
     {
         private static readonly Game _instance = new Game();
         private Dictionary<GameStateType, GameState> gameStateMap;
@@ -87,7 +88,7 @@ namespace tahova_RPG_hra.Source.Core
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + ".json";
+            string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{Player.Name}" + ".json";
             string filePath = Path.Combine(folderPath, fileName);
 
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -95,9 +96,9 @@ namespace tahova_RPG_hra.Source.Core
             File.WriteAllText(filePath, jsonString);
         }
 
-        public void Load(string _fileName)
+        public void LoadMap(string _fileName)
         {
-            //deserialize
+            //deserialize map
             try
             {
                 string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Maps");
@@ -109,6 +110,24 @@ namespace tahova_RPG_hra.Source.Core
                 var deserializedList = JsonSerializer.Deserialize<List<List<Node>>>(json, options);
                 Location map = new(deserializedList, 23,78, 23, 78);
                 Maps.Add(map);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        public void Load(string _fileName)
+        {
+            //deserialize game
+            try
+            {
+                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "savefiles");
+                string fileName = Path.Combine(folderPath, _fileName);
+
+                string json = File.ReadAllText(fileName);
+
+                var deserializedList = JsonSerializer.Deserialize<Game>(json);
             }
             catch (Exception ex)
             {
@@ -169,6 +188,10 @@ namespace tahova_RPG_hra.Source.Core
                 Instance.Maps[ActiveMap].PlayerX = destinationX;
                 Instance.Maps[ActiveMap].PlayerY = destinationY;
                 Instance.Maps[ActiveMap].Map[destinationX][destinationY].Traverse();
+
+                //save new player coords
+                Instance.Maps[ActiveMap].PlayerX = destinationX;
+                Instance.Maps[ActiveMap].PlayerY = destinationY;
             }
         }
 
@@ -214,8 +237,26 @@ namespace tahova_RPG_hra.Source.Core
 
         public void startCombat(Enemy enemy)
         {
+            //set targets
             Instance.Player.Target = enemy;
             Instance.Player.Target.Target = Instance.Player;
+
+            //set owners and casters
+            foreach (Item item in Instance.Player.Inventory)
+                if (item != null)
+                    item.Owner = Instance.Player;
+            foreach (Spell spell in Instance.Player.Spells)
+                if (spell != null)
+                    spell.Caster = Instance.Player;
+
+            if (enemy.Inventory != null)
+                foreach (Item item in enemy.Inventory)
+                    if (item != null)
+                        item.Owner = enemy;
+            if (enemy.Spells != null)
+                foreach (Spell spell in enemy.Spells)
+                        spell.Caster = enemy;
+
             Instance.ChangeState(GameStateType.Combat);
         }
 
@@ -241,7 +282,7 @@ namespace tahova_RPG_hra.Source.Core
 
         public void openTown(TownNode town)
         {
-            //TODO
+            Instance.ChangeState(GameStateType.Town);
         }
 
         public void openExploration()
