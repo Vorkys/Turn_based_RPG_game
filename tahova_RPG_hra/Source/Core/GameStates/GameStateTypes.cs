@@ -506,6 +506,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             y += keybinds[tmpId].Length + 1;
                             tmpId++;
                         }
+                        //keybind is too long
                         else
                             Console.Write(' ');
                     }
