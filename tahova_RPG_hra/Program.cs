@@ -22,7 +22,7 @@ namespace tahova_RPG_hra
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
                     continue;
                 }
-                else if (i == GlobalConstants.consoleSizeHeight - 2)
+                else if (i == GlobalConstants.consoleSizeHeight - 1)
                 {
                     Console.Write("H");
                     break;

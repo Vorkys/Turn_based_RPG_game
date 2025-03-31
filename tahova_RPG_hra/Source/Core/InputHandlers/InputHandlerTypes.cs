@@ -69,8 +69,9 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.Escape:
                     Game.Instance.Pause();
                     break;
+                //TODO - DEBUG add player lvl for spells
                 case ConsoleKey.Q:
-                    Game.Instance.Player.IncreaseLvl();
+                    Game.Instance.Player.IncreaseLvl(2);
                     break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
@@ -106,15 +107,22 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
         {
             switch (inputKey)
             {
+                //Close/Cancel action or menu
                 case ConsoleKey.Escape:
                     if (Game.Instance.GameState is CombatState)
                     {
                         CombatState castGameState = (CombatState)Game.Instance.GameState;
 
                         if (castGameState.ShowSpells)
+                        {
                             castGameState.ShowSpells = false;
+                            castGameState.ListElementId = 0;
+                        }
                         else if (castGameState.ShowItems)
+                        {
                             castGameState.ShowItems = false;
+                            castGameState.ListElementId = 0;
+                        }
                         else if (!castGameState.ToConfirmDialog)
                             Game.Instance.Pause();
                     }
@@ -126,7 +134,16 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                         CombatState castGameState = (CombatState)Game.Instance.GameState;
 
                         if (!castGameState.ToConfirmDialog && !castGameState.ShowSpells && !castGameState.ShowItems)
+                        {
                             Game.Instance.Player.AttackTarget(Game.Instance.Player.Damage);
+                            
+                            //Check if target is still alive
+                            if (Game.Instance.Player.Target != null)
+                            {
+                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
+                                castEnemy.ChooseMove();
+                            }   
+                        }
                         else
                             return false;
                     }
@@ -165,13 +182,10 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                             return false;
                         else
                         {
-                            if (Game.Instance.Player.Target is Enemy)
-                            {
-                                Enemy castTarget = (Enemy)Game.Instance.Player.Target;
-                                castTarget.ChooseMove();
-                                if (Game.Instance.Player.Health <= 0)
-                                    Game.Instance.GameOver();
-                            }
+                            Game.Instance.Player.ReduceHealth(1);
+
+                            if (Game.Instance.Player.Health <= 0)
+                                Game.Instance.GameOver();
                         }
                     }
                     break;
@@ -188,39 +202,41 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                             if (Game.Instance.Player.Target is Enemy)
                             {
                                 Enemy castTarget = (Enemy)Game.Instance.Player.Target;
-                                castTarget.AttackTarget(1);
+                                castTarget.ReduceHealth(1);
+
+                                if (castTarget.Health <= 0)
+                                    castTarget.Defeated();
                             }
                         }
                     }
                     break;
+                //Previous item of list when list is open
                 case ConsoleKey.A:
                 case ConsoleKey.LeftArrow:
                     if (Game.Instance.GameState is CombatState)
                     {
                         CombatState castGameState = (CombatState)Game.Instance.GameState;
 
-                        if (!castGameState.ToConfirmDialog && castGameState.ShowSpells)
-                            castGameState.PreviousElement();
-                        else if (!castGameState.ToConfirmDialog && castGameState.ShowItems)
+                        if (!castGameState.ToConfirmDialog && (castGameState.ShowSpells || castGameState.ShowItems))
                             castGameState.PreviousElement();
                         else
                             return false;
                     }
                     break;
+                //Next item of list when list is open
                 case ConsoleKey.D:
                 case ConsoleKey.RightArrow:
                     if (Game.Instance.GameState is CombatState)
                     {
                         CombatState castGameState = (CombatState)Game.Instance.GameState;
 
-                        if (!castGameState.ToConfirmDialog && castGameState.ShowSpells)
-                            castGameState.NextElement();
-                        else if (!castGameState.ToConfirmDialog && castGameState.ShowItems)
+                        if (!castGameState.ToConfirmDialog && (castGameState.ShowSpells || castGameState.ShowItems))
                             castGameState.NextElement();
                         else
                             return false;
                     }
                     break;
+                //Confirm action
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     if (Game.Instance.GameState is CombatState)
@@ -228,9 +244,39 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                         CombatState castGameState = (CombatState)Game.Instance.GameState;
 
                         if (castGameState.ShowSpells && Game.Instance.Player.Spells.Count > 0)
+                        {
                             Game.Instance.Player.Spells[castGameState.ListElementId].Cast();
+                            
+                            //Check if target is still alive
+                            if (Game.Instance.Player.Target != null)
+                            {
+                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
+                                castEnemy.ChooseMove();
+                            }
+
+                            //reset combat state
+                            castGameState.ShowSpells = false;
+                            castGameState.ShowItems = false;
+                            castGameState.ListElementId = 0;
+                            castGameState.CombatDialog = null;
+                        }
                         else if (castGameState.ShowItems && Game.Instance.Player.Inventory[castGameState.ListElementId] is Consumable)
+                        {
                             Game.Instance.Player.Inventory[castGameState.ListElementId].Use();
+
+                            //Check if target is still alive
+                            if (Game.Instance.Player.Target != null)
+                            {
+                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
+                                castEnemy.ChooseMove();
+                            }
+
+                            //reset combat state
+                            castGameState.ShowSpells = false;
+                            castGameState.ShowItems = false;
+                            castGameState.ListElementId = 0;
+                            castGameState.CombatDialog = null;
+                        }
                         else if (!castGameState.ToConfirmDialog)
                             return false;
                     }

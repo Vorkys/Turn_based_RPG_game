@@ -267,11 +267,23 @@ namespace tahova_RPG_hra.Source.Entities
             if (Inventory == null)
                 return false;
 
-            int tmpamount = amount;
+            int tmpAmount = amount;
+            item.Owner = this;
 
             for (int i = 0; i < Inventory.Length; i++)
             {
-                if (Inventory[i].Name == item.Name || Inventory[i] == null)
+                if (Inventory[i] == null)
+                {
+                    Inventory[i] = item;
+                    amount -= item.Quantity;
+
+                    if (Inventory[i].Quantity > Inventory[i].MaxQuantity)
+                    {
+                        amount = Inventory[i].Quantity - Inventory[i].MaxQuantity;
+                        Inventory[i].Quantity -= amount;
+                    }
+                }
+                else if (Inventory[i].Name == item.Name)
                 {
                     Inventory[i].Quantity += amount;
                     amount = 0;
@@ -282,13 +294,14 @@ namespace tahova_RPG_hra.Source.Entities
                         Inventory[i].Quantity -= amount;
                     }
                 }
+                
 
                 if (amount == 0)
                     break;
             }
 
             //true = amount has changed (some item looted), false = amount hasnt changed (nothing looted)
-            return tmpamount != amount ? true : false;
+            return tmpAmount != amount ? true : false;
         }
 
         public void Equip(Equippable item)
