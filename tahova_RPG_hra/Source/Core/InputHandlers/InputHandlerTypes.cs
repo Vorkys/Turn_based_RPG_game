@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using tahova_RPG_hra.Source.Core.GameStates;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
@@ -15,7 +10,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
     {
         public override bool handle(ConsoleKey inputKey)
         {
-            switch (inputKey) 
+            switch (inputKey)
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
@@ -42,7 +37,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
             {
                 case ConsoleKey.Escape:
                     Game.Instance.Resume();
-                        break;
+                    break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
                     break;
@@ -128,7 +123,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                     }
                     break;
                 //Normal attack from Player
-                case ConsoleKey.Q:                    
+                case ConsoleKey.Q:
                     if (Game.Instance.GameState is CombatState)
                     {
                         CombatState castGameState = (CombatState)Game.Instance.GameState;
@@ -136,13 +131,13 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                         if (!castGameState.ToConfirmDialog && !castGameState.ShowSpells && !castGameState.ShowItems)
                         {
                             Game.Instance.Player.AttackTarget(Game.Instance.Player.Damage);
-                            
+
                             //Check if target is still alive
                             if (Game.Instance.Player.Target != null)
                             {
                                 Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
                                 castEnemy.ChooseMove();
-                            }   
+                            }
                         }
                         else
                             return false;
@@ -246,7 +241,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                         if (castGameState.ShowSpells && Game.Instance.Player.Spells.Count > 0)
                         {
                             Game.Instance.Player.Spells[castGameState.ListElementId].Cast();
-                            
+
                             //Check if target is still alive
                             if (Game.Instance.Player.Target != null)
                             {

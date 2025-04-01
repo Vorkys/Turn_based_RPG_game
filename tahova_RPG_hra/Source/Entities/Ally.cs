@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using tahova_RPG_hra.Source.Core;
+﻿using System.Collections.Generic;
 using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Quests;
 using tahova_RPG_hra.Source.Spells;
-using tahova_RPG_hra.Source.Statuses;
 
 namespace tahova_RPG_hra.Source.Entities
 {
@@ -21,7 +14,7 @@ namespace tahova_RPG_hra.Source.Entities
             entryDialog = null;
         }
 
-        public List<string> EntryDialog { get => entryDialog; set => entryDialog = value; }        
+        public List<string> EntryDialog { get => entryDialog; set => entryDialog = value; }
 
         public virtual void Talk() { }
     }

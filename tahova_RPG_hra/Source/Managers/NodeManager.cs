@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.Locations.Nodes;
 
@@ -46,12 +41,12 @@ namespace tahova_RPG_hra.Source.Managers
         public static CombatNode CombatForestB = new('T', "Green", "DarkGreen", "DarkGreen", true, 15, 6, 12, new List<Enemy> { EntityManager.BlackWolve, EntityManager.Bandit });
 
         //Structures
-        public static Node Village = new('m', "Green", "Magenta", "Magenta", true);
+        public static TownNode Village = new('m', "Green", "Magenta", "Magenta", true, "Hometown", "The village I was born and grew up in.", "hometown.txt", null);
         //public static Node Town1 = new('M', "Green", "Magenta", "Magenta", true);
         public static TownNode Town1 = new('M', "Green", "Magenta", "Magenta", true, "Organa", "A medium sized town.", "organa.txt", null);
-        public static Node Town2 = new('M', "Green", "Magenta", "Magenta", true);
-        public static Node Town3 = new('M', "Yellow", "Magenta", "Magenta", true);
+        public static TownNode Town2 = new('M', "Green", "Magenta", "Magenta", true, "Foresta", "A nice city hidden in the forest.", "foresta.txt", null);
+        public static TownNode Town3 = new('M', "Yellow", "Magenta", "Magenta", true, "Deserta", "An old sand village with strange citizens.", "deserta.txt", null);
         public static Node Town4 = new('m', "Gray", "Magenta", "Magenta", true);
-        public static Node Town5 = new('M', "Gray", "Magenta", "Magenta", true);
+        public static TownNode Town5 = new('M', "Gray", "Magenta", "Magenta", true, "Volcana", "A rocky town partly destroyed by magma.", "volcana.txt", null);
     }
 }

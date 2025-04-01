@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core.GameStates;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items;
@@ -108,7 +103,7 @@ namespace tahova_RPG_hra.Source.Core
 
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var deserializedList = JsonSerializer.Deserialize<List<List<Node>>>(json, options);
-                Location map = new(deserializedList, 23,78, 23, 78);
+                Location map = new(deserializedList, 23, 78, 23, 78);
                 Maps.Add(map);
             }
             catch (Exception ex)
@@ -255,7 +250,7 @@ namespace tahova_RPG_hra.Source.Core
                         item.Owner = enemy;
             if (enemy.Spells != null)
                 foreach (Spell spell in enemy.Spells)
-                        spell.Caster = enemy;
+                    spell.Caster = enemy;
 
             Instance.ChangeState(GameStateType.Combat);
         }

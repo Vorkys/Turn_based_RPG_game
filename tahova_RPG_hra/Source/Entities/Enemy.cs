@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.Core.GameStates;
 using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Quests;
 using tahova_RPG_hra.Source.Spells;
-using tahova_RPG_hra.Source.Statuses;
 using tahova_RPG_hra.Source.Utils;
 
 namespace tahova_RPG_hra.Source.Entities
@@ -188,7 +183,8 @@ namespace tahova_RPG_hra.Source.Entities
                 return true;
             }
             else if (random == 1)
-                while (true) {
+                while (true)
+                {
                     random = rand.Next(0, Spells.Count);
 
                     if (Spells[random].Cost <= this.Mana)
@@ -252,6 +248,10 @@ namespace tahova_RPG_hra.Source.Entities
             foreach (Quest quest in Game.Instance.ActiveQuests)
                 foreach (Objective objective in quest.Objectives)
                     objective.UpdateObjective(this);
+
+            //Heal player after each combat
+            Game.Instance.Player.IncreaseHealth((int)(Game.Instance.Player.MaxHealth / 4));
+            Game.Instance.Player.IncreaseMana((int)(Game.Instance.Player.MaxHealth / 6));
 
             Game.Instance.Player.Target = null;
             Game.Instance.ChangeState(GameStateType.Exploration);

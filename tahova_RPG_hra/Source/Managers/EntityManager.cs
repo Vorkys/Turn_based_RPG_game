@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using tahova_RPG_hra.Source.Core;
+﻿using System.Collections.Generic;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.Entities.AllyRoles;
 using tahova_RPG_hra.Source.Entities.EnemyTypes;
-using tahova_RPG_hra.Source.Spells;
 using static tahova_RPG_hra.Source.Entities.Enemy;
 
 namespace tahova_RPG_hra.Source.Managers
@@ -50,7 +44,7 @@ namespace tahova_RPG_hra.Source.Managers
             speed: 14,
             money: 0,
             quests: null,
-            enemies: new List<Enemy>{SmallGoblin, Goblin}
+            enemies: new List<Enemy> { SmallGoblin, Goblin }
             );
 
         public static Goblin SmallGoblin = new(

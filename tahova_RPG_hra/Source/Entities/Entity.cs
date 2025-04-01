@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Spells;
-using tahova_RPG_hra.Source.Statuses;
 using tahova_RPG_hra.Source.Utils;
 
 namespace tahova_RPG_hra.Source.Entities
@@ -269,7 +263,7 @@ namespace tahova_RPG_hra.Source.Entities
                         Inventory[i].Quantity -= amount;
                     }
                 }
-                
+
 
                 if (amount == 0)
                     break;

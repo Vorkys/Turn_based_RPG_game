@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Entities;
+﻿using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.Utils;
 
 namespace tahova_RPG_hra.Source.Spells

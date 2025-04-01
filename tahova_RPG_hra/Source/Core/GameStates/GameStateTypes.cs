@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using tahova_RPG_hra.Source.Core.InputHandlers;
-using tahova_RPG_hra.Source.Utils;
 using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.GameObjects.Items;
+using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Locations.Nodes;
+using tahova_RPG_hra.Source.Utils;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
@@ -415,7 +412,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                             Console.Write(line);
                             y += line.Length - 1;
                         }
-                        
+
                     }
                     //line doesnt contains player render or enemy render
                     else
@@ -446,7 +443,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             {
                 keybinds = ["[A/<] - Previous spell", "[D/>] - Next spell", "[SpaceBar/Enter] - Cast", "[ESC] - back"];
                 if (Game.Instance.Player.Spells.Count > 0)
-                    CombatDialog = $"{ListElementId + 1}/{Game.Instance.Player.Spells.Count} {Game.Instance.Player.Spells[ListElementId].Name} ({Game.Instance.Player.Spells[ListElementId].Cost}): {Game.Instance.Player.Spells[ListElementId].Description} ({Game.Instance.Player.Spells[ListElementId].Power}).";
+                    CombatDialog = $"{ListElementId + 1}/{Game.Instance.Player.Spells.Count} {Game.Instance.Player.Spells[ListElementId].Name} ({Game.Instance.Player.Spells[ListElementId].Cost}): {Game.Instance.Player.Spells[ListElementId].Description} (P: {Game.Instance.Player.Spells[ListElementId].Power})";
                 else
                     CombatDialog = "You have no spells.";
             }
@@ -455,7 +452,8 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 if (Game.Instance.Player.Inventory[ListElementId] is Consumable)
                 {
                     keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[SpaceBar/Enter] - Use", "[ESC] - back"];
-                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}({Game.Instance.Player.Inventory[ListElementId].Quantity}): {Game.Instance.Player.Inventory[ListElementId].Description}";
+                    Consumable castItem = (Consumable)Game.Instance.Player.Inventory[ListElementId];
+                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}({Game.Instance.Player.Inventory[ListElementId].Quantity}): {Game.Instance.Player.Inventory[ListElementId].Description} (P: {castItem.Power})";
                 }
                 else if (Game.Instance.Player.Inventory[ListElementId] is Item)
                 {
@@ -469,7 +467,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 }
             }
             else
-                keybinds = ["[Q] - Attack enemy", "[W] - Show spells", "[E] - Show items", "[ESC] - Pause", "[Spacebar/Enter] - Confirm"];
+                keybinds = ["[Q] - Attack enemy", $"[W] - Show spells ({Game.Instance.Player.Spells.Count})", "[E] - Show items", "[ESC] - Pause", "[Spacebar/Enter] - Confirm"];
 
             int tmpId = 0;
 

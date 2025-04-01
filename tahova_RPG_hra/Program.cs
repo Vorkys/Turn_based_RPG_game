@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Locations.Nodes;
 using tahova_RPG_hra.Source.Utils;
 
 namespace tahova_RPG_hra
@@ -12,14 +9,14 @@ namespace tahova_RPG_hra
     {
         public static void Main(string[] args)
         {
-            Console.SetWindowSize(GlobalConstants.consoleSizeWidth, GlobalConstants.consoleSizeHeight);
+            Console.SetWindowSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
             Console.Clear();
 
             for (int i = 0; i < GlobalConstants.consoleSizeHeight; i++)
             {
                 if (i == 0)
                 {
-                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                    Console.WriteLine(new string('=', GlobalConstants.consoleSizeWidth));
                     continue;
                 }
                 else if (i == GlobalConstants.consoleSizeHeight - 1)
@@ -38,7 +35,7 @@ namespace tahova_RPG_hra
                     switch (i)
                     {
                         case 1:
-                            text = $" Before continuin please make sure the console window size has width: {GlobalConstants.consoleSizeWidth}, height: {GlobalConstants.consoleSizeHeight}";
+                            text = $" Before continuin please make sure the console window size has width: {GlobalConstants.consoleSizeWidth + 1}, height: {GlobalConstants.consoleSizeHeight}";
                             Console.Write(text);
                             k += text.Length - 1;
                             break;
@@ -59,28 +56,27 @@ namespace tahova_RPG_hra
 
                 Console.WriteLine();
             }
-            
+
             Console.ReadLine();
             Console.Clear();
 
-            string _fileName = null;
+            //string _fileName;
+            string _fileName = "map.json";
 
-            Console.WriteLine("Insert name of map you want to load (make sure the map is located in: *yourProgramFolder*/Maps/): ");
-            _fileName = Console.ReadLine();
+            //Console.WriteLine("Insert name of map you want to load (make sure the map is located in: *yourProgramFolder*/Maps/): ");
+            //_fileName = Console.ReadLine();
 
             if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", _fileName)))
                 Game.Instance.LoadMap(_fileName);
-            else if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "savefiles", _fileName)))
-                Game.Instance.Load(_fileName);
-            else
-            {
-                Console.WriteLine("Invalid file name. Please make sure the map name is SAME as your input.");
-                Console.WriteLine("Press any key to exit program...");
-                Console.ReadKey();
-                Environment.Exit(1);
-            }
-
-            //Game tmp = Game.Instance;
+            //else if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "savefiles", _fileName)))
+            //    Game.Instance.Load(_fileName);
+            //else
+            //{
+            //    Console.WriteLine("Invalid file name. Please make sure the map name is SAME as your input.");
+            //    Console.WriteLine("Press any key to exit program...");
+            //    Console.ReadKey();
+            //    Environment.Exit(1);
+            //}
 
             while (true)
             {
@@ -91,7 +87,6 @@ namespace tahova_RPG_hra
 
                 do
                 {
-                    //TODO - make user not write into consoleD
                     validInput = Game.Instance.GameState.InputHandler.handle(Console.ReadKey(intercept: true).Key);
                 } while (!validInput);
             }

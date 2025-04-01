@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Entities;
+﻿using tahova_RPG_hra.Source.Entities;
 
 namespace tahova_RPG_hra.Source.GameObjects.Items
 {
@@ -63,7 +56,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
             this.MaxQuantity = maxQuantity;
         }
 
-        
+
         internal Entity Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }

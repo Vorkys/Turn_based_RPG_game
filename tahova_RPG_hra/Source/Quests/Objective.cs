@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.GameObjects.Items;
 using static tahova_RPG_hra.Source.Entities.Enemy;
 
 namespace tahova_RPG_hra.Source.Quests

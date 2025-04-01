@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using tahova_RPG_hra.Source.GameObjects.Items;
+﻿using System.Collections.Generic;
 using static tahova_RPG_hra.Source.Entities.Enemy;
 
 namespace tahova_RPG_hra.Source.Quests.QuestObjective
@@ -51,7 +46,7 @@ namespace tahova_RPG_hra.Source.Quests.QuestObjective
                         IsCompleted = true;
                         return;
                     }
-                }   
+                }
             }
         }
     }
