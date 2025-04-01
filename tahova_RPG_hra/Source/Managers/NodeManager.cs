@@ -43,9 +43,9 @@ namespace tahova_RPG_hra.Source.Managers
         //Structures
         public static TownNode Village = new('m', "Green", "Magenta", "Magenta", true, "Hometown", "The village I was born and grew up in.", "hometown.txt", null);
         //public static Node Town1 = new('M', "Green", "Magenta", "Magenta", true);
-        public static TownNode Town1 = new('M', "Green", "Magenta", "Magenta", true, "Organa", "A medium sized town.", "organa.txt", null);
+        public static TownNode Town1 = new('M', "Green", "Magenta", "Magenta", true, "Organa", "A medium sized town. Rest here and prepare for the forest (lvl 10 is recomended).", "organa.txt", null);
         public static TownNode Town2 = new('M', "Green", "Magenta", "Magenta", true, "Foresta", "A nice city hidden in the forest.", "foresta.txt", null);
-        public static TownNode Town3 = new('M', "Yellow", "Magenta", "Magenta", true, "Deserta", "An old sand village with strange citizens.", "deserta.txt", null);
+        public static TownNode Town3 = new('M', "Yellow", "Magenta", "Magenta", true, "Deserta", "An old sand village with strange citizens. The game ends here.", "deserta.txt", null);
         public static Node Town4 = new('m', "Gray", "Magenta", "Magenta", true);
         public static TownNode Town5 = new('M', "Gray", "Magenta", "Magenta", true, "Volcana", "A rocky town partly destroyed by magma.", "volcana.txt", null);
     }

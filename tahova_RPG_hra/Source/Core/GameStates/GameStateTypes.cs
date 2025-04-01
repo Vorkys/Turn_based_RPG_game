@@ -761,7 +761,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                         TownNode town = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX][playerPosY];
 
                         string text = $"{town.Name} - {town.Description}";
-                        string line = $"{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}{text}{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}";
+                        string line = $"{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}{text}{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2) - 1)}";
                         Console.Write(line);
                         y += line.Length - 1;
                     }
