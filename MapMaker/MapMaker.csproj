@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\tahova_RPG_hra\tahova_RPG_hra.csproj" />
+    <ProjectReference Include="..\tahova_RPG_hra\TurnBasedRPG.csproj" />
   </ItemGroup>
 
 </Project>
