@@ -762,7 +762,13 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
                         string text = $"{town.Name} - {town.Description}";
                         string line = $"{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}{text}{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2) - 1)}";
-                        Console.Write(line);
+
+                        if (line.Length == consoleRenderBoxWidth)
+                            line.Substring(0, line.Length - 1);
+                        else if (line.Length == consoleRenderBoxWidth - 1)
+                            line += ' ';
+
+                            Console.Write(line);
                         y += line.Length - 1;
                     }
                     else
