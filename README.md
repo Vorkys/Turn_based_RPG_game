@@ -35,6 +35,8 @@ https://docs.google.com/spreadsheets/d/1gUhlrCLBu2qNzamf21vJsLRPSi-7dqDCMxIDyiMQ
 6. run (publish) and enjoy!
 ---
 ### Playtester form:
+https://docs.google.com/forms/d/e/1FAIpQLSd3zkT27ca6Td1WEQKUL8GpCUw8aQfIb-KP8zMQrzQfvkyAaA/viewform?usp=dialog
+
 - playtime (time)
 - what he liked (free text)
 - what he didnt like (free text)
