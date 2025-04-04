@@ -7,7 +7,8 @@ This project is a program developed by only myself as part of my Bachelor. The p
 ## Technical documentation
 
 ### Class diagram:
-![class diagram drawio](https://github.com/user-attachments/assets/7587ffa3-1dcc-474d-b87b-1bcc50430753)
+![class diagram](https://github.com/user-attachments/assets/c7c7d7d8-bb3c-4835-9a33-713e08039f13)
+
 
 ### Stats informations:
 https://insightmaker.com/insight/66TUuG7nGjIy44KP4LMVEi/BP-design
