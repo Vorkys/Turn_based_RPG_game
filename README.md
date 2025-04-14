@@ -1,5 +1,6 @@
 # ASCII Adventure
 This project is a program developed by only myself as part of my Bachelor. The project is open-source and is playable on any PC that can run .exe and has .NET 9.0 installed.
+character ASCII art created using AI 
 
 ## Dependecies
 - only dependency is .NET 9.0 downloadable at: https://dotnet.microsoft.com/en-us/download/dotnet/9.0
