@@ -485,8 +485,8 @@ namespace tahova_RPG_hra.Source.Managers
         //Meadows village
         public static TownNode StartingVillage = new(
             nodeChar: 'm',
-            backgroundColor: "Green",
-            foregroundColor: "Magenta",
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
             mapColor: "Magenta",
             isMovable: true,
             name: "Veneta",
@@ -498,8 +498,8 @@ namespace tahova_RPG_hra.Source.Managers
         //Plains town
         public static TownNode PlainsTown = new(
             nodeChar: 'M',
-            backgroundColor: "Green",
-            foregroundColor: "Magenta",
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
             mapColor: "Magenta",
             isMovable: true,
             name: "Fanges",
@@ -511,8 +511,8 @@ namespace tahova_RPG_hra.Source.Managers
         //Forest town
         public static TownNode ForestTown = new(
             nodeChar: 'M',
-            backgroundColor: "Green",
-            foregroundColor: "Magenta",
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
             mapColor: "Magenta",
             isMovable: true,
             name: "Enpolis",
@@ -524,8 +524,8 @@ namespace tahova_RPG_hra.Source.Managers
         //Desert town
         public static TownNode DesertTown = new(
             nodeChar: 'M',
-            backgroundColor: "Yellow",
-            foregroundColor: "Magenta",
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
             mapColor: "Magenta",
             isMovable: true,
             name: "Arrowing",
@@ -537,8 +537,8 @@ namespace tahova_RPG_hra.Source.Managers
         //Savana camp
         public static TownNode SavanaCamp = new(
             nodeChar: 'm',
-            backgroundColor: "Yellow",
-            foregroundColor: "Magenta",
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
             mapColor: "Magenta",
             isMovable: true,
             name: "Savana camp",
@@ -550,8 +550,8 @@ namespace tahova_RPG_hra.Source.Managers
         //Ash land camp
         public static TownNode AshLandCamp = new(
             nodeChar: 'm',
-            backgroundColor: "Gray",
-            foregroundColor: "Magenta",
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
             mapColor: "Magenta",
             isMovable: true,
             name: "Ash lands camp",
@@ -563,8 +563,8 @@ namespace tahova_RPG_hra.Source.Managers
         //Heaven tavern
         public static TownNode HeavenTavern = new(
             nodeChar: 'm',
-            backgroundColor: "White",
-            foregroundColor: "Magenta",
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
             mapColor: "Magenta",
             isMovable: true,
             name: "Heavenly tavern",

@@ -213,12 +213,15 @@ namespace tahova_RPG_hra.Source.Entities
                     objective.UpdateObjective(ItemDrops);
 
             //item drops
-            for (int i = 0; i < ItemDrops.Count; i++)
+            if (ItemDrops != null)
             {
-                bool dropRoll = Roll.RollDice(ItemDrops[i].DropChance);
+                for (int i = 0; i < ItemDrops.Count; i++)
+                {
+                    bool dropRoll = Roll.RollDice(ItemDrops[i].DropChance);
 
-                if (dropRoll)
-                    Game.Instance.Player.AddItem(ItemDrops[i].Item);
+                    if (dropRoll)
+                        Game.Instance.Player.AddItem(ItemDrops[i].Item);
+                }
             }
 
             //player add XP

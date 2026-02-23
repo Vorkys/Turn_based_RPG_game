@@ -23,8 +23,8 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
         public Node(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable)
         {
             NodeChar = nodeChar;
-            ForegroundColor = foregroundColor;
             BackgroundColor = backgroundColor;
+            ForegroundColor = foregroundColor;
             MapColor = mapColor;
             IsMovable = isMovable;
         }

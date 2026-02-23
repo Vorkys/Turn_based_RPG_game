@@ -55,21 +55,21 @@ namespace MapMaker
                             break;
                         //Plains
                         case 'b':
-                            if (Roll.RollDice(7))
+                            if (Roll.RollDice(5))
                                 row.Add(NodeManager.GrassWithStickA);
-                            else if (Roll.RollDice(7))
+                            else if (Roll.RollDice(5))
                                 row.Add(NodeManager.GrassWithStickB);
-                            else if (Roll.RollDice(7))
+                            else if (Roll.RollDice(5))
                                 row.Add(NodeManager.GrassWithPeble);
                             else
                                 row.Add(NodeManager.Grass);
                             break;
                         case 'B':
-                            if (Roll.RollDice(7))
+                            if (Roll.RollDice(5))
                                 row.Add(NodeManager.CombatGrassWithStickA);
-                            else if (Roll.RollDice(7))
+                            else if (Roll.RollDice(5))
                                 row.Add(NodeManager.CombatGrassWithStickB);
-                            else if (Roll.RollDice(7))
+                            else if (Roll.RollDice(5))
                                 row.Add(NodeManager.CombatGrassWithPeble);
                             else
                                 row.Add(NodeManager.CombatGrass);
@@ -102,17 +102,17 @@ namespace MapMaker
                             break;
                         //Desert
                         case 'e':
-                            if (Roll.RollDice(10))
+                            if (Roll.RollDice(4))
                                 row.Add(NodeManager.SandWithCactus);
-                            else if (Roll.RollDice(10))
+                            else if (Roll.RollDice(2))
                                 row.Add(NodeManager.SandWithTumbleweed);
                             else
                                 row.Add(NodeManager.Sand);
                             break;
                         case 'E':
-                            if (Roll.RollDice(10))
+                            if (Roll.RollDice(6))
                                 row.Add(NodeManager.CombatSandWithCactus);
-                            else if (Roll.RollDice(10))
+                            else if (Roll.RollDice(2))
                                 row.Add(NodeManager.CombatSandWithTumbleweed);
                             else
                                 row.Add(NodeManager.CombatSand);
@@ -161,7 +161,7 @@ namespace MapMaker
                                 row.Add(NodeManager.Ashes);
                                 break;
                         case 'H':
-                            if (Roll.RollDice(10))
+                            if (Roll.RollDice(5))
                                 row.Add(NodeManager.CombatLavaWithRock);
                             else if (Roll.RollDice(10))
                                 row.Add(NodeManager.CombatVolcanoWithLavaCrack);

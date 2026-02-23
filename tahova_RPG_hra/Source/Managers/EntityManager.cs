@@ -28,30 +28,6 @@ namespace tahova_RPG_hra.Source.Managers
             money: 0
             );
 
-        //TODO - remove template
-        public static Goblin TEMPLATE = new(
-            name: "TEMPLATE",
-            spritePath: "default.txt",
-            level: 1,
-            maxLevel: 1,
-            maxHealth: 1,
-            maxMana: 1,
-            spells: null,
-            damage: 1,
-            criticalHitChance: 4,
-            missChance: 2,
-            armor: 1,
-            speed: 1,
-            itemDrops: new List<Drop>()
-            {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
-            },
-            goldDrop: 1,
-            escapeChance: 60,
-            xpDrop: 1
-        );
-
         #region Enemies
 
         # region T1 enemies
@@ -68,7 +44,10 @@ namespace tahova_RPG_hra.Source.Managers
             missChance: 2,
             armor: 0,
             speed: 1,
-            itemDrops: null,
+            itemDrops: new List<Drop>()
+            {
+                new Drop(ItemManager.SmallHealthPotion, 15)
+            },
             goldDrop: 2,
             escapeChance: 80,
             xpDrop: 10
