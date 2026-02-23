@@ -54,7 +54,7 @@ namespace tahova_RPG_hra.Source.Managers
             spawnRate: 15,
             minEnemyLvl: 1,
             maxEnemyLvl: 3,
-            enemyToSpawn: new List<Enemy> { EntityManager.CuteSlime, EntityManager.SmallGoblin, EntityManager.Wolf, EntityManager.BigGoblin }
+            enemyToSpawn: new List<Enemy> { EntityManager.GoblinWarrior, EntityManager.GoblinArcher, EntityManager.Wolf, EntityManager.BigGoblin }
         );
 
         public static Node GrassWithStickB = new(
@@ -73,26 +73,26 @@ namespace tahova_RPG_hra.Source.Managers
             spawnRate: 15,
             minEnemyLvl: 1,
             maxEnemyLvl: 3,
-            enemyToSpawn: new List<Enemy> { EntityManager.CuteSlime, EntityManager.SmallGoblin, EntityManager.Wolf, EntityManager.BigGoblin }
+            enemyToSpawn: new List<Enemy> { EntityManager.CuteSlime, EntityManager.GoblinWarrior, EntityManager.GoblinArcher, EntityManager.Wolf, EntityManager.BigGoblin }
         );
 
         public static Node GrassWithPeble = new(
             nodeChar: '.',
             backgroundColor: "Green",
-            foregroundColor: "Grey",
+            foregroundColor: "Gray",
             mapColor: "Green",
             isMovable: true
         );
         public static CombatNode CombatGrassWithPeble = new(
             nodeChar: '.',
             backgroundColor: "Green",
-            foregroundColor: "Grey",
+            foregroundColor: "Gray",
             mapColor: "Green",
             isMovable: true,
             spawnRate: 15,
             minEnemyLvl: 1,
             maxEnemyLvl: 3,
-            enemyToSpawn: new List<Enemy> { EntityManager.CuteSlime, EntityManager.SmallGoblin, EntityManager.Wolf, EntityManager.BigGoblin }
+            enemyToSpawn: new List<Enemy> { EntityManager.GoblinWarrior, EntityManager.GoblinArcher, EntityManager.Wolf, EntityManager.BigGoblin }
         );
 
         public static Node GrassWithFlower = new(
@@ -331,13 +331,13 @@ namespace tahova_RPG_hra.Source.Managers
             maxEnemyLvl: 22,
             enemyToSpawn: new List<Enemy> { EntityManager.Skeleton, EntityManager.Golem }
         );
-
+        //obstacle
         public static Node Lava = new(
             nodeChar: ' ',
             backgroundColor: "Red",
             foregroundColor: "Red",
             mapColor: "Gray",
-            isMovable: true
+            isMovable: false
         );
 
         public static Node LavaWithRock = new(
@@ -376,6 +376,17 @@ namespace tahova_RPG_hra.Source.Managers
             minEnemyLvl: 19,
             maxEnemyLvl: 22,
             enemyToSpawn: new List<Enemy> { EntityManager.Skeleton, EntityManager.Golem }
+        );
+        public static CombatNode CombatVolcanoAshes = new(
+            nodeChar: ' ',
+            backgroundColor: "Gray",
+            foregroundColor: "Gray",
+            mapColor: "Gray",
+            isMovable: true,
+            spawnRate: 15,
+            minEnemyLvl: 19,
+            maxEnemyLvl: 22,
+            enemyToSpawn: new List<Enemy> { EntityManager.CorruptedHuman, EntityManager.LavaTentacle, EntityManager.MagmaWarrior, EntityManager.Mage }
         );
 
         public static Node AshesWithBurntTree = new(
@@ -426,7 +437,7 @@ namespace tahova_RPG_hra.Source.Managers
             backgroundColor: "Cyan",
             foregroundColor: "Blue",
             mapColor: "Cyan",
-            isMovable: true
+            isMovable: false
         );
 
         public static Node ShallowWaterB = new(
@@ -434,7 +445,7 @@ namespace tahova_RPG_hra.Source.Managers
             backgroundColor: "Cyan",
             foregroundColor: "Blue",
             mapColor: "Cyan",
-            isMovable: true
+            isMovable: false
         );
 
         public static Node OceanA = new(
@@ -442,7 +453,7 @@ namespace tahova_RPG_hra.Source.Managers
             backgroundColor: "DarkBlue",
             foregroundColor: "White",
             mapColor: "DarkBlue",
-            isMovable: true
+            isMovable: false
         );
 
         public static Node OceanB = new(
@@ -450,7 +461,7 @@ namespace tahova_RPG_hra.Source.Managers
             backgroundColor: "DarkBlue",
             foregroundColor: "White",
             mapColor: "DarkBlue",
-            isMovable: true
+            isMovable: false
         );
 
         public static Node OceanC = new(
@@ -458,7 +469,7 @@ namespace tahova_RPG_hra.Source.Managers
             backgroundColor: "DarkBlue",
             foregroundColor: "White",
             mapColor: "DarkBlue",
-            isMovable: true
+            isMovable: false
         );
 
         public static Node OceanD = new(
@@ -466,24 +477,102 @@ namespace tahova_RPG_hra.Source.Managers
             backgroundColor: "DarkBlue",
             foregroundColor: "White",
             mapColor: "DarkBlue",
-            isMovable: true
+            isMovable: false
         );
         #endregion
 
-        //Obstacles
-        //public static Node ObstacleBigTrunk = new('H', "Green", "DarkRed", "Green", false);
-        //public static Node ObstacleBigRock = new('O', "Green", "Gray", "DarkGreen", false);
-        //public static Node ObstracleHole = new('O', "Yellow", "Black", "Black", false);
-        //public static Node ObstacleMagma = new('~', "Red", "DarkRed", "DarkRed", false);
-        //public static Node ObstacleLava = new('~', "DarkRed", "Red", "Red", false);
-
-        //Structures
-        public static TownNode Village = new('m', "Green", "Magenta", "Magenta", true, "Hometown", "The village I was born and grew up in.", "hometown.txt", null);
-        //public static Node Town1 = new('M', "Green", "Magenta", "Magenta", true);
-        public static TownNode Town1 = new('M', "Green", "Magenta", "Magenta", true, "Organa", "A medium sized town. Rest here and prepare for the forest (lvl 10 is recomended).", "organa.txt", null);
-        public static TownNode Town2 = new('M', "Green", "Magenta", "Magenta", true, "Foresta", "A nice city hidden in the forest.", "foresta.txt", null);
-        public static TownNode Town3 = new('M', "Yellow", "Magenta", "Magenta", true, "Deserta", "An old sand village with strange citizens. The game ends here.", "deserta.txt", null);
-        public static Node Town4 = new('m', "Gray", "Magenta", "Magenta", true);
-        public static TownNode Town5 = new('M', "Gray", "Magenta", "Magenta", true, "Volcana", "A rocky town partly destroyed by magma.", "volcana.txt", null);
+        #region Structures
+        //Meadows village
+        public static TownNode StartingVillage = new(
+            nodeChar: 'm',
+            backgroundColor: "Green",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Veneta",
+            description: "This is my village where I grew up in. Area level: 1-3",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: null
+        );
+        //Plains town
+        public static TownNode PlainsTown = new(
+            nodeChar: 'M',
+            backgroundColor: "Green",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Fanges",
+            description: "Big town in the middle of the plains. A lot of merchants are here. Area level: 3-8",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: null
+        );
+        //Forest town
+        public static TownNode ForestTown = new(
+            nodeChar: 'M',
+            backgroundColor: "Green",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Enpolis",
+            description: "Hidden town in the middle of the forest. Near the border to the deep forest. Area level: 7-15",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: null
+        );
+        //Desert town
+        public static TownNode DesertTown = new(
+            nodeChar: 'M',
+            backgroundColor: "Yellow",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Arrowing",
+            description: "Description. Area level: 14-18",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: null
+        );
+        //Savana camp
+        public static TownNode SavanaCamp = new(
+            nodeChar: 'm',
+            backgroundColor: "Yellow",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Savana camp",
+            description: "Small camp used for studying the environment. Area level: 17-20",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: null
+        );
+        //Ash land camp
+        public static TownNode AshLandCamp = new(
+            nodeChar: 'm',
+            backgroundColor: "Gray",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Ash lands camp",
+            description: "Advanced camp in the Ash lands to defend the main continent. Area level: 19-25",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: null
+        );
+        //Heaven tavern
+        public static TownNode HeavenTavern = new(
+            nodeChar: 'm',
+            backgroundColor: "White",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Heavenly tavern",
+            description: "A tavern in the heavens where you can rest. Area level: 25-30",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: null
+        );
+        #endregion
     }
 }
