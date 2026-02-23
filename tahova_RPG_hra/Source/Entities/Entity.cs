@@ -59,7 +59,7 @@ namespace tahova_RPG_hra.Source.Entities
         }
 
         //Enemy ct
-        public Entity(string name, string spritePath, int level, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed)
+        public Entity(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed)
         {
             this.Name = name;
             this.SpritePath = spritePath;
@@ -67,6 +67,7 @@ namespace tahova_RPG_hra.Source.Entities
             this.Equipment = null;
             this.Target = null;
             this.Level = level;
+            this.MaxLevel = maxLevel;
             this.EntityXP = 0;
             this.XPtoLevelUp = 100;
             this.Health = maxHealth;
