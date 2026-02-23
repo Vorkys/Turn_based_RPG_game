@@ -28,8 +28,9 @@ namespace tahova_RPG_hra.Source.Entities
         private int escapeChance;
         private int xpDrop;
 
-        public Enemy(string name, string spritePath, int level, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed)
+        public Enemy(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed)
         {
+            this.MaxLevel = maxLevel;
             this.ItemDrops = itemDrops;
             this.GoldDrop = goldDrop;
             this.EscapeChance = escapeChance;
@@ -41,6 +42,7 @@ namespace tahova_RPG_hra.Source.Entities
         public int EscapeChance { get => escapeChance; set => escapeChance = value; }
         public int XpDrop { get => xpDrop; set => xpDrop = value; }
 
+        //TODO - when lvl == max/minLevel => break
         public void SetLvl(int setLevel)
         {
             if (setLevel > MaxLevel)

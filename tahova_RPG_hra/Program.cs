@@ -66,8 +66,10 @@ namespace tahova_RPG_hra
             //Console.WriteLine("Insert name of map you want to load (make sure the map is located in: *yourProgramFolder*/Maps/): ");
             //_fileName = Console.ReadLine();
 
+            //TODO check if map is found
             if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", _fileName)))
                 Game.Instance.LoadMap(_fileName);
+
             //else if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "savefiles", _fileName)))
             //    Game.Instance.Load(_fileName);
             //else
