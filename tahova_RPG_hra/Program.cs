@@ -35,7 +35,7 @@ namespace tahova_RPG_hra
                     switch (i)
                     {
                         case 1:
-                            text = $" Before continuin please make sure the console window size has width: {GlobalConstants.consoleSizeWidth + 1}, height: {GlobalConstants.consoleSizeHeight}";
+                            text = $" Before continuing make sure the console window size has width: {GlobalConstants.consoleSizeWidth + 1}, height: {GlobalConstants.consoleSizeHeight}";
                             Console.Write(text);
                             k += text.Length - 1;
                             break;
@@ -80,10 +80,14 @@ namespace tahova_RPG_hra
             //    Environment.Exit(1);
             //}
 
+            //TODO - remove after testing
+            Game.Instance.Player.IncreaseLvl(60);
+
+            Game.Instance.GameState.Render();
             while (true)
             {
                 //while rendering input cant be taken. Rendering will be async
-                Game.Instance.GameState.Render();
+                Game.Instance.GameState.Update();
 
                 bool validInput = false;
 

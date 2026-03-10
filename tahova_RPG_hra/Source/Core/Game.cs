@@ -103,6 +103,7 @@ namespace tahova_RPG_hra.Source.Core
 
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var deserializedList = JsonSerializer.Deserialize<List<List<Node>>>(json, options);
+                //TODO - remove commet; old map = 23, 78, 23, 78 ; new map = 4, 7, 4, 7
                 Location map = new(deserializedList, 4, 7, 4, 7);
                 Maps.Add(map);
             }
@@ -157,9 +158,10 @@ namespace tahova_RPG_hra.Source.Core
             {
                 GameState = newState;
                 Console.WriteLine($"GameState changed to: {GameState.GetType().Name}");
+                Instance.GameState.Render();
             }
             else
-                Console.WriteLine($"Invalid GameState");
+                Console.WriteLine($"ERROR: Invalid GameState");
         }
 
         public void Pause()

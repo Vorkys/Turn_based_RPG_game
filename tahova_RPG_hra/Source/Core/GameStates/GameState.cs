@@ -10,5 +10,8 @@ namespace tahova_RPG_hra.Source.Core.GameStates
         public InputHandler InputHandler { get => inputHandler; set => inputHandler = value; }
 
         public abstract void Render();
+
+        //TODO - after implemented all change "virtual" to "abstract"
+        public virtual void Update() { }
     }
 }

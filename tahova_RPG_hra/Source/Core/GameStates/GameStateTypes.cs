@@ -115,75 +115,27 @@ namespace tahova_RPG_hra.Source.Core.GameStates
         {
             InputHandler = new ExplorationHandler();
         }
-
+        
         public override void Render()
         {
-            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
-            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
-
             Console.Clear();
 
-            //Print dynamic render box
-            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            //Print main border
+            for (int i = 0; i < GlobalConstants.consoleRenderSizeHeight; i++)
             {
                 //divider '='
-                if (x == 0 || x == (consoleRenderBoxHeight - 1))
-                {
+                if (i == 0 || i == GlobalConstants.consoleRenderSizeHeight - 1)
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-
-                    if (x != (GlobalConstants.consoleSizeHeight - 1))
-                        Console.WriteLine();
-
-                    continue;
-                }
-
-                int renderingHeight = playerPosX - (consoleRenderBoxHeight / 2) + (x - 1);
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    int renderingWidth = playerPosY - (consoleRenderBoxWidth / 2) + (y - 1);
-                    //border 'H'
-                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
-                        Console.Write('H');
-                    //game map where player is in middle
-                    //out of bound Height so fill with ' ' and skip to next line
-                    else if (renderingHeight < 0 || renderingHeight >= Game.Instance.Maps[Game.Instance.ActiveMap].Map.Count)
-                    {
-                        int blankAmount = GlobalConstants.consoleSizeWidth - 2;
-                        Console.Write(new string(' ', blankAmount));
-                        y += blankAmount - 1;
-                    }
-                    //out of bound Left Width so write limited amount of ' '
-                    else if (renderingWidth < 0)
-                    {
-                        int blankAmount = -renderingWidth;
-                        Console.Write(new string(' ', blankAmount));
-                        y += blankAmount - 1;
-                    }
-                    //out of bound Right Width so write limited amount of ' '
-                    else if (renderingWidth >= Game.Instance.Maps[Game.Instance.ActiveMap].Map[0].Count)
-                    {
-                        int blankAmount = GlobalConstants.consoleSizeWidth - y - 1;
-                        Console.Write(new string(' ', blankAmount));
-                        y += blankAmount - 1;
-                    }
-                    //player node
-                    else if (renderingHeight == playerPosX && renderingWidth == playerPosY)
-                        Game.Instance.Maps[Game.Instance.ActiveMap].Map[renderingHeight][renderingWidth].Write(true);
-                    //normal node
-                    else
-                        Game.Instance.Maps[Game.Instance.ActiveMap].Map[renderingHeight][renderingWidth].Write();
-                }
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
 
                 Console.WriteLine();
             }
 
+            //Print control box
             string[] keybinds = ["[ESC] - Pause", "[W/S/A/D or arrows] - Move"];
             int tmpId = 0;
 
-            //print informations box
             for (int x = 0; x < 4; x++)
             {
                 //divider '='
@@ -198,6 +150,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                     //border 'H'
                     if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
+
                     //print keybinds
                     else if (tmpId < keybinds.Length)
                     {
@@ -214,6 +167,105 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 }
 
                 Console.WriteLine();
+            }
+
+            //Map printed using Update()
+        }
+
+        //Keep in memory the player position when the map was last rendered
+        private int playerRenderedPosX = GlobalConstants.consoleRenderSizeHeight;
+        private int playerRenderedPosY = GlobalConstants.consoleRenderSizeWidth;
+
+        public override void Update()
+        {
+            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
+            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
+            //% of rendering box considered "outside"
+            float outsideX = (GlobalConstants.consoleRenderSizeHeight / 2) / 2;
+            float outsideY = (GlobalConstants.consoleRenderSizeWidth / 2) / 3;
+
+            //Update decides wether 1. re-render map where player is in center of screen OR 2. move player node
+            if (Math.Abs(playerRenderedPosX - playerPosX) > outsideX || Math.Abs(playerRenderedPosY - playerPosY) > outsideY)
+                RenderMap();
+            else
+                UpdatePlayerNode();
+
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+        }
+
+        //Rerender map where player is in middle
+        public void RenderMap()
+        {
+            //Clear render box
+            for (int row = 1; row < GlobalConstants.consoleRenderSizeHeight - 1; row++)
+            {
+                Console.SetCursorPosition(1, row);
+                Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+            }
+
+            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
+            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
+            //Update last palyer rendered positions
+            playerRenderedPosX = playerPosX;
+            playerRenderedPosY = playerPosY;
+
+            //IF Player position (in middle of render screen) is far enough from a border then render from render border
+            int mapHeightStart = playerPosX >= (GlobalConstants.consoleRenderSizeHeight / 2) ? 1 : (GlobalConstants.consoleRenderSizeHeight / 2) - playerPosX;
+            int mapWidthStart = playerPosY >= (GlobalConstants.consoleRenderSizeWidth / 2) ? 1 : (GlobalConstants.consoleRenderSizeWidth / 2) - playerPosY;
+
+            //FOR while row is inside render box AND is in bounds of map
+            for (int mapCurrentHeight = 0; (mapHeightStart + mapCurrentHeight) < GlobalConstants.consoleRenderSizeHeight - 1 && (playerPosX - (GlobalConstants.consoleRenderSizeHeight / 2) + mapHeightStart + mapCurrentHeight) < Game.Instance.Maps[Game.Instance.ActiveMap].Map.Count; mapCurrentHeight++)
+            {
+                Console.SetCursorPosition(mapWidthStart, mapHeightStart + mapCurrentHeight);
+
+                for (int mapCurrentWidth = 0; (mapWidthStart + mapCurrentWidth) < GlobalConstants.consoleRenderSizeWidth + 1 && (playerPosY - (GlobalConstants.consoleRenderSizeWidth / 2) + mapWidthStart + mapCurrentWidth) < Game.Instance.Maps[Game.Instance.ActiveMap].Map[0].Count; mapCurrentWidth++)
+                {
+                    int x = playerPosX - (GlobalConstants.consoleRenderSizeHeight / 2) + mapHeightStart + mapCurrentHeight;
+                    int y = playerPosY - (GlobalConstants.consoleRenderSizeWidth / 2) + mapWidthStart + mapCurrentWidth;
+
+                    //Normal node
+                    if (x == playerPosX && y == playerPosY)
+                        Game.Instance.Maps[Game.Instance.ActiveMap].Map[x][y].Write(true);
+                    //Player node
+                    else
+                        Game.Instance.Maps[Game.Instance.ActiveMap].Map[x][y].Write();
+                }
+            }
+        }
+
+        //Move player node and update node around so there isnt any duplicate player node
+        public void UpdatePlayerNode()
+        {
+            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
+            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
+            //Center of render box - oposite number of (distance of player from center)
+            int playerCursorHeight = (GlobalConstants.consoleRenderSizeHeight / 2) - (playerRenderedPosX - playerPosX);
+            int playerCursorWidth = (GlobalConstants.consoleRenderSizeWidth / 2) - (playerRenderedPosY - playerPosY);
+
+            Console.SetCursorPosition(playerCursorWidth, playerCursorHeight);
+            Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX][playerPosY].Write(true);
+
+            //Clean side of player for playerNode duplicates (if in bounds of map)
+            if (playerPosX - 1 >= 0)
+            {
+                Console.SetCursorPosition(playerCursorWidth, playerCursorHeight - 1);
+                Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX - 1][playerPosY].Write();
+            }
+            if (playerPosX + 1 < Game.Instance.Maps[Game.Instance.ActiveMap].Map.Count)
+            {
+                Console.SetCursorPosition(playerCursorWidth, playerCursorHeight + 1);
+                Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX + 1][playerPosY].Write();
+            }
+            if (playerPosY - 1 >= 0)
+            {
+                Console.SetCursorPosition(playerCursorWidth - 1, playerCursorHeight);
+                Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX][playerPosY - 1].Write();
+            }
+            if (playerPosY + 1 < Game.Instance.Maps[Game.Instance.ActiveMap].Map[0].Count)
+            {
+                Console.SetCursorPosition(playerCursorWidth + 1, playerCursorHeight);
+                Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX][playerPosY + 1].Write();
             }
         }
     }

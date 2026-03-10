@@ -38,7 +38,7 @@ namespace tahova_RPG_hra.Source.Entities
             if (EntityXP > XPtoLevelUp)
                 EntityXP -= XPtoLevelUp;
 
-            while (numberOfLvls > 0)
+            while (numberOfLvls > 0 && Level < MaxLevel)
             {
                 //huge upgrade
                 if (this.Level % 5 == 0)
