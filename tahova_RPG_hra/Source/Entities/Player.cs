@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using tahova_RPG_hra.Source.Core;
+using tahova_RPG_hra.Source.Core.GameStates;
 using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Managers;
@@ -101,6 +102,12 @@ namespace tahova_RPG_hra.Source.Entities
         public override void AttackTarget(int damage)
         {
             base.AttackTarget(damage);
+
+            if (Game.Instance.GameState is CombatState)
+            {
+                CombatState castGameState = (CombatState)Game.Instance.GameState;
+                castGameState.CombatDialog = $"Player: attacked {Game.Instance.Player.Target.Name}.";
+            }
 
             if (this.Health <= 0)
                 Game.Instance.GameOver();

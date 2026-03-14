@@ -10,16 +10,67 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
     {
         public override bool handle(ConsoleKey inputKey)
         {
+            MainMenuState castInstanceState = (MainMenuState)Game.Instance.GameState;
+
             switch (inputKey)
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
+                    castInstanceState.PreviousSelection();
                     break;
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
+                    castInstanceState.NextSelection();
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case (MainMenuState.MenuState.MainMenu):
+                            switch (castInstanceState.SelectedOption)
+                            {
+                                case 0:
+                                    Game.Instance.ChangeState(GameStateType.Exploration);
+                                    break;
+                                case 1:
+                                    castInstanceState.CurrentState = MainMenuState.MenuState.ContinueMenu;
+                                    castInstanceState.SelectedOption = 0;
+                                    castInstanceState.RerenderMenu();
+                                    break;
+                                case 2:
+                                    castInstanceState.CurrentState = MainMenuState.MenuState.HowToPlayMenu;
+                                    castInstanceState.SelectedOption = 0;
+                                    castInstanceState.RerenderMenu();
+                                    break;
+                                case 3:
+                                    Environment.Exit(0);
+                                    break;
+                            }
+                            break;
+                        case (MainMenuState.MenuState.ContinueMenu):
+                            //TODO - implement
+                            throw new NotImplementedException();
+                            break;
+                        case (MainMenuState.MenuState.HowToPlayMenu):
+                            return false;
+                    }
+                    break;
+                case ConsoleKey.Escape:
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case (MainMenuState.MenuState.MainMenu):
+                            return false;
+                        case (MainMenuState.MenuState.ContinueMenu):
+                            castInstanceState.CurrentState = MainMenuState.MenuState.MainMenu;
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.RerenderMenu();
+                            break;
+                        case (MainMenuState.MenuState.HowToPlayMenu):
+                            castInstanceState.CurrentState = MainMenuState.MenuState.MainMenu;
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.RerenderMenu();
+                            break;
+                    }
                     break;
                 default:
                     return false;
@@ -37,15 +88,6 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
             {
                 case ConsoleKey.Escape:
                     Game.Instance.Resume();
-                    break;
-                case ConsoleKey.UpArrow:
-                case ConsoleKey.W:
-                    break;
-                case ConsoleKey.DownArrow:
-                case ConsoleKey.S:
-                    break;
-                case ConsoleKey.Spacebar:
-                case ConsoleKey.Enter:
                     break;
                 default:
                     return false;
@@ -84,10 +126,6 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.D:
                     Game.Instance.MovePlayerRight();
                     break;
-                case ConsoleKey.Spacebar:
-                case ConsoleKey.Enter:
-                    Game.Instance.startCombat(EntityManager.SmallGoblin);
-                    break;
                 default:
                     return false;
             }
@@ -100,180 +138,150 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
     {
         public override bool handle(ConsoleKey inputKey)
         {
+            CombatState castInstanceState = (CombatState)Game.Instance.GameState;
+
             switch (inputKey)
             {
                 //Close/Cancel action or menu
                 case ConsoleKey.Escape:
-                    if (Game.Instance.GameState is CombatState)
+                    switch (castInstanceState.CurrentState)
                     {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                        if (castGameState.ShowSpells)
-                        {
-                            castGameState.ShowSpells = false;
-                            castGameState.ListElementId = 0;
-                        }
-                        else if (castGameState.ShowItems)
-                        {
-                            castGameState.ShowItems = false;
-                            castGameState.ListElementId = 0;
-                        }
-                        else if (!castGameState.ToConfirmDialog)
+                        case CombatState.CombatDialogState.DefaultDialog:
                             Game.Instance.Pause();
+                            break;
+                        case CombatState.CombatDialogState.SpellDialog:
+                            castInstanceState.CurrentState = CombatState.CombatDialogState.DefaultDialog;
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.RerenderCombat();
+                            break;
+                        case CombatState.CombatDialogState.ItemDialog:
+                            castInstanceState.CurrentState = CombatState.CombatDialogState.DefaultDialog;
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.RerenderCombat();
+                            break;
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
+                            return false;
                     }
                     break;
                 //Normal attack from Player
                 case ConsoleKey.Q:
-                    if (Game.Instance.GameState is CombatState)
+                    switch (castInstanceState.CurrentState)
                     {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                        if (!castGameState.ToConfirmDialog && !castGameState.ShowSpells && !castGameState.ShowItems)
-                        {
+                        case CombatState.CombatDialogState.DefaultDialog:
                             Game.Instance.Player.AttackTarget(Game.Instance.Player.Damage);
-
-                            //Check if target is still alive
+                            castInstanceState.CurrentState = CombatState.CombatDialogState.AwaitConfirmDialog;
                             if (Game.Instance.Player.Target != null)
-                            {
-                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
-                                castEnemy.ChooseMove();
-                            }
-                        }
-                        else
+                                castInstanceState.RerenderCombat();
+                            break;
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
                     }
                     break;
                 //Open Spell menu
                 case ConsoleKey.W:
-                    if (Game.Instance.GameState is CombatState)
+                    switch (castInstanceState.CurrentState)
                     {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                        if (!castGameState.ToConfirmDialog && !castGameState.ShowSpells && !castGameState.ShowItems)
-                            castGameState.ShowSpells = true;
-                        else
+                        case CombatState.CombatDialogState.DefaultDialog:
+                            castInstanceState.CurrentState = CombatState.CombatDialogState.SpellDialog;
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.RerenderCombat();
+                            break;
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
                     }
                     break;
                 //Open Item menu
                 case ConsoleKey.E:
-                    if (Game.Instance.GameState is CombatState)
+                    switch (castInstanceState.CurrentState)
                     {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                        if (!castGameState.ToConfirmDialog && !castGameState.ShowSpells && !castGameState.ShowItems)
-                            castGameState.ShowItems = true;
-                        else
+                        case CombatState.CombatDialogState.DefaultDialog:
+                            castInstanceState.CurrentState = CombatState.CombatDialogState.ItemDialog;
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.RerenderCombat();
+                            break;
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
                     }
                     break;
-                ////TODO - DEBUG enemy attack
-                //case ConsoleKey.UpArrow:
-                //    if (Game.Instance.GameState is CombatState)
-                //    {
-                //        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                //        if (castGameState.ToConfirmDialog || castGameState.ShowSpells || castGameState.ShowItems)
-                //            return false;
-                //        else
-                //        {
-                //            Game.Instance.Player.ReduceHealth(1);
-
-                //            if (Game.Instance.Player.Health <= 0)
-                //                Game.Instance.GameOver();
-                //        }
-                //    }
-                //    break;
-                ////TODO - DEBUG player attack
-                //case ConsoleKey.DownArrow:
-                //    if (Game.Instance.GameState is CombatState)
-                //    {
-                //        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                //        if (castGameState.ToConfirmDialog || castGameState.ShowSpells || castGameState.ShowItems)
-                //            return false;
-                //        else
-                //        {
-                //            if (Game.Instance.Player.Target is Enemy)
-                //            {
-                //                Enemy castTarget = (Enemy)Game.Instance.Player.Target;
-                //                castTarget.ReduceHealth(1);
-
-                //                if (castTarget.Health <= 0)
-                //                    castTarget.Defeated();
-                //            }
-                //        }
-                //    }
-                //    break;
                 //Previous item of list when list is open
                 case ConsoleKey.A:
                 case ConsoleKey.LeftArrow:
-                    if (Game.Instance.GameState is CombatState)
+                    switch (castInstanceState.CurrentState)
                     {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                        if (!castGameState.ToConfirmDialog && (castGameState.ShowSpells || castGameState.ShowItems))
-                            castGameState.PreviousElement();
-                        else
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                            castInstanceState.PreviousElement();
+                            break;
+                        case CombatState.CombatDialogState.DefaultDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
                     }
                     break;
                 //Next item of list when list is open
                 case ConsoleKey.D:
                 case ConsoleKey.RightArrow:
-                    if (Game.Instance.GameState is CombatState)
+                    switch (castInstanceState.CurrentState)
                     {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                        if (!castGameState.ToConfirmDialog && (castGameState.ShowSpells || castGameState.ShowItems))
-                            castGameState.NextElement();
-                        else
-                            return false;
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                            castInstanceState.NextElement();
+                            break;
+                    case CombatState.CombatDialogState.DefaultDialog:
+                    case CombatState.CombatDialogState.AwaitConfirmDialog:
+                            break;
                     }
                     break;
                 //Confirm action
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
-                    if (Game.Instance.GameState is CombatState)
+                    switch (castInstanceState.CurrentState)
                     {
-                        CombatState castGameState = (CombatState)Game.Instance.GameState;
-
-                        if (castGameState.ShowSpells && Game.Instance.Player.Spells.Count > 0)
-                        {
-                            Game.Instance.Player.Spells[castGameState.ListElementId].Cast();
-
-                            //Check if target is still alive
-                            if (Game.Instance.Player.Target != null)
-                            {
-                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
-                                castEnemy.ChooseMove();
-                            }
-
-                            //reset combat state
-                            castGameState.ShowSpells = false;
-                            castGameState.ShowItems = false;
-                            castGameState.ListElementId = 0;
-                            castGameState.CombatDialog = null;
-                        }
-                        else if (castGameState.ShowItems && Game.Instance.Player.Inventory[castGameState.ListElementId] is Consumable)
-                        {
-                            Game.Instance.Player.Inventory[castGameState.ListElementId].Use();
-
-                            //Check if target is still alive
-                            if (Game.Instance.Player.Target != null)
-                            {
-                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
-                                castEnemy.ChooseMove();
-                            }
-
-                            //reset combat state
-                            castGameState.ShowSpells = false;
-                            castGameState.ShowItems = false;
-                            castGameState.ListElementId = 0;
-                            castGameState.CombatDialog = null;
-                        }
-                        else if (!castGameState.ToConfirmDialog)
+                        case CombatState.CombatDialogState.DefaultDialog:
                             return false;
+                        case CombatState.CombatDialogState.SpellDialog:
+                            if (Game.Instance.Player.Spells[castInstanceState.SelectedOption].Cost <= Game.Instance.Player.Mana)
+                            {
+                                Game.Instance.Player.Spells[castInstanceState.SelectedOption].Cast();
+                                castInstanceState.CombatDialog = $"Player: casted {Game.Instance.Player.Spells[castInstanceState.SelectedOption].Name}";
+                                castInstanceState.CurrentState = CombatState.CombatDialogState.AwaitConfirmDialog;
+                                castInstanceState.SelectedOption = 0;
+                                castInstanceState.RerenderCombat();
+                            }
+                            else
+                                return false;
+                            break;
+                        case CombatState.CombatDialogState.ItemDialog:
+                            if (Game.Instance.Player.Inventory[castInstanceState.SelectedOption] is Consumable)
+                            {
+                                Game.Instance.Player.Inventory[castInstanceState.SelectedOption].Use();
+                                castInstanceState.CombatDialog = $"Player: used {Game.Instance.Player.Inventory[castInstanceState.SelectedOption].Name}";
+                                castInstanceState.CurrentState = CombatState.CombatDialogState.AwaitConfirmDialog;
+                                castInstanceState.SelectedOption = 0;
+                                castInstanceState.RerenderCombat();
+                            }
+                            else
+                                return false;
+                            break;
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
+                            if (castInstanceState.CombatDialog.Contains("Player:"))
+                            {
+                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
+                                castEnemy.ChooseMove();
+                                castInstanceState.RerenderCombat();
+                            }
+                            else
+                            {
+                                castInstanceState.CurrentState = CombatState.CombatDialogState.DefaultDialog;
+                                castInstanceState.SelectedOption = 0;
+                                castInstanceState.RerenderCombat();
+                            }
+                            break;
                     }
                     break;
                 default:

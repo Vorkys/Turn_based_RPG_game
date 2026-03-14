@@ -10,6 +10,7 @@ namespace tahova_RPG_hra
         public static void Main(string[] args)
         {
             Console.SetWindowSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
+            Console.SetBufferSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
             Console.Clear();
 
             for (int i = 0; i < GlobalConstants.consoleSizeHeight; i++)

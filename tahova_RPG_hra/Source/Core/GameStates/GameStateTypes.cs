@@ -5,21 +5,184 @@ using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Locations.Nodes;
+using tahova_RPG_hra.Source.Scenes;
 using tahova_RPG_hra.Source.Utils;
+using static tahova_RPG_hra.Source.Core.GameStates.CombatState;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
-    class MenuState : GameState
+    class MainMenuState : GameState
     {
-        public MenuState()
+        public enum MenuState
+        {
+            MainMenu,
+            ContinueMenu,
+            HowToPlayMenu
+        }
+        private int menuStateLength = 3;
+        private MenuState currentState = MenuState.MainMenu;
+        private int selectedOption = 0;
+        //TODO - add path of all save files in "Saves"
+        private string[] saveFilesPath = [];
+        private string[] menuSelections = ["New game", "Continue", "How to play?", "Exit"];
+        private string[] manual = ["1. Explore the world", "2. Rest in camps, villages and towns", "3. Become stronger killing enemies", "4. Dont fight stronger enemies!", "5. Reach heaven"];
+
+        public MainMenuState()
         {
             InputHandler = new MenuHandler();
         }
 
         public override void Render()
         {
-            throw new NotImplementedException();
+            Console.Clear();
+
+            //Print main border
+            for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight; row++)
+            {
+                //divider '='
+                if (row == 0 || row == GlobalConstants.consoleRenderSizeHeight - 1)
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
+
+                Console.WriteLine();
+            }
+
+            //Print control box
+            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar or Enter] - Confirm", "[ESC] - Back"];
+            int tmpId = 0;
+
+            for (int row = 0; row < 4; row++)
+            {
+                //divider
+                if (row == 3)
+                {
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                    break;
+                }
+
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
+                {
+                    //border 'H'
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
+                        Console.Write('H');
+
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
+                    {
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
+                    }
+                    else
+                        Console.Write(' ');
+                }
+
+                Console.WriteLine();
+            }
+
+            RerenderMenu();
         }
+
+        public override void Update()
+        {
+            switch (currentState)
+            {
+                case (MenuState.MainMenu):
+                    for (int selectionRow = 0; selectionRow < menuSelections.Length; selectionRow++)
+                    {
+                        Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15 - 3, GlobalConstants.consoleSizeHeight / 5 + (2 * selectionRow));
+                        if (selectionRow == selectedOption)
+                            Console.Write(">>");
+                        else
+                            Console.Write("  ");
+                    }
+                    break;
+                case (MenuState.ContinueMenu):
+                    if (saveFilesPath.Length > 0)
+                    {
+                        for (int selectionRow = 0; selectionRow < saveFilesPath.Length; selectionRow++)
+                        {
+                            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15 - 3, GlobalConstants.consoleSizeHeight / 5 + (1 * selectionRow));
+                            if (selectionRow == selectedOption)
+                                Console.Write(">>");
+                            else
+                                Console.Write("  ");
+                        }
+                    }
+                    break;
+            }
+
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+        }
+
+        public void RerenderMenu()
+        {
+            //Clear render box
+            for (int row = 1; row < GlobalConstants.consoleRenderSizeHeight - 1; row++)
+            {
+                Console.SetCursorPosition(1, row);
+                Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+            }
+
+            switch (currentState)
+            {
+                case (MenuState.MainMenu):
+                    for (int i = 0; i < menuSelections.Length; i++)
+                    {
+                        //set starting position for selections
+                        Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + (i * 2));
+                        Console.Write(menuSelections[i]);
+                    }
+                    break;
+                case (MenuState.ContinueMenu):
+                    Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5);
+                    Console.Write("Your saved files:");
+
+                    if (saveFilesPath.Length == 0)
+                    {
+                        Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + 2);
+                        Console.Write("No saved files");
+                    }    
+                    for (int saveFileNumber = 0; saveFileNumber < saveFilesPath.Length; saveFileNumber++)
+                    {
+                        Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + 2 + saveFileNumber);
+                        Console.Write(saveFilesPath[saveFileNumber]);
+                    }
+                    break;
+                case (MenuState.HowToPlayMenu):
+                    Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5);
+                    Console.Write("How to play?");
+
+                    for (int row = 0; row < manual.Length; row++)
+                    {
+                        Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + 2 + row);
+                        Console.Write(manual[row]);
+                    }
+                    break;
+            }
+        }
+
+        public void NextSelection()
+        {
+            //selectedOption < MenuEnum.Count
+            if (currentState == MenuState.MainMenu && selectedOption < menuStateLength)
+                selectedOption++;
+            else if (currentState == MenuState.ContinueMenu && selectedOption < saveFilesPath.Length - 1)
+                selectedOption++;
+        }
+
+        public void PreviousSelection()
+        {
+            if (currentState == MenuState.MainMenu && selectedOption > 0)
+                selectedOption--;
+            else if (currentState == MenuState.ContinueMenu && selectedOption > 0)
+                selectedOption--;
+        }
+
+        public int SelectedOption { get => selectedOption; set => selectedOption = value; }
+        public MenuState CurrentState { get => currentState; set => currentState = value; }
     }
 
     class PauseState : GameState
@@ -31,75 +194,49 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
-            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
-            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
+            //Print pause in middle of screen
+            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 2 - 5, GlobalConstants.consoleRenderSizeHeight / 2 - 1);
+            Console.Write('o' + "---------" + 'o');
+            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 2 - 5, GlobalConstants.consoleRenderSizeHeight / 2);
+            Console.Write('|' + "  Pause  " + '|');
+            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 2 - 5, GlobalConstants.consoleRenderSizeHeight / 2 + 1);
+            Console.Write('o' + "---------" + 'o');
 
-            Console.Clear();
-
-            //Print dynamic render box
-            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            //clear control box
+            for (int row = 0; row < 4; row++)
             {
-                //divider '='
-                if (x == 0 || x == (consoleRenderBoxHeight - 1))
-                {
-                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-
-                    if (x != (GlobalConstants.consoleSizeHeight - 1))
-                        Console.WriteLine();
-
-                    continue;
-                }
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    //border 'H'
-                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
-                        Console.Write('H');
-                    else if ((x - 1) == consoleRenderBoxHeight / 2)
-                    {
-                        string text = "[Paused]";
-                        string line = $"{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}{text}{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}";
-                        Console.Write(line);
-                        y += line.Length - 1;
-                    }
-                    else
-                        Console.Write(' ');
-                }
-
-                Console.WriteLine();
+                Console.SetCursorPosition(0, GlobalConstants.consoleSizeHeight - 4 + row);
+                Console.Write(new string(' ', GlobalConstants.consoleSizeWidth));
             }
 
-            string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Confirm"];
+            Console.SetCursorPosition(0, GlobalConstants.consoleSizeHeight - 4);
+            //Print control box
+            string[] keybinds = ["[ESC] - Resume"];
             int tmpId = 0;
 
             //print informations box
-            for (int x = 0; x < 4; x++)
+            for (int row = 0; row < 4; row++)
             {
-                //divider '='
-                if (x == 3)
+                //divider
+                if (row == 3)
                 {
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-                    continue;
+                    break;
                 }
 
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
                 {
                     //border 'H'
-                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
-                    //print keybinds
-                    else if (tmpId < keybinds.Length)
+
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length + 2 < GlobalConstants.consoleRenderSizeWidth - column))
                     {
-                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
-                        {
-                            Console.Write($" {keybinds[tmpId]} ");
-                            y += keybinds[tmpId].Length + 1;
-                            tmpId++;
-                        }
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
                     }
-                    //empty
                     else
                         Console.Write(' ');
                 }
@@ -133,35 +270,31 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[ESC] - Pause", "[W/S/A/D or arrows] - Move"];
+            string[] keybinds = ["[W/S/A/D or arrows] - Move", "[ESC] - Pause"];
             int tmpId = 0;
 
-            for (int x = 0; x < 4; x++)
+            for (int row = 0; row < 4; row++)
             {
-                //divider '='
-                if (x == 3)
+                //divider
+                if (row == 3)
                 {
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-                    continue;
+                    break;
                 }
 
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
                 {
                     //border 'H'
-                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
 
-                    //print keybinds
-                    else if (tmpId < keybinds.Length)
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
                     {
-                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
-                        {
-                            Console.Write($" {keybinds[tmpId]} ");
-                            y += keybinds[tmpId].Length + 1;
-                            tmpId++;
-                        }
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
                     }
-                    //empty
                     else
                         Console.Write(' ');
                 }
@@ -272,327 +405,326 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
     class CombatState : GameState
     {
+        public enum CombatDialogState
+        {
+            DefaultDialog,
+            SpellDialog,
+            ItemDialog,
+            AwaitConfirmDialog
+        }
+        private CombatDialogState currentState = CombatDialogState.DefaultDialog;
+        //cant use Game.Instance since it is null when this class is created
+        private static int spellNumber = 0;
+        private string[][] dialogKeybinds =
+        {
+            ["[Q] - Attack enemy", $"[W] - Show spells ({spellNumber})", "[E] - Show items", "[ESC] - Pause"],
+            ["[A/<] - Previous selection", "[D/>] - Next selection", "[Spacebar/Enter] - Use", "[ESC] - Back"],
+            ["[Spacebar/Enter] - Confirm"]
+        };
         private string combatDialog;
-        private bool toConfirmAction;
-        private bool showSpells;
-        private bool showItems;
-        private int listElementId;
+        private int selectedOption = 0;
 
         public CombatState()
         {
             InputHandler = new CombatHandler();
-            CombatDialog = null;
-            ToConfirmDialog = false;
-            ShowSpells = false;
-            ShowItems = false;
-            ListElementId = 0;
         }
-
-        public string CombatDialog { get => combatDialog; set => combatDialog = value; }
-        public bool ToConfirmDialog { get => toConfirmAction; set => toConfirmAction = value; }
-        public bool ShowSpells { get => showSpells; set => showSpells = value; }
-        public bool ShowItems { get => showItems; set => showItems = value; }
-        public int ListElementId { get => listElementId; set => listElementId = value; }
 
         public override void Render()
         {
-            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
-            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
+            dialogKeybinds[0][1] = $"[W] - Show spells ({Game.Instance.Player.Spells.Count})";
+            Console.Clear();
 
+            //Print main border
+            for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight; row++)
+            {
+                //divider '='
+                if (row == 0 || row == GlobalConstants.consoleRenderSizeHeight - 1)
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
+
+                Console.WriteLine();
+            }
+
+            //Print info box
+            for (int row = 0; row < 4; row++)
+            {
+                //divider
+                if (row == 3)
+                {
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                    break;
+                }
+                else
+                    Console.WriteLine('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
+            }
+
+            RerenderCombat();
+        }
+
+        public override void Update()
+        {
+            //Clear bonus info lines
+            for (int row = 0; row < 2; row++)
+            {
+                Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 3 + row);
+                Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+            }
+
+            switch (currentState)
+            {
+                case CombatDialogState.DefaultDialog:
+                    //Update enemy HP
+                    Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 32, Game.Instance.Player.Target.Sprite.Length + 1);
+                    int entityBarPercent = (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(new string('=', entityBarPercent));
+                    Console.ResetColor();
+                    Console.Write(new string('-', 30 - entityBarPercent));
+
+                    //Update player HP & MP
+                    Console.SetCursorPosition(2 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 4);
+                    entityBarPercent = (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(new string('=', entityBarPercent));
+                    Console.ResetColor();
+                    Console.Write(new string('-', 30 - entityBarPercent));
+                    Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+                    Console.Write($" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
+                    //Mana
+                    Console.SetCursorPosition(2 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 3);
+                    entityBarPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(new string('~', entityBarPercent));
+                    Console.ResetColor();
+                    Console.Write(new string('-', 30 - entityBarPercent));
+                    Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+                    Console.Write($" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
+                    break;
+                case CombatDialogState.SpellDialog:
+                    if (Game.Instance.Player.Spells.Count == 0)
+                    {
+                        Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 3);
+                        Console.Write(" You dont have any spells yet.");
+                    }
+                    else
+                    {
+                        string spellName = Game.Instance.Player.Spells[selectedOption].Name.Length < GlobalConstants.consoleRenderSizeWidth / 2 ? Game.Instance.Player.Spells[selectedOption].Name : Game.Instance.Player.Spells[selectedOption].Name.Substring(0, GlobalConstants.consoleRenderSizeWidth / 2 - 3) + "...";
+                        string spellDescription = Game.Instance.Player.Spells[selectedOption].Description.Length + 2 <= GlobalConstants.consoleRenderSizeWidth ? Game.Instance.Player.Spells[selectedOption].Description : Game.Instance.Player.Spells[selectedOption].Description.Substring(0, GlobalConstants.consoleRenderSizeWidth - 5) + "...";
+
+                        Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 3);
+                        Console.Write($" << {selectedOption + 1}/{Game.Instance.Player.Spells.Count} {spellName} (");
+                        Console.ForegroundColor = Game.Instance.Player.Spells[selectedOption].Cost <= Game.Instance.Player.Mana ? ConsoleColor.Green : ConsoleColor.Red;
+                        Console.Write(Game.Instance.Player.Spells[selectedOption].Cost);
+                        Console.ResetColor();
+                        Console.Write(") >>");
+                        Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 2);
+                        Console.Write(' ' + spellDescription + ' ');
+                    }
+                    break;
+                case CombatDialogState.ItemDialog:
+                    string itemName;
+                    string itemDescription;
+
+                    if (Game.Instance.Player.Inventory[selectedOption] == null)
+                    {
+                        itemName = "-----";
+                        itemDescription = "Empty space in your pocket";
+                    }
+                    else
+                    {
+                        itemName = Game.Instance.Player.Inventory[selectedOption].Name.Length < GlobalConstants.consoleRenderSizeWidth / 2 ? Game.Instance.Player.Inventory[selectedOption].Name : Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, GlobalConstants.consoleRenderSizeWidth / 2 - 3) + "...";
+                        itemDescription = Game.Instance.Player.Inventory[selectedOption].Description.Length + 2 <= GlobalConstants.consoleRenderSizeWidth ? Game.Instance.Player.Inventory[selectedOption].Description : Game.Instance.Player.Inventory[selectedOption].Description.Substring(0, GlobalConstants.consoleRenderSizeWidth - 5) + "...";
+                    }
+
+                    Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 3);
+                    Console.Write($" << {selectedOption + 1}/{Game.Instance.Player.Inventory.Length} {itemName} ");
+                    if (Game.Instance.Player.Inventory[selectedOption] != null)
+                    {
+                        Console.Write('(');
+                        Console.ForegroundColor = Game.Instance.Player.Inventory[selectedOption] is Consumable ? ConsoleColor.Green : ConsoleColor.Red;
+                        Console.Write(Game.Instance.Player.Inventory[selectedOption].Quantity);
+                        Console.ResetColor();
+                        Console.Write(')');
+                    }
+                    Console.Write(" >>");
+                    Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 2);
+                    Console.Write(' ' + itemDescription + ' ');
+                    break;
+                case CombatDialogState.AwaitConfirmDialog:
+                    Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 2);
+                    if (combatDialog.Length + 2 <= GlobalConstants.consoleRenderSizeWidth)
+                        Console.Write(' ' + combatDialog + ' ');
+                    else
+                        Console.Write(string.Concat(" ", combatDialog.AsSpan(0, GlobalConstants.consoleRenderSizeWidth - 4), "... "));
+                    break;
+            }
+
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+        }
+
+        public void RerenderCombat()
+        {
             Game.Instance.Player.LoadSprite();
             Game.Instance.Player.Target.LoadSprite();
 
-            Console.Clear();
-
-            //Print dynamic render box
-            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            //Print enemy sprite
+            for (int row = 0; row < Game.Instance.Player.Target.Sprite.Length; row++)
             {
-                //divider '='
-                if (x == 0 || x == (consoleRenderBoxHeight - 1))
-                {
-                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-
-                    if (x != (GlobalConstants.consoleSizeHeight - 1))
-                        Console.WriteLine();
-
-                    continue;
-                }
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    //border 'H'
-                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
-                        Console.Write('H');
-
-                    //if line contains only enemy render (line is above player render box and line is inside enemy render box)
-                    else if ((consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length) > (x - 1) && (x - 1) < Game.Instance.Player.Target.Sprite.Length)
-                    {
-                        //line is penultimate of enemy render box => line has name, lvl and part of sprite
-                        if ((x - 1) == (Game.Instance.Player.Target.Sprite.Length - 2))
-                        {
-                            string line = new string(' ', consoleRenderBoxWidth - 32 - Game.Instance.Player.Target.Sprite[0].Length);
-                            //if name is too long substring until Name len is 21(32 - 7 - 1) and add "..."
-                            line += Game.Instance.Player.Target.Name.Length > 24 ? $"{Game.Instance.Player.Target.Name.Substring(0, 21)}..." : $"{Game.Instance.Player.Target.Name}{new string(' ', 25 - Game.Instance.Player.Target.Name.Length)}";
-                            //add lvl "Lvl:XX "
-                            line += Game.Instance.Player.Target.Level < 10 ? $"Lvl: {Game.Instance.Player.Target.Level} " : $"Lvl:{Game.Instance.Player.Target.Level} ";
-                            //add sprite line
-                            line += Game.Instance.Player.Target.Sprite[x - 1];
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-                        //line is last of enemy render box => line has hp(%) and part of sprite
-                        else if ((x - 1) == (Game.Instance.Player.Target.Sprite.Length - 1))
-                        {
-                            string line = new string(' ', consoleRenderBoxWidth - 32 - Game.Instance.Player.Target.Sprite[0].Length);
-                            //add life in percentage
-                            int healthPercent = (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth;
-                            if (healthPercent < 0)
-                                line += $"<{new string('-', 30)}>";
-                            else
-                                line += $"<{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}>";
-
-                            line += Game.Instance.Player.Target.Sprite[x - 1];
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-                        //line only has enemy sprite
-                        else
-                        {
-                            string line = new string(' ', consoleRenderBoxWidth - Game.Instance.Player.Target.Sprite[x - 1].Length);
-                            line += Game.Instance.Player.Target.Sprite[x - 1];
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-                    }
-                    //TODO
-                    //if line doesnt contains player or enemy render (line >= sprite len && line)
-                    //else if ((x - 1) >= Game.Instance.Player.Target.Sprite.Length && (x - 1) <= (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length))
-                    //{
-                    //    string line = new string(' ', consoleRenderBoxWidth);
-                    //    Console.Write(line);
-                    //    y += line.Length - 1;
-                    //}
-                    //if line contains enemy AND players
-                    //else if ((x - 1) < Game.Instance.Player.Target.Sprite.Length && (x - 1) >= (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length))
-                    //{
-                    //    //
-                    //    if ()
-                    //}
-                    //if line contains only player
-                    else if (x >= (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length - 1))
-                    {
-                        //line is pre penultimate of player render box => line has name, lvl and part of sprite
-                        if (x == (consoleRenderBoxHeight - 5))
-                        {
-                            //add sprite line
-                            string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
-                            //if name is too long substring until Name len is 21(32 - 7 - 3 - 1) and add "..."
-                            line += Game.Instance.Player.Name.Length > 24 ? $"{Game.Instance.Player.Name.Substring(0, 21)}..." : $"{Game.Instance.Player.Name}{new string(' ', 26 - Game.Instance.Player.Name.Length)}";
-                            //add lvl "Lvl:XX"
-                            line += Game.Instance.Player.Level < 10 ? $"Lvl: {Game.Instance.Player.Level}" : $"Lvl:{Game.Instance.Player.Level}";
-                            //add white space
-                            line += new string(' ', consoleRenderBoxWidth - line.Length);
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-                        //line is pre pre penultimate of player render box => line has part of sprite, hp(%) and amount of hp
-                        else if (x == (consoleRenderBoxHeight - 4))
-                        {
-                            //add sprite part
-                            string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
-                            //add life in percentage
-                            int healthPercent = (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth;
-                            if (healthPercent < 0)
-                                line += $"<{new string('-', 30)}>";
-                            else
-                                line += $"<{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}>";
-                            //add health counter
-                            line += $" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}";
-                            //add white spaces
-                            line += new string(' ', consoleRenderBoxWidth - line.Length);
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-                        //line is pre penultimate of player render box => line has part of sprite, mana(%) and amount of mana
-                        else if (x == (consoleRenderBoxHeight - 3))
-                        {
-                            //add sprite part
-                            string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
-                            //add life in percentage
-                            int healthPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
-                            if (healthPercent < 0)
-                                line += $"<{new string('-', 30)}>";
-                            else
-                                line += $"<{new string('~', healthPercent)}{new string('-', 30 - healthPercent)}>";
-                            //add health counter
-                            line += $" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}";
-                            //add white spaces
-                            line += new string(' ', consoleRenderBoxWidth - line.Length);
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-                        //line is penultimate of player render box => line has part of sprite, xp(%) and amount of xp
-                        else if (x == (consoleRenderBoxHeight - 2))
-                        {
-                            //add sprite part
-                            string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
-                            //add life in percentage
-                            int healthPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
-                            line += $"|{new string('=', healthPercent)}{new string('-', 30 - healthPercent)}|";
-                            //add health counter
-                            line += $" XP: {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}";
-                            //add white spaces
-                            line += new string(' ', consoleRenderBoxWidth - line.Length);
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-                        //line only has player sprite
-                        else
-                        {
-                            string line = Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)];
-                            line += new string(' ', consoleRenderBoxWidth - Game.Instance.Player.Sprite[x + 1 - (consoleRenderBoxHeight - Game.Instance.Player.Sprite.Length)].Length);
-
-                            Console.Write(line);
-                            y += line.Length - 1;
-                        }
-
-                    }
-                    //line doesnt contains player render or enemy render
-                    else
-                    {
-                        string line = new string(' ', consoleRenderBoxWidth);
-                        Console.Write(line);
-                        y += line.Length - 1;
-                    }
-                }
-
-                Console.WriteLine();
+                Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1 - Game.Instance.Player.Target.Sprite[row].Length, 1 + row);
+                Console.Write(Game.Instance.Player.Target.Sprite[row]);
+            }
+            //Print player sprite
+            for (int row = 0; row < Game.Instance.Player.Sprite.Length; row++)
+            {
+                Console.SetCursorPosition(1, GlobalConstants.consoleRenderSizeHeight - 1 - Game.Instance.Player.Sprite.Length + row);
+                Console.Write(Game.Instance.Player.Sprite[row]);
             }
 
-            string[] keybinds;
+            int entityNameAllowedLength = 33 - (3 + Game.Instance.Player.MaxLevel.ToString().Length);
+            int entityNameLength = Game.Instance.Player.Target.Name.Length;
+            //Print ENEMY info
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 33, Game.Instance.Player.Target.Sprite.Length);
+            //Print enemy name (cut name if too long) and LVL
+            Console.Write(entityNameLength < entityNameAllowedLength ? Game.Instance.Player.Target.Name : Game.Instance.Player.Target.Name.Substring(0, entityNameAllowedLength - 3) + "...");
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 6 - Game.Instance.Player.MaxLevel.ToString().Length, Game.Instance.Player.Target.Sprite.Length);
+            Console.Write("Lvl: " + Game.Instance.Player.Target.Level);
+            //Print health
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 33, Game.Instance.Player.Target.Sprite.Length + 1);
+            int entityBarPercent = (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth;
+            Console.Write('<');
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(new string('=', entityBarPercent));
+            Console.ResetColor();
+            Console.Write(new string('-', 30 - entityBarPercent));
+            Console.Write('>');
 
-            //if (CombatDialog != null)
-            //    ToConfirmDialog = true;
-            //else
-            //    ToConfirmDialog = false;
+            //Print PLAYER info
+            entityNameLength = Game.Instance.Player.Name.Length;
+            //Name & LVL
+            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 5);
+            Console.Write(entityNameLength < entityNameAllowedLength ? Game.Instance.Player.Name : Game.Instance.Player.Name.Substring(0, entityNameAllowedLength - 3) + "...");
+            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length + 33 - 6 - Game.Instance.Player.MaxLevel.ToString().Length, GlobalConstants.consoleRenderSizeHeight - 5);
+            Console.Write("Lvl: " + Game.Instance.Player.Level);
+            //Health
+            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 4);
+            entityBarPercent = (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth;
+            Console.Write('<');
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(new string('=', entityBarPercent));
+            Console.ResetColor();
+            Console.Write(new string('-', 30 - entityBarPercent));
+            Console.Write('>');
+            Console.Write($" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
+            //Mana
+            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 3);
+            entityBarPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
+            Console.Write('<');
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.Write(new string('~', entityBarPercent));
+            Console.ResetColor();
+            Console.Write(new string('-', 30 - entityBarPercent));
+            Console.Write('>');
+            Console.Write($" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
+            //EXP
+            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 2);
+            entityBarPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
+            Console.Write('|');
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(new string('=', entityBarPercent));
+            Console.ResetColor();
+            Console.Write(new string('-', 30 - entityBarPercent));
+            Console.Write('|');
+            Console.Write($" XP: {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}");
 
-            Player tmp = Game.Instance.Player;
-
-            ToConfirmDialog = false;
-
-            if (ToConfirmDialog)
-                keybinds = ["[ESC/SpaceBar/Enter] - Confirm"];
-            else if (ShowSpells)
-            {
-                keybinds = ["[A/<] - Previous spell", "[D/>] - Next spell", "[SpaceBar/Enter] - Cast", "[ESC] - back"];
-                if (Game.Instance.Player.Spells.Count > 0)
-                    CombatDialog = $"{ListElementId + 1}/{Game.Instance.Player.Spells.Count} {Game.Instance.Player.Spells[ListElementId].Name} ({Game.Instance.Player.Spells[ListElementId].Cost}): {Game.Instance.Player.Spells[ListElementId].Description} (P: {Game.Instance.Player.Spells[ListElementId].Power})";
-                else
-                    CombatDialog = "You have no spells.";
-            }
-            else if (ShowItems)
-            {
-                if (Game.Instance.Player.Inventory[ListElementId] is Consumable)
-                {
-                    keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[SpaceBar/Enter] - Use", "[ESC] - back"];
-                    Consumable castItem = (Consumable)Game.Instance.Player.Inventory[ListElementId];
-                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}({Game.Instance.Player.Inventory[ListElementId].Quantity}): {Game.Instance.Player.Inventory[ListElementId].Description} (P: {castItem.Power})";
-                }
-                else if (Game.Instance.Player.Inventory[ListElementId] is Item)
-                {
-                    keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[ESC] - back"];
-                    CombatDialog = $"{ListElementId + 1}/{6} {Game.Instance.Player.Inventory[ListElementId].Name}({Game.Instance.Player.Inventory[ListElementId].Quantity}): {Game.Instance.Player.Inventory[ListElementId].Description}";
-                }
-                else
-                {
-                    keybinds = ["[A/<] - Previous item", "[D/>] - Next item", "[ESC] - back"];
-                    CombatDialog = $"{ListElementId + 1}/{6} Null item.";
-                }
-            }
-            else
-                keybinds = ["[Q] - Attack enemy", $"[W] - Show spells ({Game.Instance.Player.Spells.Count})", "[E] - Show items", "[ESC] - Pause", "[Spacebar/Enter] - Confirm"];
-
+            //Fill info box
             int tmpId = 0;
 
-            //print informations box
-            for (int x = 0; x < 4; x++)
+            switch (currentState)
             {
-                //divider '='
-                if (x == 3)
-                {
-                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-                    continue;
-                }
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    //border 'H'
-                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
-                        Console.Write('H');
-                    //print combat dialog
-                    else if (CombatDialog != null)
+                case CombatDialogState.DefaultDialog:
+                    for (int row = 0; row < 3; row++)
                     {
-                        if (CombatDialog.Length < (GlobalConstants.consoleSizeWidth - y))
+                        for (int column = 1; column < GlobalConstants.consoleRenderSizeWidth && tmpId < dialogKeybinds[0].Length; column++)
                         {
-                            Console.Write($" {CombatDialog} ");
-                            y += CombatDialog.Length + 1;
-                            CombatDialog = null;
+                            if (dialogKeybinds[0][tmpId].Length + 2 < GlobalConstants.consoleRenderSizeWidth - column)
+                            {
+                                Console.SetCursorPosition(column, GlobalConstants.consoleSizeHeight - 4 + row);
+                                Console.Write($" {dialogKeybinds[0][tmpId]} ");
+                                column += dialogKeybinds[0][tmpId].Length + 1;
+                                tmpId++;
+                            }
                         }
                     }
-                    //print keybinds
-                    else if (tmpId < keybinds.Length)
+                    break;
+                case CombatDialogState.SpellDialog:
+                    for (int row = 0; row < 3; row++)
                     {
-                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
+                        for (int column = 1; column < GlobalConstants.consoleRenderSizeWidth && tmpId < dialogKeybinds[1].Length; column++)
                         {
-                            Console.Write($" {keybinds[tmpId]} ");
-                            y += keybinds[tmpId].Length + 1;
-                            tmpId++;
+                            if (dialogKeybinds[1][tmpId].Length + 2 < GlobalConstants.consoleRenderSizeWidth - column)
+                            {
+                                Console.SetCursorPosition(column, GlobalConstants.consoleSizeHeight - 4 + row);
+                                Console.Write($" {dialogKeybinds[1][tmpId]} ");
+                                column += dialogKeybinds[1][tmpId].Length + 1;
+                                tmpId++;
+                            }
                         }
-                        //keybind is too long
-                        else
-                            Console.Write(' ');
                     }
-                    //empty
-                    else
-                        Console.Write(' ');
-                }
-
-                Console.WriteLine();
+                    break;
+                case CombatDialogState.ItemDialog:
+                    for (int row = 0; row < 3; row++)
+                    {
+                        for (int column = 1; column < GlobalConstants.consoleRenderSizeWidth && tmpId < dialogKeybinds[1].Length; column++)
+                        {
+                            if (dialogKeybinds[1][tmpId].Length + 2 < GlobalConstants.consoleRenderSizeWidth - column)
+                            {
+                                Console.SetCursorPosition(column, GlobalConstants.consoleSizeHeight - 4 + row);
+                                Console.Write($" {dialogKeybinds[1][tmpId]} ");
+                                column += dialogKeybinds[1][tmpId].Length + 1;
+                                tmpId++;
+                            }
+                        }
+                    }
+                    break;
+                case CombatDialogState.AwaitConfirmDialog:
+                    for (int row = 0; row < 3; row++)
+                    {
+                        for (int column = 1; column < GlobalConstants.consoleRenderSizeWidth && tmpId < dialogKeybinds[2].Length; column++)
+                        {
+                            if (dialogKeybinds[2][tmpId].Length + 2 < GlobalConstants.consoleRenderSizeWidth - column)
+                            {
+                                Console.SetCursorPosition(column, GlobalConstants.consoleSizeHeight - 4 + row);
+                                Console.Write($" {dialogKeybinds[2][tmpId]} ");
+                                column += dialogKeybinds[2][tmpId].Length + 1;
+                                tmpId++;
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
         public void NextElement()
         {
-            if (ShowSpells && ListElementId < Game.Instance.Player.Spells.Count - 1)
-            {
-                ListElementId++;
-            }
-            else if (ShowItems && ListElementId < Game.Instance.Player.Inventory.Length - 1)
-            {
-                ListElementId++;
-            }
+            if (currentState == CombatDialogState.SpellDialog && selectedOption < Game.Instance.Player.Spells.Count - 1)
+                selectedOption++;
+            else if (currentState == CombatDialogState.ItemDialog && selectedOption < Game.Instance.Player.Inventory.Length - 1)
+                selectedOption++;
         }
 
         public void PreviousElement()
         {
-            if (ShowSpells && ListElementId > 0)
-            {
-                ListElementId--;
-            }
-            else if (ShowItems && ListElementId > 0)
-            {
-                ListElementId--;
-            }
+            if (currentState == CombatDialogState.SpellDialog && selectedOption > 0)
+                selectedOption--;
+            else if (currentState == CombatDialogState.ItemDialog && selectedOption > 0)
+                selectedOption--;
         }
+
+        public int SelectedOption { get => selectedOption; set => selectedOption = value; }
+        public string CombatDialog { get => combatDialog ; set => combatDialog = value; }
+        public CombatDialogState CurrentState { get => currentState; set => currentState = value; }
     }
 
     class DialogState : GameState

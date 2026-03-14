@@ -148,7 +148,7 @@ namespace tahova_RPG_hra.Source.Entities
                         {
                             //TODO - BP text "cast"
                             CombatState castGameState = (CombatState)Game.Instance.GameState;
-                            castGameState.CombatDialog = $"{Name} used {Inventory[id].Name}.";
+                            castGameState.CombatDialog = $"Enemy {Name}: used {Inventory[id].Name}.";
                         }
 
                         this.RemoveItem(Inventory[id]);
@@ -178,11 +178,12 @@ namespace tahova_RPG_hra.Source.Entities
                 if (Game.Instance.GameState is CombatState)
                 {
                     CombatState castGameState = (CombatState)Game.Instance.GameState;
-                    castGameState.CombatDialog = $"{Name} attacked {Game.Instance.Player.Name}.";
+                    castGameState.CombatDialog = $"Enemy {Name}: attacked {Game.Instance.Player.Name}.";
                 }
 
                 return true;
             }
+            //spell
             else if (random == 1)
                 while (true)
                 {
@@ -195,11 +196,10 @@ namespace tahova_RPG_hra.Source.Entities
                         if (Game.Instance.GameState is CombatState)
                         {
                             CombatState castGameState = (CombatState)Game.Instance.GameState;
-                            castGameState.CombatDialog = $"{Name} casted {Spells[random].Name}.";
+                            castGameState.CombatDialog = $"Enemy {Name}: casted {Spells[random].Name}.";
                         }
                         return true;
                     }
-
                 }
 
             return false;

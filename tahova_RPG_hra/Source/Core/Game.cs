@@ -41,7 +41,7 @@ namespace tahova_RPG_hra.Source.Core
             GameStateMap = new Dictionary<GameStateType, GameState>
             {
                 //default values
-                { GameStateType.Menu, new MenuState() },
+                { GameStateType.Menu, new MainMenuState() },
                 { GameStateType.Pause, new PauseState() },
                 { GameStateType.Exploration, new ExplorationState() },
                 { GameStateType.Combat, new CombatState() },
@@ -52,7 +52,7 @@ namespace tahova_RPG_hra.Source.Core
                 { GameStateType.Trading, new TradingState() }
             };
             //Default gameState
-            GameState = gameStateMap[GameStateType.Exploration];
+            GameState = gameStateMap[GameStateType.Menu];
 
             Maps = new List<Location>();
             ActiveMap = 0;
@@ -142,7 +142,7 @@ namespace tahova_RPG_hra.Source.Core
             //TODO - dynamic values
             GameState newState = stateType switch
             {
-                GameStateType.Menu => new MenuState(),
+                GameStateType.Menu => new MainMenuState(),
                 GameStateType.Pause => new PauseState(),
                 GameStateType.Exploration => new ExplorationState(),
                 GameStateType.Combat => new CombatState(),
@@ -157,7 +157,8 @@ namespace tahova_RPG_hra.Source.Core
             if (newState != null)
             {
                 GameState = newState;
-                Console.WriteLine($"GameState changed to: {GameState.GetType().Name}");
+                //DEBUG
+                //Console.WriteLine($"GameState changed to: {GameState.GetType().Name}");
                 Instance.GameState.Render();
             }
             else
