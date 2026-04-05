@@ -48,7 +48,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                             }
                             break;
                         case (MainMenuState.MenuState.ContinueMenu):
-                            //TODO - implement
+                            //TODO - implement savefiles
                             throw new NotImplementedException();
                             break;
                         case (MainMenuState.MenuState.HowToPlayMenu):

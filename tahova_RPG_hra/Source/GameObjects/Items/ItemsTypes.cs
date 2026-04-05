@@ -5,7 +5,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 {
     class HealingItem : Consumable
     {
-        public HealingItem(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
+        public HealingItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
         {
         }
 
@@ -19,7 +19,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 
     class ManaIncreaseItem : Consumable
     {
-        public ManaIncreaseItem(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
+        public ManaIncreaseItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
         {
         }
 
@@ -33,14 +33,17 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 
     class HybridHealingItem : Consumable
     {
-        public HybridHealingItem(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
+        private int manaIncrease;
+
+        public HybridHealingItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power, int manaIncrease) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
         {
+            this.manaIncrease = manaIncrease;
         }
 
         public override bool Use()
         {
             Owner.IncreaseHealth(Power);
-            Owner.IncreaseMana(Power);
+            Owner.IncreaseMana(manaIncrease);
             Owner.RemoveItem(this);
             return true;
         }
@@ -48,7 +51,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 
     class DamageItem : Consumable
     {
-        public DamageItem(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
+        public DamageItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
         {
         }
 
@@ -62,7 +65,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
 
     class ReduceMana : Consumable
     {
-        public ReduceMana(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity, power)
+        public ReduceMana(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
         {
         }
 

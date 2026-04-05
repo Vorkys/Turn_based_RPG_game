@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using tahova_RPG_hra.Source.Core;
 using tahova_RPG_hra.Source.GameObjects.Items;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
@@ -235,40 +236,59 @@ namespace tahova_RPG_hra.Source.Entities
 
         public bool AddItem(Item item, int amount = 1)
         {
+            //Failsafe
             if (Inventory == null || item == null)
                 return false;
 
             int tmpAmount = amount;
+            item.Owner = this;
 
-            for (int i = 0; i < Inventory.Length; i++)
+            //Is the item already in the inventory and has some space in stack to add more?
+            bool isItemInInventory = Inventory.OfType<Item>().Any(_item =>  _item.Name == item.Name && _item.Quantity < _item.MaxQuantity);
+
+            //Add item to current stack in Inventory
+            if (isItemInInventory)
             {
-                if (Inventory[i] == null)
+                for (int i = 0; Inventory.Length > i; i++)
                 {
-                    Inventory[i] = item;
-                    amount -= item.Quantity;
-
-                    if (Inventory[i].Quantity > Inventory[i].MaxQuantity)
+                    if (Inventory[i]?.Name == item.Name && Inventory[i].Quantity < Inventory[i].MaxQuantity)
                     {
-                        amount = Inventory[i].Quantity - Inventory[i].MaxQuantity;
-                        Inventory[i].Quantity -= amount;
+                        int quantityLeft = Inventory[i].MaxQuantity - Inventory[i].Quantity;
+                        int addQuantity = Math.Min(quantityLeft, amount);
+
+                        Inventory[i].Quantity += addQuantity;
+                        amount -= addQuantity;
                     }
                 }
-                else if (Inventory[i].Name == item.Name && Inventory[i].Quantity < Inventory[i].MaxQuantity)
-                {
-                    Inventory[i].Quantity += amount;
-                    amount = 0;
-
-                    if (Inventory[i].Quantity > Inventory[i].MaxQuantity)
-                    {
-                        amount = Inventory[i].Quantity - Inventory[i].MaxQuantity;
-                        Inventory[i].Quantity -= amount;
-                    }
-                }
-
-
-                if (amount == 0)
-                    break;
             }
+            //Add item to an empty space in Inventory
+            else
+            {
+                for (int i = 0; Inventory.Length > i; i++)
+                {
+                    if (Inventory[i] == null)
+                    {
+                        if (amount <= item.MaxQuantity)
+                        {
+                            Inventory[i] = item;
+                            Inventory[i].Quantity = amount;
+                            amount = 0;
+                        }
+                        else
+                        {
+                            Inventory[i] = item;
+                            inventory[i].Quantity = item.MaxQuantity;
+                            amount -= item.MaxQuantity;
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            //If the item was placed somewhere AND still have some stacks left call method again
+            if (amount != tmpAmount && amount > 0)
+                AddItem(item, amount);
 
             //true = amount has changed (some item looted), false = amount hasnt changed (nothing looted)
             return tmpAmount != amount ? true : false;

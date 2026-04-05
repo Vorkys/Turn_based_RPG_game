@@ -12,28 +12,6 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
         private int quantity;
         private int maxQuantity;
 
-        public Item(Entity owner, string name, string description, int buyPrice, int sellPrice, int quantity, int maxQuantity)
-        {
-            this.Owner = owner;
-            this.Name = name;
-            this.Description = description;
-            this.BuyPrice = buyPrice;
-            this.SellPrice = sellPrice;
-            this.Quantity = quantity;
-            this.MaxQuantity = maxQuantity;
-        }
-
-        public Item(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity)
-        {
-            this.Owner = owner;
-            this.Name = name;
-            this.Description = description;
-            this.BuyPrice = buyPrice;
-            this.SellPrice = sellPrice;
-            this.Quantity = 1;
-            this.MaxQuantity = maxQuantity;
-        }
-
         public Item(string name, string description, int buyPrice, int sellPrice, int quantity, int maxQuantity)
         {
             this.Owner = null;
@@ -55,7 +33,6 @@ namespace tahova_RPG_hra.Source.GameObjects.Items
             this.Quantity = 1;
             this.MaxQuantity = maxQuantity;
         }
-
 
         internal Entity Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }

@@ -6,12 +6,7 @@ namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
     {
         private int power;
 
-        public Consumable(Entity owner, string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, maxQuantity)
-        {
-            this.Power = power;
-        }
-
-        public Consumable(Entity owner, string name, string description, int buyPrice, int sellPrice, int quantity, int maxQuantity, int power) : base(owner, name, description, buyPrice, sellPrice, quantity, maxQuantity)
+        public Consumable(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power) : base(name, description, buyPrice, sellPrice, maxQuantity)
         {
             this.Power = power;
         }

@@ -8,6 +8,7 @@ using tahova_RPG_hra.Source.Locations.Nodes;
 using tahova_RPG_hra.Source.Scenes;
 using tahova_RPG_hra.Source.Utils;
 using static tahova_RPG_hra.Source.Core.GameStates.CombatState;
+using static tahova_RPG_hra.Source.Core.GameStates.MainMenuState;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
@@ -741,74 +742,62 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
-            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
-            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
-
             Console.Clear();
 
-            //Print dynamic render box
-            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            //Print main border
+            for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight; row++)
             {
                 //divider '='
-                if (x == 0 || x == (consoleRenderBoxHeight - 1))
-                {
+                if (row == 0 || row == GlobalConstants.consoleRenderSizeHeight - 1)
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-
-                    if (x != (GlobalConstants.consoleSizeHeight - 1))
-                        Console.WriteLine();
-
-                    continue;
-                }
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    //border 'H'
-                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
-                        Console.Write('H');
-                    else
-                        Console.Write(' ');
-                }
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
 
                 Console.WriteLine();
             }
 
+            //Print control box
             string[] keybinds = ["[ESC/Spacebar/Enter] - Next dialog"];
             int tmpId = 0;
 
-            //print informations box
-            for (int x = 0; x < 4; x++)
+            for (int row = 0; row < 4; row++)
             {
-                //divider '='
-                if (x == 3)
+                //divider
+                if (row == 3)
                 {
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-                    continue;
+                    break;
                 }
 
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
                 {
                     //border 'H'
-                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
-                    //print keybinds
-                    else if (tmpId < keybinds.Length)
+
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
                     {
-                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
-                        {
-                            Console.Write($" {keybinds[tmpId]} ");
-                            y += keybinds[tmpId].Length + 1;
-                            tmpId++;
-                        }
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
                     }
-                    //empty
                     else
                         Console.Write(' ');
                 }
 
                 Console.WriteLine();
             }
+
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+
+            throw new NotImplementedException();
         }
     }
 
@@ -821,74 +810,62 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
-            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
-            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
-
             Console.Clear();
 
-            //Print dynamic render box
-            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            //Print main border
+            for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight; row++)
             {
                 //divider '='
-                if (x == 0 || x == (consoleRenderBoxHeight - 1))
-                {
+                if (row == 0 || row == GlobalConstants.consoleRenderSizeHeight - 1)
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-
-                    if (x != (GlobalConstants.consoleSizeHeight - 1))
-                        Console.WriteLine();
-
-                    continue;
-                }
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    //border 'H'
-                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
-                        Console.Write('H');
-                    else
-                        Console.Write(' ');
-                }
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
 
                 Console.WriteLine();
             }
 
+            //Print control box
             string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Confirm"];
             int tmpId = 0;
 
-            //print informations box
-            for (int x = 0; x < 4; x++)
+            for (int row = 0; row < 4; row++)
             {
-                //divider '='
-                if (x == 3)
+                //divider
+                if (row == 3)
                 {
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-                    continue;
+                    break;
                 }
 
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
                 {
                     //border 'H'
-                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
-                    //print keybinds
-                    else if (tmpId < keybinds.Length)
+
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
                     {
-                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
-                        {
-                            Console.Write($" {keybinds[tmpId]} ");
-                            y += keybinds[tmpId].Length + 1;
-                            tmpId++;
-                        }
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
                     }
-                    //empty
                     else
                         Console.Write(' ');
                 }
 
                 Console.WriteLine();
             }
+
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+
+            throw new NotImplementedException();
         }
     }
 
@@ -901,6 +878,61 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
+            Console.Clear();
+
+            //Print main border
+            for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight; row++)
+            {
+                //divider '='
+                if (row == 0 || row == GlobalConstants.consoleRenderSizeHeight - 1)
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
+
+                Console.WriteLine();
+            }
+
+            //Print control box
+            string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Confirm"];
+            int tmpId = 0;
+
+            for (int row = 0; row < 4; row++)
+            {
+                //divider
+                if (row == 3)
+                {
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
+                    break;
+                }
+
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
+                {
+                    //border 'H'
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
+                        Console.Write('H');
+
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
+                    {
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
+                    }
+                    else
+                        Console.Write(' ');
+                }
+
+                Console.WriteLine();
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+
             throw new NotImplementedException();
         }
     }
@@ -914,90 +946,62 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
-            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
-            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
-
             Console.Clear();
 
-            //Print dynamic render box
-            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            //Print main border
+            for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight; row++)
             {
                 //divider '='
-                if (x == 0 || x == (consoleRenderBoxHeight - 1))
-                {
+                if (row == 0 || row == GlobalConstants.consoleRenderSizeHeight - 1)
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-
-                    if (x != (GlobalConstants.consoleSizeHeight - 1))
-                        Console.WriteLine();
-
-                    continue;
-                }
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    //border 'H'
-                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
-                        Console.Write('H');
-                    else if ((x - 1) == consoleRenderBoxHeight / 2)
-                    {
-                        int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-                        int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-                        TownNode town = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[playerPosX][playerPosY];
-
-                        string text = $"{town.Name} - {town.Description}";
-                        string line = $"{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2))}{text}{new string(' ', (consoleRenderBoxWidth / 2) - (text.Length / 2) - 1)}";
-
-                        if (line.Length == consoleRenderBoxWidth)
-                            line.Substring(0, line.Length - 1);
-                        else if (line.Length == consoleRenderBoxWidth - 1)
-                            line += ' ';
-
-                            Console.Write(line);
-                        y += line.Length - 1;
-                    }
-                    else
-                        Console.Write(' ');
-                }
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
 
                 Console.WriteLine();
             }
 
-            //string[] keybinds = ["[Q] - Organised combat", $"[W] - Tavern (heal)", $"[E] - Save game", "[ESC] - Exit Town"];
+            //Print control box
             string[] keybinds = ["[W] - Tavern (heal)", "[ESC] - Exit Town"];
             int tmpId = 0;
 
-            //print informations box
-            for (int x = 0; x < 4; x++)
+            for (int row = 0; row < 4; row++)
             {
-                //divider '='
-                if (x == 3)
+                //divider
+                if (row == 3)
                 {
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-                    continue;
+                    break;
                 }
 
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
                 {
                     //border 'H'
-                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
-                    //print keybinds
-                    else if (tmpId < keybinds.Length)
+
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
                     {
-                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
-                        {
-                            Console.Write($" {keybinds[tmpId]} ");
-                            y += keybinds[tmpId].Length + 1;
-                            tmpId++;
-                        }
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
                     }
-                    //empty
                     else
                         Console.Write(' ');
                 }
 
                 Console.WriteLine();
             }
+
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+
+            throw new NotImplementedException();
         }
     }
 
@@ -1010,74 +1014,62 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
-            int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int consoleRenderBoxHeight = GlobalConstants.consoleSizeHeight - 4;
-            int consoleRenderBoxWidth = GlobalConstants.consoleSizeWidth - 2;
-
             Console.Clear();
 
-            //Print dynamic render box
-            for (int x = 0; x < consoleRenderBoxHeight; x++)
+            //Print main border
+            for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight; row++)
             {
                 //divider '='
-                if (x == 0 || x == (consoleRenderBoxHeight - 1))
-                {
+                if (row == 0 || row == GlobalConstants.consoleRenderSizeHeight - 1)
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-
-                    if (x != (GlobalConstants.consoleSizeHeight - 1))
-                        Console.WriteLine();
-
-                    continue;
-                }
-
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
-                {
-                    //border 'H'
-                    if (y == 0 || y + 1 == GlobalConstants.consoleSizeWidth)
-                        Console.Write('H');
-                    else
-                        Console.Write(' ');
-                }
+                else
+                    Console.Write('H' + new string(' ', GlobalConstants.consoleRenderSizeWidth) + 'H');
 
                 Console.WriteLine();
             }
 
+            //Print control box
             string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Confirm"];
             int tmpId = 0;
 
-            //print informations box
-            for (int x = 0; x < 4; x++)
+            for (int row = 0; row < 4; row++)
             {
-                //divider '='
-                if (x == 3)
+                //divider
+                if (row == 3)
                 {
                     Console.Write(new string('=', GlobalConstants.consoleSizeWidth));
-                    continue;
+                    break;
                 }
 
-                for (int y = 0; y < GlobalConstants.consoleSizeWidth; y++)
+                for (int column = 0; column < GlobalConstants.consoleSizeWidth; column++)
                 {
                     //border 'H'
-                    if (y == 0 || y == GlobalConstants.consoleSizeWidth - 1)
+                    if (column == 0 || column == GlobalConstants.consoleSizeWidth - 1)
                         Console.Write('H');
-                    //print keybinds
-                    else if (tmpId < keybinds.Length)
+
+                    //print keybind if there is enough place
+                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
                     {
-                        if (keybinds[tmpId].Length < (GlobalConstants.consoleSizeWidth - y))
-                        {
-                            Console.Write($" {keybinds[tmpId]} ");
-                            y += keybinds[tmpId].Length + 1;
-                            tmpId++;
-                        }
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
                     }
-                    //empty
                     else
                         Console.Write(' ');
                 }
 
                 Console.WriteLine();
             }
+
+            throw new NotImplementedException();
+        }
+
+        public override void Update()
+        {
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+
+            throw new NotImplementedException();
         }
     }
 }
