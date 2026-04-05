@@ -286,9 +286,6 @@ namespace tahova_RPG_hra.Source.Entities
         {
             bool miss = Roll.RollDice(MissChance);
 
-            Player test1 = Game.Instance.Player;
-            Enemy test2 = (Enemy)Game.Instance.Player.Target;
-
             if (miss)
                 Target.ReduceHealth(0);
 
@@ -307,9 +304,6 @@ namespace tahova_RPG_hra.Source.Entities
                 Target.ReduceHealth(2 * (Damage + change));
             else
                 Target.ReduceHealth(Damage + change);
-
-            test1 = Game.Instance.Player;
-            test2 = (Enemy)Game.Instance.Player.Target;
         }
     }
 }

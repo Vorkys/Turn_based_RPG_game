@@ -592,7 +592,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             Console.Write("Lvl: " + Game.Instance.Player.Target.Level);
             //Print health
             Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 33, Game.Instance.Player.Target.Sprite.Length + 1);
-            int entityBarPercent = (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth;
+            int entityBarPercent = Game.Instance.Player.Target.Health > 0 ? (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth : 0;
             Console.Write('<');
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(new string('=', entityBarPercent));
@@ -609,7 +609,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             Console.Write("Lvl: " + Game.Instance.Player.Level);
             //Health
             Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 4);
-            entityBarPercent = (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth;
+            entityBarPercent = Game.Instance.Player.Health > 0 ? (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth : 0;
             Console.Write('<');
             Console.ForegroundColor = ConsoleColor.Red;
             Console.Write(new string('=', entityBarPercent));
