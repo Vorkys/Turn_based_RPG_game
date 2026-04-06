@@ -3,6 +3,7 @@ using tahova_RPG_hra.Source.Core.GameStates;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
 using tahova_RPG_hra.Source.Managers;
+using static tahova_RPG_hra.Source.Core.GameStates.InventoryState;
 
 namespace tahova_RPG_hra.Source.Core.InputHandlers
 {
@@ -16,12 +17,10 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
             {
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
-                    castInstanceState.PreviousSelection();
-                    break;
+                    return castInstanceState.PreviousSelection();
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
-                    castInstanceState.NextSelection();
-                    break;
+                    return castInstanceState.NextSelection();
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
                     switch (castInstanceState.CurrentState)
@@ -126,6 +125,9 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                 case ConsoleKey.D:
                     Game.Instance.MovePlayerRight();
                     break;
+                case ConsoleKey.I:
+                    Game.Instance.ChangeState(GameStateType.Inventory);
+                    break;
                 default:
                     return false;
             }
@@ -216,8 +218,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                     {
                         case CombatState.CombatDialogState.SpellDialog:
                         case CombatState.CombatDialogState.ItemDialog:
-                            castInstanceState.PreviousElement();
-                            break;
+                            return castInstanceState.PreviousElement();
                         case CombatState.CombatDialogState.DefaultDialog:
                         case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
@@ -230,11 +231,10 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                     {
                         case CombatState.CombatDialogState.SpellDialog:
                         case CombatState.CombatDialogState.ItemDialog:
-                            castInstanceState.NextElement();
-                            break;
+                            return castInstanceState.NextElement();
                     case CombatState.CombatDialogState.DefaultDialog:
                     case CombatState.CombatDialogState.AwaitConfirmDialog:
-                            break;
+                            return false;
                     }
                     break;
                 //Confirm action
@@ -314,25 +314,43 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
     {
         public override bool handle(ConsoleKey inputKey)
         {
+            InventoryState castInstanceState = (InventoryState)Game.Instance.GameState;
+
             switch (inputKey)
             {
                 case ConsoleKey.Escape:
                     Game.Instance.ChangeState(GameStateType.Exploration);
                     break;
-                case ConsoleKey.UpArrow:
-                case ConsoleKey.W:
-                    break;
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.D:
-                    break;
+                    return castInstanceState.NextElement();
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
+                    if (castInstanceState.CurrentState == InventoryDialogState.SpellDialog)
+                        castInstanceState.CurrentState = InventoryDialogState.ItemDialog;
+                    else
+                        castInstanceState.CurrentState = InventoryDialogState.SpellDialog;
+
+                    castInstanceState.SelectedOption = 0;
                     break;
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:
-                    break;
+                    return castInstanceState.PreviousElement();
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
+                    if (Game.Instance.Player.Inventory[castInstanceState.SelectedOption] is Equippable)
+                    {
+                        Game.Instance.Player.Equip((Equippable)Game.Instance.Player.Inventory[castInstanceState.SelectedOption]);
+                        castInstanceState.UpdateEquipment();
+                        castInstanceState.UpdateStats();
+                    }
+                    else if (Game.Instance.Player.Inventory[castInstanceState.SelectedOption] is Consumable)
+                    {
+                        Game.Instance.Player.Inventory[castInstanceState.SelectedOption].Use();
+                        castInstanceState.UpdateStats();
+                    }
+                    else
+                        return false;
                     break;
                 default:
                     return false;

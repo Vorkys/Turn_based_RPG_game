@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using tahova_RPG_hra.Source.Core.InputHandlers;
 using tahova_RPG_hra.Source.Entities;
 using tahova_RPG_hra.Source.GameObjects.Items;
@@ -9,6 +10,7 @@ using tahova_RPG_hra.Source.Scenes;
 using tahova_RPG_hra.Source.Utils;
 using static tahova_RPG_hra.Source.Core.GameStates.CombatState;
 using static tahova_RPG_hra.Source.Core.GameStates.MainMenuState;
+using static tahova_RPG_hra.Source.GameObjects.Items.ItemTypes.Equippable;
 
 namespace tahova_RPG_hra.Source.Core.GameStates
 {
@@ -165,21 +167,29 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             }
         }
 
-        public void NextSelection()
+        public bool NextSelection()
         {
             //selectedOption < MenuEnum.Count
             if (currentState == MenuState.MainMenu && selectedOption < menuStateLength)
                 selectedOption++;
             else if (currentState == MenuState.ContinueMenu && selectedOption < saveFilesPath.Length - 1)
                 selectedOption++;
+            else
+                return false;
+
+            return true;
         }
 
-        public void PreviousSelection()
+        public bool PreviousSelection()
         {
             if (currentState == MenuState.MainMenu && selectedOption > 0)
                 selectedOption--;
             else if (currentState == MenuState.ContinueMenu && selectedOption > 0)
                 selectedOption--;
+            else
+                return false;
+
+            return true;
         }
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
@@ -271,7 +281,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[W/S/A/D or arrows] - Move", "[ESC] - Pause"];
+            string[] keybinds = ["[W/S/A/D or arrows] - Move", "[I] - Inventory", "[ESC] - Pause"];
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -707,20 +717,28 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             }
         }
 
-        public void NextElement()
+        public bool NextElement()
         {
             if (currentState == CombatDialogState.SpellDialog && selectedOption < Game.Instance.Player.Spells.Count - 1)
                 selectedOption++;
             else if (currentState == CombatDialogState.ItemDialog && selectedOption < Game.Instance.Player.Inventory.Length - 1)
                 selectedOption++;
+            else
+                return false;
+
+            return true;
         }
 
-        public void PreviousElement()
+        public bool PreviousElement()
         {
             if (currentState == CombatDialogState.SpellDialog && selectedOption > 0)
                 selectedOption--;
             else if (currentState == CombatDialogState.ItemDialog && selectedOption > 0)
                 selectedOption--;
+            else
+                return false;
+
+            return true;
         }
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
@@ -803,6 +821,37 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
     class InventoryState : GameState
     {
+        public enum InventoryDialogState
+        {
+            SpellDialog,
+            ItemDialog
+        }
+        private InventoryDialogState currentState = InventoryDialogState.ItemDialog;
+        private static string[] statLabels = { "Name", "Level", "Health", "Mana", "Experience", "Damage", "Armor", "Speed" };
+        private static string[] stickman =
+            {
+                 "___",
+                "/   \\",
+               "|     |",
+               "\\___/",
+                  "|",
+                 "/|\\",
+                "/ | \\",
+               "/  |  \\",
+                  "|",
+                 "/ \\",
+                "/   \\",
+               "/     \\",
+               "",
+               "nnnn",
+              "\\__|",
+              "",
+              "nnnn",
+              "|__/"
+            };
+        private static int maxStickmanStringLength = stickman.Max(row => row.Length);
+        private int selectedOption = 0;
+
         public InventoryState()
         {
             InputHandler = new InventoryHandler();
@@ -825,7 +874,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Confirm"];
+            string[] keybinds = ["[A/<] - Previous selection", "[D/>] - Next selection", "[S/v] - Switch to Spells/Inventory", "[ESC] - Resume", "[Spacebar/Enter] - Equip"];
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -857,16 +906,358 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 Console.WriteLine();
             }
 
-            throw new NotImplementedException();
+            //Print Player info
+            //Print player sprite
+            Game.Instance.Player.LoadSprite();
+
+            for (int row = 0; row < Game.Instance.Player.Sprite.Length; row++)
+            {
+                Console.SetCursorPosition(1, 1 + row);
+                Console.Write(Game.Instance.Player.Sprite[row]);
+            }
+
+            int statsRowStart = Game.Instance.Player.Sprite.Length + 2;
+            int maxLabelStringLength = statLabels.Max(label => label.Length);
+            int entityBarPercent;
+
+            //Print Player stats (Name, Lvl, HP, MP, XP, DMG, DEF, SPD)
+            for (int row = 0; row < statLabels.Length; row++)
+            {
+                switch (row)
+                {
+                    //Name
+                    case 0:
+                        int entityNameAllowedLength = 33 - (3 + Game.Instance.Player.MaxLevel.ToString().Length);
+                        int entityNameLength = Game.Instance.Player.Name.Length;
+                        string entityName = entityNameLength < entityNameAllowedLength ? Game.Instance.Player.Name : Game.Instance.Player.Name.Substring(0, entityNameAllowedLength - 3) + "...";
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: {entityName}");
+                        break;
+                    //Level
+                    case 1:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: {Game.Instance.Player.Level}");
+                        break;
+                    //HP
+                    case 2:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: ");
+                        entityBarPercent = Game.Instance.Player.Health > 0 ? (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth : 0;
+                        Console.Write('<');
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(new string('=', entityBarPercent));
+                        Console.ResetColor();
+                        Console.Write(new string('-', 30 - entityBarPercent));
+                        Console.Write('>');
+                        Console.Write($" {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
+                        break;
+                    //MP
+                    case 3:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: ");
+                        entityBarPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
+                        Console.Write('<');
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(new string('~', entityBarPercent));
+                        Console.ResetColor();
+                        Console.Write(new string('-', 30 - entityBarPercent));
+                        Console.Write('>');
+                        Console.Write($" {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
+                        break;
+                    //XP
+                    case 4:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: ");
+                        entityBarPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
+                        Console.Write('|');
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write(new string('=', entityBarPercent));
+                        Console.ResetColor();
+                        Console.Write(new string('-', 30 - entityBarPercent));
+                        Console.Write('|');
+                        Console.Write($" {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}");
+                        break;
+                    //DMG
+                    case 5:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: {Game.Instance.Player.Damage}");
+                        break;
+                    //DEF
+                    case 6:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: {Game.Instance.Player.Armor}");
+                        break;
+                    //SPD
+                    case 7:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: {Game.Instance.Player.Speed}");
+                        break;
+                }                
+            }
+
+            //Print stickman for equipment
+            for (int row = 0; row < stickman.Length; row++)
+            {
+                //Console Width - percent of console width (so it isnt sticked to border) - center of stickman - start of current stickman row
+                Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 25) - (maxStickmanStringLength / 2) - (stickman[row].Length / 2), 2 + row);
+                Console.Write(stickman[row]);
+            }
+
+            //Print equipped lines
+            for (int equippedItem = 0; equippedItem < Game.Instance.Player.Equipment.Length; equippedItem++)
+            {
+                int equippedItemLine = 0;
+
+                switch (equippedItem)
+                {
+                    case 0:
+                        equippedItemLine = 2;
+                        break;
+                    case 1:
+                        equippedItemLine = 4;
+                        break;
+                    case 2:
+                        equippedItemLine = 7;
+                        break;
+                    case 3:
+                        equippedItemLine = 10;
+                        break;
+                    case 4:
+                        equippedItemLine = 13;
+                        break;
+                    case 5:
+                        equippedItemLine = 17;
+                        break;
+                }
+
+                Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 25) - maxStickmanStringLength - 4, 2 + equippedItemLine);
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write(new string('_', 4 + ((maxStickmanStringLength / 2) - (stickman[equippedItemLine].Length / 2)) + 1));
+                Console.ResetColor();
+            }
+
+            UpdateStats();
+            UpdateEquipment();
         }
 
         public override void Update()
         {
+            int maxItemNameLength = 20;
+            int maxDialogLength = 80;
+            int dialogRowStart = 1 + Game.Instance.Player.Sprite.Length + 2 + statLabels.Length + 2;
+
+            switch (currentState)
+            {
+                case InventoryDialogState.ItemDialog:
+                    string itemName = Game.Instance.Player.Inventory[SelectedOption] == null ? "-----" : Game.Instance.Player.Inventory[SelectedOption].Name;
+                    itemName = itemName.Length < maxItemNameLength ? itemName : string.Concat(itemName.AsSpan(0, maxItemNameLength - 3), "...");
+                    string itemDescription = Game.Instance.Player.Inventory[SelectedOption] == null ? "Empty space in your pocket" : Game.Instance.Player.Inventory[SelectedOption].Description;
+                    itemDescription = itemDescription.Length <= maxDialogLength ? itemDescription : string.Concat(itemDescription.AsSpan(0, maxDialogLength - 3), "...");
+
+                    Console.SetCursorPosition(2, dialogRowStart);
+                    Console.Write(new string(' ', maxDialogLength));
+                    Console.SetCursorPosition(2, dialogRowStart);
+                    Console.Write($"<< {selectedOption + 1}/{Game.Instance.Player.Inventory.Length} {itemName} ");
+                    if (Game.Instance.Player.Inventory[selectedOption] != null)
+                    {
+                        Console.Write('(');
+                        switch (Game.Instance.Player.Inventory[selectedOption])
+                        {
+                            case HealingItem:
+                            case ManaIncreaseItem:
+                            case HybridHealingItem:
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write(Game.Instance.Player.Inventory[selectedOption].Quantity);
+                                Console.ResetColor();
+                                break;
+                            case Equippable:
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.Write('E');
+                                Console.ResetColor();
+                                break;
+                            default:
+                                Console.Write(Game.Instance.Player.Inventory[selectedOption].Quantity);
+                                break;
+                        }
+                        Console.Write(')');
+                    }
+                    Console.Write(" >>");
+                    //Desc
+                    Console.SetCursorPosition(2, dialogRowStart + 1);
+                    Console.Write(new string(' ', maxDialogLength));
+                    Console.SetCursorPosition(2, dialogRowStart + 1);
+                    Console.Write(itemDescription);
+                    break;
+                case InventoryDialogState.SpellDialog:
+                    if (Game.Instance.Player.Spells.Count == 0)
+                    {
+                        Console.SetCursorPosition(2, dialogRowStart);
+                        Console.Write(" You dont have any spells yet.");
+                    }
+                    else
+                    {
+                        string spellName = Game.Instance.Player.Spells[selectedOption].Name.Length < maxItemNameLength ? Game.Instance.Player.Spells[selectedOption].Name : string.Concat(Game.Instance.Player.Spells[selectedOption].Name.AsSpan(0, maxItemNameLength - 3), "...");
+                        string spellDescription = Game.Instance.Player.Spells[selectedOption].Description.Length + 2 <= maxDialogLength ? Game.Instance.Player.Spells[selectedOption].Description : string.Concat(Game.Instance.Player.Spells[selectedOption].Description.AsSpan(0, maxDialogLength - 3), "...");
+
+                        Console.SetCursorPosition(2, dialogRowStart);
+                        Console.Write(new string(' ', maxDialogLength));
+                        Console.SetCursorPosition(2, dialogRowStart);
+                        Console.Write($"<< {selectedOption + 1}/{Game.Instance.Player.Spells.Count} {spellName} ({Game.Instance.Player.Spells[selectedOption].Cost}) >>");
+                        Console.SetCursorPosition(2, dialogRowStart + 1);
+                        Console.Write(new string(' ', maxDialogLength));
+                        Console.SetCursorPosition(2, dialogRowStart + 1);
+                        Console.Write(spellDescription);
+                    }
+                    break;
+            }
+
             //move cursor back to end for better experience
             Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
 
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
+
+        public void UpdateEquipment()
+        {
+            int maxItemNameLength = GlobalConstants.consoleRenderSizeWidth / 8;
+
+            for (int equippedItem = 0; equippedItem < Game.Instance.Player.Equipment.Length; equippedItem++)
+            {
+                int equippedItemLine = 0;
+                string itemName = Game.Instance.Player.Equipment[equippedItem] == null ? "No item" : Game.Instance.Player.Equipment[equippedItem].Name;
+                itemName = itemName.Length < maxItemNameLength ? itemName : string.Concat(itemName.AsSpan(0, maxItemNameLength - 3), "...");
+
+                switch (equippedItem)
+                {
+                    case 0:
+                        equippedItemLine = 2;
+                        break;
+                    case 1:
+                        equippedItemLine = 4;
+                        break;
+                    case 2:
+                        equippedItemLine = 7;
+                        break;
+                    case 3:
+                        equippedItemLine = 10;
+                        break;
+                    case 4:
+                        equippedItemLine = 13;
+                        break;
+                    case 5:
+                        equippedItemLine = 17;
+                        break;
+                }
+
+                Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 25) - maxStickmanStringLength - 4 - (maxItemNameLength + 1), 2 + equippedItemLine);
+                Console.Write(new string(' ', maxItemNameLength - itemName.Length) + itemName);
+            }
+        }
+
+        public void UpdateStats()
+        {
+            int statsRowStart = Game.Instance.Player.Sprite.Length + 4;
+            int maxLabelStringLength = statLabels.Max(label => label.Length);
+            int entityBarPercent;
+
+            //Update Player stats (HP, MP, XP, DMG, DEF, SPD)
+            for (int row = 0; row < 6; row++)
+            {
+                switch (row)
+                {
+                    //HP
+                    case 0:
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        entityBarPercent = Game.Instance.Player.Health > 0 ? (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth : 0;
+                        Console.Write('<');
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write(new string('=', entityBarPercent));
+                        Console.ResetColor();
+                        Console.Write(new string('-', 30 - entityBarPercent));
+                        Console.Write('>');
+                        Console.Write($" {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
+                        break;
+                    //MP
+                    case 1:
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        entityBarPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
+                        Console.Write('<');
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.Write(new string('~', entityBarPercent));
+                        Console.ResetColor();
+                        Console.Write(new string('-', 30 - entityBarPercent));
+                        Console.Write('>');
+                        Console.Write($" {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
+                        break;
+                    //XP
+                    case 2:
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        entityBarPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
+                        Console.Write('|');
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.Write(new string('=', entityBarPercent));
+                        Console.ResetColor();
+                        Console.Write(new string('-', 30 - entityBarPercent));
+                        Console.Write('|');
+                        Console.Write($" {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}");
+                        break;
+                    //DMG
+                    case 3:
+                        //Clear previous value
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write("     ");
+                        //Update value
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write(Game.Instance.Player.Damage);
+                        break;
+                    //DEF
+                    case 4:
+                        //Clear previous value
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write("     ");
+                        //Update value
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write(Game.Instance.Player.Armor);
+                        break;
+                    //SPD
+                    case 5:
+                        //Clear previous value
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write("     ");
+                        //Update value
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write(Game.Instance.Player.Speed);
+                        break;
+                }
+            }
+        }
+
+        public bool NextElement()
+        {
+            if (currentState == InventoryDialogState.SpellDialog && selectedOption < Game.Instance.Player.Spells.Count - 1)
+                selectedOption++;
+            else if (currentState == InventoryDialogState.ItemDialog && selectedOption < Game.Instance.Player.Inventory.Length - 1)
+                selectedOption++;
+            else
+                return false;
+
+            return true;
+        }
+
+        public bool PreviousElement()
+        {
+            if (currentState == InventoryDialogState.SpellDialog && selectedOption > 0)
+                selectedOption--;
+            else if (currentState == InventoryDialogState.ItemDialog && selectedOption > 0)
+                selectedOption--;
+            else
+                return false;
+
+            return true;
+        }
+
+        public int SelectedOption { get => selectedOption; set => selectedOption = value; }
+        public InventoryDialogState CurrentState { get => currentState; set => currentState = value; }
     }
 
     class JournalState : GameState

@@ -14,12 +14,14 @@ namespace tahova_RPG_hra.Source.Entities
 
         public Player(string name, string spritePath, Item[] inventory, Equippable[] equipment, int level, int xPtoLevelUp, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int money) : base(name, spritePath, inventory, equipment, level, xPtoLevelUp, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
         {
-            this.ImmuneMoves = 4;
+            ImmuneMoves = 4;
             Spells = new List<Spell>();
             Inventory = [null, null, null, null, null, null];
+            Equipment = [null, null, null, null, null, null];
 
-            this.AddItem(ItemManager.SmallHealthPotion, 3);
-            this.AddItem(ItemManager.SmallManaPotion, 2);
+            AddItem(ItemManager.SmallHealthPotion, 3);
+            AddItem(ItemManager.SmallManaPotion, 2);
+            AddItem(ItemManager.IronRing);
         }
 
         public int ImmuneMoves { get => immuneMoves; set => immuneMoves = value; }

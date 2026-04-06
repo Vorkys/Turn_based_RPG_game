@@ -214,12 +214,12 @@ namespace tahova_RPG_hra.Source.Entities
 
             for (int i = 0; i < Inventory.Length; i++)
             {
-                if (Inventory[i].Name == item.Name)
+                if (Inventory[i] != null && Inventory[i].Name == item.Name)
                 {
                     Inventory[i].Quantity -= amount;
                     amount = 0;
 
-                    if (Inventory[i].Quantity < 0)
+                    if (Inventory[i].Quantity <= 0)
                     {
                         amount = -Inventory[i].Quantity;
                         Inventory[i] = null;
@@ -296,10 +296,68 @@ namespace tahova_RPG_hra.Source.Entities
 
         public void Equip(Equippable item)
         {
-            Equippable tmpItem = this.Equipment[(int)item.Slot];
-            this.Equipment[(int)item.Slot] = item;
-            this.RemoveItem(item);
-            this.AddItem(tmpItem);
+            if (Equipment[(int)item.Slot] == null)
+            {
+                Equipment[(int)item.Slot] = item;
+                RemoveItem(item);
+            }
+            else
+            {
+                Equippable tmpItem = Equipment[(int)item.Slot];
+                int test = MaxMana;
+                //Remove stats from old equipment
+                switch (tmpItem.Slot)
+                {
+                    case Equippable.EquippableSlot.Helm:
+                        Armor -= tmpItem.Strength;
+                        break;
+                    case Equippable.EquippableSlot.Body:
+                        Armor -= tmpItem.Strength;
+                        break;
+                    case Equippable.EquippableSlot.Legs:
+                        Armor -= tmpItem.Strength;
+                        break;
+                    case Equippable.EquippableSlot.Ring:
+                        MaxMana -= tmpItem.Strength;
+                        break;
+                    case Equippable.EquippableSlot.Main_Hand:
+                        Damage -= tmpItem.Strength;
+                        break;
+                    case Equippable.EquippableSlot.Off_Hand:
+                        Armor -= tmpItem.Strength;
+                        break;
+                }
+
+                Equipment[(int)item.Slot] = item;
+                RemoveItem(item);
+                AddItem(tmpItem);
+            }
+
+            ////Add stats from new equipment
+            switch (item.Slot)
+            {
+                case Equippable.EquippableSlot.Helm:
+                    Armor += item.Strength;
+                    break;
+                case Equippable.EquippableSlot.Body:
+                    Armor += item.Strength;
+                    break;
+                case Equippable.EquippableSlot.Legs:
+                    Armor += item.Strength;
+                    break;
+                case Equippable.EquippableSlot.Ring:
+                    MaxMana += item.Strength;
+                    break;
+                case Equippable.EquippableSlot.Main_Hand:
+                    Damage += item.Strength;
+                    break;
+                case Equippable.EquippableSlot.Off_Hand:
+                    Armor += item.Strength;
+                    break;
+            }
+
+            if (Mana > MaxMana)
+                Mana = MaxMana;
         }
 
         public virtual void AttackTarget(int damage)

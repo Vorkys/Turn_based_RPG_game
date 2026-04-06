@@ -2,6 +2,7 @@
 
 namespace tahova_RPG_hra.Source.Managers
 {
+    //Here you can add spells. Try to keep the names and descriptions small.
     class SpellManager
     {
         public static HealSpell MinorHeal = new(
