@@ -827,7 +827,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             ItemDialog
         }
         private InventoryDialogState currentState = InventoryDialogState.ItemDialog;
-        private static string[] statLabels = { "Name", "Level", "Health", "Mana", "Experience", "Damage", "Armor", "Speed" };
+        private static string[] statLabels = { "Name", "Level", "Health", "Mana", "Experience", "Damage", "Armor", "Speed", "Money" };
         private static string[] stickman =
             {
                  "___",
@@ -920,7 +920,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             int maxLabelStringLength = statLabels.Max(label => label.Length);
             int entityBarPercent;
 
-            //Print Player stats (Name, Lvl, HP, MP, XP, DMG, DEF, SPD)
+            //Print Player stats (Name, Lvl, HP, MP, XP, DMG, DEF, SPD, Money)
             for (int row = 0; row < statLabels.Length; row++)
             {
                 switch (row)
@@ -992,7 +992,11 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                         Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
                         Console.Write($"{statLabels[row]}: {Game.Instance.Player.Speed}");
                         break;
-                }                
+                    case 8:
+                        Console.SetCursorPosition(2 + maxLabelStringLength - statLabels[row].Length, statsRowStart + row);
+                        Console.Write($"{statLabels[row]}: {Game.Instance.Player.Money}");
+                        break;
+                }
             }
 
             //Print stickman for equipment
@@ -1091,6 +1095,10 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 case InventoryDialogState.SpellDialog:
                     if (Game.Instance.Player.Spells.Count == 0)
                     {
+                        Console.SetCursorPosition(2, dialogRowStart);
+                        Console.Write(new string(' ', maxDialogLength));
+                        Console.SetCursorPosition(2, dialogRowStart + 1);
+                        Console.Write(new string(' ', maxDialogLength));
                         Console.SetCursorPosition(2, dialogRowStart);
                         Console.Write(" You dont have any spells yet.");
                     }
@@ -1227,6 +1235,13 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                         //Update value
                         Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
                         Console.Write(Game.Instance.Player.Speed);
+                        break;
+                    case 6:
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write("     ");
+                        //Update value
+                        Console.SetCursorPosition(2 + maxLabelStringLength + 2, statsRowStart + row);
+                        Console.Write($"{Game.Instance.Player.Money}");
                         break;
                 }
             }
