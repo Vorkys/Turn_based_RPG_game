@@ -83,8 +83,31 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
     {
         public override bool handle(ConsoleKey inputKey)
         {
+            PauseState castInstanceState = (PauseState)Game.Instance.GameState;
+
             switch (inputKey)
             {
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.W:
+                    return castInstanceState.PreviousSelection();
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
+                    return castInstanceState.NextSelection();
+                case ConsoleKey.Spacebar:
+                case ConsoleKey.Enter:
+                    switch (castInstanceState.SelectedOption)
+                    {
+                        case 0:
+                            Game.Instance.Resume();
+                            break;
+                        case 1:
+                            Game.Instance.Save();
+                            break;
+                        case 2:
+                            Game.Instance.ChangeState(GameStateType.Menu);
+                            break;
+                    }
+                    break;
                 case ConsoleKey.Escape:
                     Game.Instance.Resume();
                     break;
@@ -332,6 +355,7 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                         castInstanceState.CurrentState = InventoryDialogState.SpellDialog;
 
                     castInstanceState.SelectedOption = 0;
+                    castInstanceState.UpdateCurrentOpenedMenuLabel();
                     break;
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:

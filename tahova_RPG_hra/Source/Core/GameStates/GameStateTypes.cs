@@ -198,6 +198,11 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
     class PauseState : GameState
     {
+        private int selectedOption = 0;
+        private static string[] pauseMenuOptions = ["Resume", "Save", "Exit"];
+        private int pauseMenuWidth = 6 + GlobalConstants.consoleRenderSizeWidth / 4;
+        private int pauseMenuHeight = 2 * pauseMenuOptions.Length + 4 - 1;
+
         public PauseState()
         {
             InputHandler = new PauseHandler();
@@ -205,13 +210,24 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public override void Render()
         {
-            //Print pause in middle of screen
-            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 2 - 5, GlobalConstants.consoleRenderSizeHeight / 2 - 1);
-            Console.Write('o' + "---------" + 'o');
-            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 2 - 5, GlobalConstants.consoleRenderSizeHeight / 2);
-            Console.Write('|' + "  Pause  " + '|');
-            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 2 - 5, GlobalConstants.consoleRenderSizeHeight / 2 + 1);
-            Console.Write('o' + "---------" + 'o');
+            for (int line = 0; line < pauseMenuHeight; line++)
+            {
+                if (line == 0 || line == pauseMenuHeight - 1)
+                {
+                    Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 2) - (pauseMenuWidth / 2), (GlobalConstants.consoleRenderSizeHeight / 2) - (pauseMenuHeight / 2) + line);
+                    Console.Write('O' + new string('-', pauseMenuWidth - 2) + 'O');
+                }
+                else if (line % 2 == 1)
+                {
+                    Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 2) - (pauseMenuWidth / 2), (GlobalConstants.consoleRenderSizeHeight / 2) - (pauseMenuHeight / 2) + line);
+                    Console.Write('|' + new string(' ', pauseMenuWidth - 2) + '|');
+                }
+                else
+                {
+                    Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 2) - (pauseMenuWidth / 2), (GlobalConstants.consoleRenderSizeHeight / 2) - (pauseMenuHeight / 2) + line);
+                    Console.Write('|' + "    " + pauseMenuOptions[(line / 2) - 1] + new string(' ', pauseMenuWidth - (4 + pauseMenuOptions[(line / 2) - 1].Length + 2)) + '|');
+                }
+            }
 
             //clear control box
             for (int row = 0; row < 4; row++)
@@ -222,7 +238,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
             Console.SetCursorPosition(0, GlobalConstants.consoleSizeHeight - 4);
             //Print control box
-            string[] keybinds = ["[ESC] - Resume"];
+            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar or Enter] - Confirm", "[ESC] - Resume"];
             int tmpId = 0;
 
             //print informations box
@@ -255,6 +271,45 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 Console.WriteLine();
             }
         }
+
+        public override void Update()
+        {
+            //clear previous selection indicator
+            for (int line = 0; line < pauseMenuOptions.Length; line++)
+            {
+                Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 2) - (pauseMenuWidth / 2) + 2, (GlobalConstants.consoleRenderSizeHeight / 2) - (pauseMenuHeight / 2) + 2 + (2 * line));
+                Console.Write("  ");
+            }
+
+            Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 2) - (pauseMenuWidth / 2) + 2, (GlobalConstants.consoleRenderSizeHeight / 2) - (pauseMenuHeight / 2) + 2 + (2 * selectedOption));
+            Console.Write(">>");
+
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+        }
+
+        public bool NextSelection()
+        {
+            //selectedOption < MenuEnum.Count
+            if (selectedOption < pauseMenuOptions.Length - 1)
+                selectedOption++;
+            else
+                return false;
+
+            return true;
+        }
+
+        public bool PreviousSelection()
+        {
+            if (selectedOption > 0)
+                selectedOption--;
+            else
+                return false;
+
+            return true;
+        }
+
+        public int SelectedOption { get => selectedOption; set => selectedOption = value; }
     }
 
     class ExplorationState : GameState
@@ -1042,6 +1097,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
             UpdateStats();
             UpdateEquipment();
+            UpdateCurrentOpenedMenuLabel();
         }
 
         public override void Update()
@@ -1245,6 +1301,20 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                         break;
                 }
             }
+        }
+
+        public void UpdateCurrentOpenedMenuLabel()
+        {
+            int dialogRowStart = Game.Instance.Player.Sprite.Length + 2 + statLabels.Length + 2;
+
+            Console.SetCursorPosition(2, dialogRowStart);
+            Console.Write(new string(' ', 10));
+
+            Console.SetCursorPosition(2, dialogRowStart);
+            if (currentState == InventoryDialogState.ItemDialog)
+                Console.Write("Inventory:");
+            else
+                Console.Write("Spells:");
         }
 
         public bool NextElement()
