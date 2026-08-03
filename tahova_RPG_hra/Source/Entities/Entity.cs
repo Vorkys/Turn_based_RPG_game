@@ -304,7 +304,6 @@ namespace tahova_RPG_hra.Source.Entities
             else
             {
                 Equippable tmpItem = Equipment[(int)item.Slot];
-                int test = MaxMana;
                 //Remove stats from old equipment
                 switch (tmpItem.Slot)
                 {
@@ -358,6 +357,39 @@ namespace tahova_RPG_hra.Source.Entities
 
             if (Mana > MaxMana)
                 Mana = MaxMana;
+        }
+
+        public void Unequip(int EquipmentInventoryId)
+        {
+            if (!Game.Instance.Player.FreeSpaceInInventory() || Game.Instance.Player.Equipment[EquipmentInventoryId] == null)
+                return;
+
+            Equippable tmpItem = Equipment[(int)Game.Instance.Player.Equipment[EquipmentInventoryId].Slot];
+            //Remove stats from old equipment
+            switch (tmpItem.Slot)
+            {
+                case Equippable.EquippableSlot.Helm:
+                    Armor -= tmpItem.Strength;
+                    break;
+                case Equippable.EquippableSlot.Body:
+                    Armor -= tmpItem.Strength;
+                    break;
+                case Equippable.EquippableSlot.Legs:
+                    Armor -= tmpItem.Strength;
+                    break;
+                case Equippable.EquippableSlot.Ring:
+                    MaxMana -= tmpItem.Strength;
+                    break;
+                case Equippable.EquippableSlot.Main_Hand:
+                    Damage -= tmpItem.Strength;
+                    break;
+                case Equippable.EquippableSlot.Off_Hand:
+                    Armor -= tmpItem.Strength;
+                    break;
+            }
+
+            Game.Instance.Player.AddItem(Game.Instance.Player.Equipment[EquipmentInventoryId]);
+            Game.Instance.Player.Equipment[EquipmentInventoryId] = null;
         }
 
         public virtual void AttackTarget(int damage)

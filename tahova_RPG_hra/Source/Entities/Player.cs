@@ -118,5 +118,14 @@ namespace tahova_RPG_hra.Source.Entities
                 castTarget.Defeated();
             }
         }
+
+        public bool FreeSpaceInInventory()
+        {
+            for (int inventoryId = 0; inventoryId < Inventory.Length; inventoryId++)
+                if (Inventory[inventoryId] == null)
+                    return true;
+
+            return false;
+        }
     }
 }

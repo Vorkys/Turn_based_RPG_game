@@ -352,6 +352,42 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
                     else
                         return false;
                     break;
+                case ConsoleKey.D1:
+                case ConsoleKey.NumPad1:
+                    Game.Instance.Player.Unequip(0);
+                    castInstanceState.UpdateEquipment();
+                    castInstanceState.UpdateStats();
+                    break;
+                case ConsoleKey.D2:
+                case ConsoleKey.NumPad2:
+                    Game.Instance.Player.Unequip(1);
+                    castInstanceState.UpdateEquipment();
+                    castInstanceState.UpdateStats();
+                    break;
+                case ConsoleKey.D3:
+                case ConsoleKey.NumPad3:
+                    Game.Instance.Player.Unequip(2);
+                    castInstanceState.UpdateEquipment();
+                    castInstanceState.UpdateStats();
+                    break;
+                case ConsoleKey.D4:
+                case ConsoleKey.NumPad4:
+                    Game.Instance.Player.Unequip(3);
+                    castInstanceState.UpdateEquipment();
+                    castInstanceState.UpdateStats();
+                    break;
+                case ConsoleKey.D5:
+                case ConsoleKey.NumPad5:
+                    Game.Instance.Player.Unequip(4);
+                    castInstanceState.UpdateEquipment();
+                    castInstanceState.UpdateStats();
+                    break;
+                case ConsoleKey.D6:
+                case ConsoleKey.NumPad6:
+                    Game.Instance.Player.Unequip(5);
+                    castInstanceState.UpdateEquipment();
+                    castInstanceState.UpdateStats();
+                    break;
                 default:
                     return false;
             }

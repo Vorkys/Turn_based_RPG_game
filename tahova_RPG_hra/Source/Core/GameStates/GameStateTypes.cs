@@ -874,7 +874,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[A/<] - Previous selection", "[D/>] - Next selection", "[S/v] - Switch to Spells/Inventory", "[ESC] - Resume", "[Spacebar/Enter] - Equip"];
+            string[] keybinds = ["[A/<] - Previous selection", "[D/>] - Next selection", "[S/v] - Switch to Spells/Inventory", "[ESC] - Resume", "[Spacebar/Enter] - Equip", "[1-6] - Unequip slot (need free Inv space)"];
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -1158,7 +1158,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 }
 
                 Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 25) - maxStickmanStringLength - 4 - (maxItemNameLength + 1), 2 + equippedItemLine);
-                Console.Write(new string(' ', maxItemNameLength - itemName.Length) + itemName);
+                    Console.Write(new string(' ', maxItemNameLength - itemName.Length) + itemName);
             }
         }
 
@@ -1261,9 +1261,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
         public bool PreviousElement()
         {
-            if (currentState == InventoryDialogState.SpellDialog && selectedOption > 0)
-                selectedOption--;
-            else if (currentState == InventoryDialogState.ItemDialog && selectedOption > 0)
+            if (selectedOption > 0)
                 selectedOption--;
             else
                 return false;
