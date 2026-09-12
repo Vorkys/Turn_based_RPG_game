@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace tahova_RPG_hra.Source.Utils
+namespace TurnBasedRPG.Source.Utils
 {
     public static class Roll
     {

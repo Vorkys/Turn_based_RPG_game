@@ -1,6 +1,6 @@
-﻿using tahova_RPG_hra.Source.Entities;
+﻿using TurnBasedRPG.Source.Entities;
 
-namespace tahova_RPG_hra.Source.Quests.QuestObjective
+namespace TurnBasedRPG.Source.Quests.QuestObjectives
 {
     class KillObjective : Objective
     {

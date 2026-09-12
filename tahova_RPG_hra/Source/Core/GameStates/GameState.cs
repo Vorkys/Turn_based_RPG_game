@@ -1,6 +1,6 @@
-﻿using tahova_RPG_hra.Source.Core.InputHandlers;
+﻿using TurnBasedRPG.Source.Core.InputHandlers;
 
-namespace tahova_RPG_hra.Source.Core.GameStates
+namespace TurnBasedRPG.Source.Core.GameStates
 {
     public abstract class GameState
     {

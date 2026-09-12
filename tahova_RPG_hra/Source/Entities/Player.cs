@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Core.GameStates;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Managers;
-using tahova_RPG_hra.Source.Spells;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Core.GameStates;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Managers;
+using TurnBasedRPG.Source.Spells;
 
-namespace tahova_RPG_hra.Source.Entities
+namespace TurnBasedRPG.Source.Entities
 {
     public class Player : Entity
     {
@@ -16,7 +16,7 @@ namespace tahova_RPG_hra.Source.Entities
         {
             ImmuneMoves = 4;
             Spells = new List<Spell>();
-            Inventory = [null, null, null, null, null, null];
+            Inventory = [null, null, null, null, null, null, null, null, null, null];
             Equipment = [null, null, null, null, null, null];
 
             AddItem(ItemManager.SmallHealthPotion, 3);

@@ -1,15 +1,22 @@
 ﻿using System.Collections.Generic;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Spells;
+using System.Text.Json.Serialization;
+using TurnBasedRPG.Source.Entities.AllyRoles;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Spells;
 
-namespace tahova_RPG_hra.Source.Entities
+namespace TurnBasedRPG.Source.Entities
 {
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(Merchant), nameof(Merchant))]
+    [JsonDerivedType(typeof(ArenaOrganisator), nameof(ArenaOrganisator))]
+    [JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver))]
+
     public class Ally : Entity
     {
         private List<string> entryDialog;
 
-        public Ally(string name, string spritePath, Item[] inventory, Equippable[] equipment, int level, int xPtoLevelUp, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int money) : base(name, spritePath, inventory, equipment, level, xPtoLevelUp, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public Ally(string name, string spritePath, int money) : base(name, spritePath, money)
         {
             entryDialog = null;
         }

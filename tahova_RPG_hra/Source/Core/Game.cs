@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using tahova_RPG_hra.Source.Core.GameStates;
-using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.Locations;
-using tahova_RPG_hra.Source.Locations.Nodes;
-using tahova_RPG_hra.Source.Managers;
-using tahova_RPG_hra.Source.Quests;
-using tahova_RPG_hra.Source.Spells;
+using TurnBasedRPG.Source.Core.GameStates;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.Locations;
+using TurnBasedRPG.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Managers;
+using TurnBasedRPG.Source.Quests;
+using TurnBasedRPG.Source.Spells;
 
-namespace tahova_RPG_hra.Source.Core
+namespace TurnBasedRPG.Source.Core
 {
     public enum GameStateType
     {
@@ -103,8 +103,8 @@ namespace tahova_RPG_hra.Source.Core
 
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var deserializedList = JsonSerializer.Deserialize<List<List<Node>>>(json, options);
-                //TODO - remove commet; old map = 23, 78, 23, 78 ; new map = 4, 7, 4, 7
-                Location map = new(deserializedList, 4, 7, 4, 7);
+                //TODO - remove comment; old map = 23, 78, 23, 78 ; new map = 4, 7, 4, 7
+                Location map = new(deserializedList, 2, 2, 2, 2);
                 Maps.Add(map);
             }
             catch (Exception ex)
@@ -133,7 +133,7 @@ namespace tahova_RPG_hra.Source.Core
 
         public bool Init()
         {
-            //init all managers and return true if successful, false if fail somewhere
+            //init all managers and return true if successful, false if fail somewhere TODO - remove if unused?
             return true;
         }
 

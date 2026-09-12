@@ -1,7 +1,15 @@
-﻿using tahova_RPG_hra.Source.Entities;
+﻿using System.Text.Json.Serialization;
+using TurnBasedRPG.Source.Entities;
 
-namespace tahova_RPG_hra.Source.Spells
+namespace TurnBasedRPG.Source.Spells
 {
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(HealSpell), nameof(HealSpell))]
+    [JsonDerivedType(typeof(DamageSpell), nameof(DamageSpell))]
+    [JsonDerivedType(typeof(AbsorbSpell), nameof(AbsorbSpell))]
+    [JsonDerivedType(typeof(DarkDamageSpell), nameof(DarkDamageSpell))]
+    [JsonDerivedType(typeof(DarkManaStealSpell), nameof(DarkManaStealSpell))]
+
     public abstract class Spell
     {
         private Entity caster;

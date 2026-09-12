@@ -1,7 +1,7 @@
-﻿using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
+﻿using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
 
-namespace tahova_RPG_hra.Source.Managers
+namespace TurnBasedRPG.Source.Managers
 {
     //Here you can add items. Try to keep the names and descriptions small.
     class ItemManager

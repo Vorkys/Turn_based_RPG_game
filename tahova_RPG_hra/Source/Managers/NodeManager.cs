@@ -1,12 +1,19 @@
 ﻿using System.Collections.Generic;
-using System.Reflection.Metadata;
-using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Locations.Nodes;
 
-namespace tahova_RPG_hra.Source.Managers
+namespace TurnBasedRPG.Source.Managers
 {
     public class NodeManager
     {
+        public static Node DEBUG_ERROR = new(
+            nodeChar: 'X',
+            backgroundColor: "Magenta",
+            foregroundColor: "DarkMagenta",
+            mapColor: "Magenta",
+            isMovable: false
+        );
+
         #region Plains & Meadows nodes
         public static Node Grass = new(
             nodeChar: ' ',
@@ -490,10 +497,12 @@ namespace tahova_RPG_hra.Source.Managers
             mapColor: "Magenta",
             isMovable: true,
             name: "Veneta",
-            description: "This is my village where I grew up in. Area level: 1-3",
+            description: "This is my village where I grew up in. Area level: 1-3 (next area is from level 3)",
             //townSprite not implemented
             townSprite: "hometown.txt",
-            townPeople: null
+            townPeople: [
+                EntityManager.ShopkeeperT1Start
+            ]
         );
         //Plains town
         public static TownNode PlainsTown = new(
@@ -503,10 +512,13 @@ namespace tahova_RPG_hra.Source.Managers
             mapColor: "Magenta",
             isMovable: true,
             name: "Fanges",
-            description: "Big town in the middle of the plains. A lot of merchants are here. Area level: 3-8",
+            description: "Big town in the middle of the plains. A lot of merchants are here. Area level: 3-8 (next area is from level 7)",
             //townSprite not implemented
             townSprite: "hometown.txt",
-            townPeople: null
+            townPeople: [
+                EntityManager.ShopkeeperT1Plains,
+                EntityManager.OrganisatorT1
+            ]
         );
         //Forest town
         public static TownNode ForestTown = new(
@@ -516,10 +528,13 @@ namespace tahova_RPG_hra.Source.Managers
             mapColor: "Magenta",
             isMovable: true,
             name: "Enpolis",
-            description: "Hidden town in the middle of the forest. Near the border to the deep forest. Area level: 7-15",
+            description: "Hidden town in the middle of the forest. Near the border to the deep forest. Area level: 7-15 (next area is from level 14)",
             //townSprite not implemented
             townSprite: "hometown.txt",
-            townPeople: null
+            townPeople: [
+                EntityManager.ShopkeeperT2,
+                EntityManager.OrganisatorT2
+            ]
         );
         //Desert town
         public static TownNode DesertTown = new(
@@ -529,10 +544,13 @@ namespace tahova_RPG_hra.Source.Managers
             mapColor: "Magenta",
             isMovable: true,
             name: "Arrowing",
-            description: "Description. Area level: 14-18",
+            description: "Description. Area level: 14-18 (next area is from level 17)",
             //townSprite not implemented
             townSprite: "hometown.txt",
-            townPeople: null
+            townPeople: [
+                EntityManager.ShopkeeperT2,
+                EntityManager.OrganisatorT3Desert
+            ]
         );
         //Savana camp
         public static TownNode SavanaCamp = new(
@@ -542,10 +560,13 @@ namespace tahova_RPG_hra.Source.Managers
             mapColor: "Magenta",
             isMovable: true,
             name: "Savana camp",
-            description: "Small camp used for studying the environment. Area level: 17-20",
+            description: "Small camp used for studying the environment. Area level: 17-20 (next area is from level 19)",
             //townSprite not implemented
             townSprite: "hometown.txt",
-            townPeople: null
+            townPeople: [
+                EntityManager.ShopkeeperT2,
+                EntityManager.OrganisatorT3Savana
+            ]
         );
         //Ash land camp
         public static TownNode AshLandCamp = new(
@@ -555,10 +576,13 @@ namespace tahova_RPG_hra.Source.Managers
             mapColor: "Magenta",
             isMovable: true,
             name: "Ash lands camp",
-            description: "Advanced camp in the Ash lands to defend the main continent. Area level: 19-25",
+            description: "Advanced camp in the Ash lands to defend the main continent. Area level: 19-25 (next area is from level 25)",
             //townSprite not implemented
             townSprite: "hometown.txt",
-            townPeople: null
+            townPeople: [
+                EntityManager.ShopkeeperT2,
+                EntityManager.OrganisatorT1
+            ]
         );
         //Heaven tavern
         public static TownNode HeavenTavern = new(
@@ -571,7 +595,10 @@ namespace tahova_RPG_hra.Source.Managers
             description: "A tavern in the heavens where you can rest. Area level: 25-30",
             //townSprite not implemented
             townSprite: "hometown.txt",
-            townPeople: null
+            townPeople: [
+                EntityManager.ShopkeeperT2,
+                EntityManager.OrganisatorT1
+            ]
         );
         #endregion
     }

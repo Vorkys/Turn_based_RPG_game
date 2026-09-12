@@ -1,9 +1,15 @@
 ﻿using System.Collections.Generic;
-using tahova_RPG_hra.Source.Entities;
-using static tahova_RPG_hra.Source.Entities.Enemy;
+using System.Text.Json.Serialization;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Quests.QuestObjectives;
+using static TurnBasedRPG.Source.Entities.Enemy;
 
-namespace tahova_RPG_hra.Source.Quests
+namespace TurnBasedRPG.Source.Quests
 {
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(KillObjective), nameof(KillObjective))]
+    [JsonDerivedType(typeof(LootObjective), nameof(LootObjective))]
+
     public class Objective
     {
         private bool isCompleted;

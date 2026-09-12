@@ -1,7 +1,7 @@
-﻿using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.Utils;
+﻿using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Utils;
 
-namespace tahova_RPG_hra.Source.Spells
+namespace TurnBasedRPG.Source.Spells
 {
     class HealSpell : Spell
     {

@@ -1,4 +1,4 @@
-﻿namespace tahova_RPG_hra.Source.Statuses
+﻿namespace TurnBasedRPG.Source.Statuses
 {
     internal class Status
     {

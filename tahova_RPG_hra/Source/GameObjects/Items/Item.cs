@@ -1,7 +1,18 @@
-﻿using tahova_RPG_hra.Source.Entities;
+﻿using System.Text.Json.Serialization;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
 
-namespace tahova_RPG_hra.Source.GameObjects.Items
+namespace TurnBasedRPG.Source.GameObjects.Items
 {
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(Consumable), nameof(Consumable))]
+    [JsonDerivedType(typeof(Equippable), nameof(Equippable))]
+    [JsonDerivedType(typeof(HealingItem), nameof(HealingItem))]
+    [JsonDerivedType(typeof(ManaIncreaseItem), nameof(ManaIncreaseItem))]
+    [JsonDerivedType(typeof(HybridHealingItem), nameof(HybridHealingItem))]
+    [JsonDerivedType(typeof(DamageItem), nameof(DamageItem))]
+    [JsonDerivedType(typeof(ReduceMana), nameof(ReduceMana))]
+
     public class Item : GameObject
     {
         private Entity owner;

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using tahova_RPG_hra.Source.Quests;
+using TurnBasedRPG.Source.Quests;
 
-namespace tahova_RPG_hra.Source.Managers
+namespace TurnBasedRPG.Source.Managers
 {
     public class QuestManager
     {

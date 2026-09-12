@@ -1,6 +1,6 @@
-﻿using tahova_RPG_hra.Source.Spells;
+﻿using TurnBasedRPG.Source.Spells;
 
-namespace tahova_RPG_hra.Source.Managers
+namespace TurnBasedRPG.Source.Managers
 {
     //Here you can add spells. Try to keep the names and descriptions small.
     class SpellManager

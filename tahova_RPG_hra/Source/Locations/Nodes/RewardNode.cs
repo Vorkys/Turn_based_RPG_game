@@ -1,8 +1,8 @@
 ﻿using System;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.GameObjects.Items;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.GameObjects.Items;
 
-namespace tahova_RPG_hra.Source.Locations.Nodes
+namespace TurnBasedRPG.Source.Locations.Nodes
 {
     public class RewardNode : Node
     {

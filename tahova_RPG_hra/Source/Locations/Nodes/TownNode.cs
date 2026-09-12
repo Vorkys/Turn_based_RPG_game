@@ -1,7 +1,7 @@
-﻿using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Entities;
+﻿using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Entities;
 
-namespace tahova_RPG_hra.Source.Locations.Nodes
+namespace TurnBasedRPG.Source.Locations.Nodes
 {
     public class TownNode : Node
     {
@@ -28,6 +28,14 @@ namespace tahova_RPG_hra.Source.Locations.Nodes
             base.Traverse();
 
             Game.Instance.openTown(this);
+        }
+
+        public bool Contains(Ally ally)
+        {
+            for (int _ally = 0; _ally < townPeople.Length; _ally++)
+                if (townPeople[_ally] == ally) return true;
+
+            return false;
         }
     }
 }

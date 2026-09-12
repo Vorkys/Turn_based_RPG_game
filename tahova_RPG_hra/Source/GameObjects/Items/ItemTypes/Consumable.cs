@@ -1,6 +1,6 @@
-﻿using tahova_RPG_hra.Source.Entities;
+﻿using System.Text.Json.Serialization;
 
-namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
+namespace TurnBasedRPG.Source.GameObjects.Items.ItemTypes
 {
     public class Consumable : Item
     {

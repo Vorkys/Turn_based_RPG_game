@@ -1,4 +1,4 @@
-﻿namespace tahova_RPG_hra.Source.Scenes
+﻿namespace TurnBasedRPG.Source.UI
 {
     class MainMenu
     {

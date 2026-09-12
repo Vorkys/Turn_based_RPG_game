@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using tahova_RPG_hra.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Locations.Nodes;
 
-namespace tahova_RPG_hra.Source.Locations
+namespace TurnBasedRPG.Source.Locations
 {
     public class Location
     {

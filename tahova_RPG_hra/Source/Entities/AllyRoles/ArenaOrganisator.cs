@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Quests;
-using tahova_RPG_hra.Source.Spells;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Quests;
+using TurnBasedRPG.Source.Spells;
 
-namespace tahova_RPG_hra.Source.Entities.AllyRoles
+namespace TurnBasedRPG.Source.Entities.AllyRoles
 {
-    class ArenaOrganisator : Ally
+    public class ArenaOrganisator : Ally
     {
         private List<Enemy> enemies;
 
-        public ArenaOrganisator(string name, string spritePath, Item[] inventory, Equippable[] equipment, int level, int xPtoLevelUp, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int money, Quest[] quests, List<Enemy> enemies) : base(name, spritePath, inventory, equipment, level, xPtoLevelUp, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public ArenaOrganisator(string name, string spritePath, int money, List<Enemy> enemies) : base(name, spritePath, money)
         {
             this.Enemies = enemies;
         }

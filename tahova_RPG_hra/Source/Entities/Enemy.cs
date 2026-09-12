@@ -1,14 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Core.GameStates;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.Quests;
-using tahova_RPG_hra.Source.Spells;
-using tahova_RPG_hra.Source.Utils;
+using System.Text.Json.Serialization;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Core.GameStates;
+using TurnBasedRPG.Source.Entities.EnemyTypes;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Quests;
+using TurnBasedRPG.Source.Spells;
+using TurnBasedRPG.Source.Utils;
 
-namespace tahova_RPG_hra.Source.Entities
+namespace TurnBasedRPG.Source.Entities
 {
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(Slime), nameof(Slime))]
+    [JsonDerivedType(typeof(Goblin), nameof(Goblin))]
+    [JsonDerivedType(typeof(Animal), nameof(Animal))]
+    [JsonDerivedType(typeof(Human), nameof(Human))]
+    [JsonDerivedType(typeof(Magical), nameof(Magical))]
+    [JsonDerivedType(typeof(Demonic), nameof(Demonic))]
+    [JsonDerivedType(typeof(Godly), nameof(Godly))]
+
     public class Enemy : Entity
     {
         public struct Drop
@@ -258,7 +270,16 @@ namespace tahova_RPG_hra.Source.Entities
             Game.Instance.Player.IncreaseMana((int)(Game.Instance.Player.MaxHealth / 6));
 
             Game.Instance.Player.Target = null;
-            Game.Instance.ChangeState(GameStateType.Exploration);
+            //If player was in combat when standing on a Town node then he probably was in the Arena to open town by default (so he doesnt have to move out and in to load town)
+            Node castCurrentNode = Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+            if (castCurrentNode is TownNode)
+            {
+                Game.Instance.Player.Health = Game.Instance.Player.MaxHealth;
+                Game.Instance.Player.Mana = Game.Instance.Player.MaxMana;
+                castCurrentNode.Traverse();
+            }
+            else
+                Game.Instance.ChangeState(GameStateType.Exploration);
         }
 
         public override void AttackTarget(int damage)

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.Entities.AllyRoles;
-using tahova_RPG_hra.Source.Entities.EnemyTypes;
-using static tahova_RPG_hra.Source.Entities.Enemy;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Entities.AllyRoles;
+using TurnBasedRPG.Source.Entities.EnemyTypes;
+using TurnBasedRPG.Source.GameObjects.Items;
+using static TurnBasedRPG.Source.Entities.Enemy;
 
-namespace tahova_RPG_hra.Source.Managers
+namespace TurnBasedRPG.Source.Managers
 {
     //factory pattern
     class EntityManager
@@ -685,24 +686,93 @@ namespace tahova_RPG_hra.Source.Managers
 
         #endregion
 
-        public static ArenaOrganisator Organisator = new(
+        #region Friendly
+
+        #region ArenaOrganisators
+        public static ArenaOrganisator OrganisatorT1 = new(
             name: "Town arena organisator",
             spritePath: "human.txt",
-            inventory: null,
-            equipment: null,
-            level: 1,
-            xPtoLevelUp: 70,
-            maxHealth: 14,
-            maxMana: 7,
-            spells: null,
-            damage: 6,
-            criticalHitChance: 4,
-            missChance: 2,
-            armor: 2,
-            speed: 14,
             money: 0,
-            quests: null,
-            enemies: new List<Enemy> { SmallGoblin }
+            enemies: new List<Enemy> { CuteSlime, SmallGoblin, GoblinWarrior }
             );
+
+        public static ArenaOrganisator OrganisatorT2 = new(
+            name: "Town arena organisator",
+            spritePath: "human.txt",
+            money: 0,
+            enemies: new List<Enemy> { Slime, BanditWarrior }
+            );
+
+        public static ArenaOrganisator OrganisatorT3Desert = new(
+            name: "Town arena organisator",
+            spritePath: "human.txt",
+            money: 0,
+            enemies: new List<Enemy> { Lion, Hyena }
+            );
+
+        public static ArenaOrganisator OrganisatorT3Savana = new(
+            name: "Town arena organisator",
+            spritePath: "human.txt",
+            money: 0,
+            enemies: new List<Enemy> { Scorpion, Worm }
+            );
+
+        #endregion
+
+        #region Shopkeepers
+        public static Merchant ShopkeeperT1Start = new(
+            name: "Keeper of the local tavern.",
+            spritePath: "human.txt",
+            money: 50,
+            wares: new List<Item> {
+                ItemManager.SmallHealthPotion,
+                ItemManager.SmallManaPotion,
+                ItemManager.SmallPinkPotion
+            }
+            );
+
+        public static Merchant ShopkeeperT1Plains = new(
+            name: "Wealthy Merchant.",
+            spritePath: "human.txt",
+            money: 100,
+            wares: new List<Item> {
+                ItemManager.SmallHealthPotion,
+                ItemManager.SmallManaPotion,
+                ItemManager.SmallPinkPotion,
+                ItemManager.WoodenSword,
+                ItemManager.WoodenShield,
+                ItemManager.WoodenHelmet,
+                ItemManager.WoodenBody,
+                ItemManager.WoodenLegs
+            }
+            );
+
+        public static Merchant ShopkeeperT2 = new(
+            name: "Keeper of the local tavern.",
+            spritePath: "human.txt",
+            money: 1000,
+            wares: new List<Item> {
+                ItemManager.SmallHealthPotion,
+                ItemManager.SmallManaPotion,
+                ItemManager.SmallPinkPotion,
+                ItemManager.IronRing,
+                ItemManager.WoodenSword,
+                ItemManager.WoodenShield,
+                ItemManager.WoodenHelmet,
+                ItemManager.WoodenBody,
+                ItemManager.WoodenLegs
+            }
+            );
+
+        #endregion
+
+        #region QuestGivers
+        #endregion
+
+        #region Others
+
+        #endregion
+
+        #endregion
     }
 }

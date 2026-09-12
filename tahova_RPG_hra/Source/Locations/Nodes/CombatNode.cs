@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Entities;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Entities;
 
-namespace tahova_RPG_hra.Source.Locations.Nodes
+namespace TurnBasedRPG.Source.Locations.Nodes
 {
     public class CombatNode : Node
     {

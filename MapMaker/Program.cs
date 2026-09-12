@@ -1,7 +1,15 @@
 ﻿using System.Text.Json;
-using tahova_RPG_hra.Source.Locations.Nodes;
-using tahova_RPG_hra.Source.Managers;
-using tahova_RPG_hra.Source.Utils;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Entities.AllyRoles;
+using TurnBasedRPG.Source.Entities.EnemyTypes;
+using TurnBasedRPG.Source.GameObjects;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Managers;
+using TurnBasedRPG.Source.Utils;
 
 namespace MapMaker
 {
@@ -219,6 +227,9 @@ namespace MapMaker
                         case '6':
                             row.Add(NodeManager.HeavenTavern);
                             break;
+                        default:
+                            row.Add(NodeManager.DEBUG_ERROR);
+                            break;
                     }
                 }
 
@@ -246,7 +257,76 @@ namespace MapMaker
 
         static void Serialize2DList(List<List<Node>> map, string filePath)
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
+            var derivedTypesMap = new Dictionary<Type, JsonDerivedType[]>
+            {
+                [typeof(Node)] = [
+                    new JsonDerivedType(typeof(CombatNode), nameof(CombatNode)),
+                    new JsonDerivedType(typeof(BossNode), nameof(BossNode)),
+                    new JsonDerivedType(typeof(DialogNode), nameof(DialogNode)),
+                    new JsonDerivedType(typeof(DungeonNode), nameof(DungeonNode)),
+                    new JsonDerivedType(typeof(RewardNode), nameof(RewardNode)),
+                    new JsonDerivedType(typeof(TownNode), nameof(TownNode))
+                ],
+                [typeof(Entity)] = [
+                    new JsonDerivedType(typeof(Player), nameof(Player)),
+                    new JsonDerivedType(typeof(Ally), nameof(Ally)),
+                    new JsonDerivedType(typeof(ArenaOrganisator), nameof(ArenaOrganisator)),
+                    new JsonDerivedType(typeof(Merchant), "Merchant"),
+                    new JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver)),
+                    new JsonDerivedType(typeof(Enemy), nameof(Enemy)),
+                    new JsonDerivedType(typeof(Slime), nameof(Slime)),
+                    new JsonDerivedType(typeof(Goblin), nameof(Goblin)),
+                    new JsonDerivedType(typeof(Animal), nameof(Animal)),
+                    new JsonDerivedType(typeof(Human), nameof(Human)),
+                    new JsonDerivedType(typeof(Magical), nameof(Magical)),
+                    new JsonDerivedType(typeof(Demonic), nameof(Demonic)),
+                    new JsonDerivedType(typeof(Godly), nameof(Godly))
+                ],
+                [typeof(GameObject)] = [
+                    new JsonDerivedType(typeof(Item), nameof(Item)),
+                    new JsonDerivedType(typeof(Consumable), nameof(Consumable)),
+                    new JsonDerivedType(typeof(Equippable), nameof(Equippable)),
+                    new JsonDerivedType(typeof(HealingItem), nameof(HealingItem)),
+                    new JsonDerivedType(typeof(ManaIncreaseItem), nameof(ManaIncreaseItem)),
+                    new JsonDerivedType(typeof(HybridHealingItem), nameof(HybridHealingItem)),
+                    new JsonDerivedType(typeof(DamageItem), nameof(DamageItem)),
+                    new JsonDerivedType(typeof(ReduceMana), nameof(ReduceMana))
+                ],
+            };
+
+            var options = new JsonSerializerOptions
+            {
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver
+                {
+                    Modifiers =
+                    {
+                        typeInfo =>
+                        {
+                            if (derivedTypesMap.TryGetValue(
+                                typeInfo.Type,
+                                out var derivedTypes))
+                            {
+                                var polymorphismOptions = new JsonPolymorphismOptions
+                                {
+                                    TypeDiscriminatorPropertyName = "$type",
+                                    IgnoreUnrecognizedTypeDiscriminators = true,
+                                    UnknownDerivedTypeHandling =
+                                        JsonUnknownDerivedTypeHandling.FailSerialization
+                                };
+
+                                foreach (var derivedType in derivedTypes)
+                                {
+                                    polymorphismOptions.DerivedTypes.Add(derivedType);
+                                }
+
+                                typeInfo.PolymorphismOptions = polymorphismOptions;
+                            }
+                        }
+                    }
+                },
+                WriteIndented = true
+            };
+
             string json = JsonSerializer.Serialize<object>(map, options);
             File.WriteAllText(filePath, json);
         }

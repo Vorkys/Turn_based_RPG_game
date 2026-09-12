@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using tahova_RPG_hra.Source.Core;
+using TurnBasedRPG.Source.Core;
 
-namespace tahova_RPG_hra.Source.Locations.Nodes
+namespace TurnBasedRPG.Source.Locations.Nodes
 {
     public class DialogNode : Node
     {

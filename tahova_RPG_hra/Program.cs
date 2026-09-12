@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.Utils;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Utils;
 
-namespace tahova_RPG_hra
+namespace TurnBasedRPG
 {
     class Program
     {
@@ -82,7 +82,7 @@ namespace tahova_RPG_hra
             //}
 
             //TODO - remove after testing
-            Game.Instance.Player.IncreaseLvl(60);
+            Game.Instance.Player.IncreaseLvl(40);
 
             Game.Instance.GameState.Render();
             while (true)

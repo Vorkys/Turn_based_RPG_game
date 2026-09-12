@@ -1,7 +1,7 @@
 ﻿using System;
-using tahova_RPG_hra.Source.Core;
+using TurnBasedRPG.Source.Core;
 
-namespace tahova_RPG_hra.Source.GameObjects.Items.ItemTypes
+namespace TurnBasedRPG.Source.GameObjects.Items.ItemTypes
 {
     public class Equippable : Item
     {

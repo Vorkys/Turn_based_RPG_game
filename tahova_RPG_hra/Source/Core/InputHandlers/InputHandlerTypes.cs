@@ -1,11 +1,12 @@
 ﻿using System;
-using tahova_RPG_hra.Source.Core.GameStates;
-using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Managers;
-using static tahova_RPG_hra.Source.Core.GameStates.InventoryState;
+using TurnBasedRPG.Source.Core.GameStates;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Entities.AllyRoles;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Locations.Nodes;
+using static TurnBasedRPG.Source.Core.GameStates.InventoryState;
 
-namespace tahova_RPG_hra.Source.Core.InputHandlers
+namespace TurnBasedRPG.Source.Core.InputHandlers
 {
     class MenuHandler : InputHandler
     {
@@ -450,22 +451,58 @@ namespace tahova_RPG_hra.Source.Core.InputHandlers
     {
         public override bool handle(ConsoleKey inputKey)
         {
+            TownState castInstanceState = (TownState)Game.Instance.GameState;
+            TownNode castCurrentNode = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+
             switch (inputKey)
             {
+                case ConsoleKey.Q:
+                    Game.Instance.Player.Health = Game.Instance.Player.MaxHealth;
+                    Game.Instance.Player.Mana = Game.Instance.Player.MaxMana;
+                    break;
+                case ConsoleKey.UpArrow:
+                case ConsoleKey.W:
+                    return castInstanceState.PreviousElement();
+                case ConsoleKey.DownArrow:
+                case ConsoleKey.S:
+                    return castInstanceState.NextElement();
+                case ConsoleKey.E:
+                    if (castCurrentNode.TownPeople == null)
+                        return false;
+                    foreach (Ally ally in castCurrentNode.TownPeople)
+                        if (ally is Merchant)
+                        {
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.CurrentState = TownState.TownNodeState.MerchantSell;
+                        }
+                    break;
+                case ConsoleKey.R:
+                    if (castCurrentNode.TownPeople == null)
+                        return false;
+                    foreach (Ally ally in castCurrentNode.TownPeople)
+                        if (ally is Merchant)
+                        {
+                            castInstanceState.SelectedOption = 0;
+                            castInstanceState.CurrentState = TownState.TownNodeState.MerchantBuy;
+                        }
+                    break;
                 case ConsoleKey.Escape:
-                    Game.Instance.ChangeState(GameStateType.Exploration);
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case TownState.TownNodeState.TownInfo:
+                            Game.Instance.ChangeState(GameStateType.Exploration);
+                            break;
+                        case TownState.TownNodeState.MerchantSell:
+                            castInstanceState.CurrentState = TownState.TownNodeState.TownInfo;
+                            break;
+                        case TownState.TownNodeState.MerchantBuy:
+                            castInstanceState.CurrentState = TownState.TownNodeState.TownInfo;
+                            break;
+                    }
                     break;
                 //TODO - enemies are null when deserializing
                 //case ConsoleKey.Q:
                 //    EntityManager.Organisator.Talk();
-                //    break;
-                case ConsoleKey.W:
-                    Game.Instance.Player.Health = Game.Instance.Player.MaxHealth;
-                    Game.Instance.Player.Mana = Game.Instance.Player.MaxMana;
-                    break;
-                //TODO - not working
-                //case ConsoleKey.E:
-                //    Game.Instance.Save();
                 //    break;
                 default:
                     return false;

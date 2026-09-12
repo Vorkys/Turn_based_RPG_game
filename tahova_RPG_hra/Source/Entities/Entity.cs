@@ -2,14 +2,32 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Spells;
-using tahova_RPG_hra.Source.Utils;
+using System.Text.Json.Serialization;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Entities.AllyRoles;
+using TurnBasedRPG.Source.Entities.EnemyTypes;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Spells;
+using TurnBasedRPG.Source.Utils;
 
-namespace tahova_RPG_hra.Source.Entities
+namespace TurnBasedRPG.Source.Entities
 {
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(Player), nameof(Player))]
+    [JsonDerivedType(typeof(Ally), nameof(Ally))]
+    [JsonDerivedType(typeof(Merchant), nameof(Merchant))]
+    [JsonDerivedType(typeof(ArenaOrganisator), nameof(ArenaOrganisator))]
+    [JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver))]
+    [JsonDerivedType(typeof(Enemy), nameof(Enemy))]
+    [JsonDerivedType(typeof(Slime), nameof(Slime))]
+    [JsonDerivedType(typeof(Goblin), nameof(Goblin))]
+    [JsonDerivedType(typeof(Animal), nameof(Animal))]
+    [JsonDerivedType(typeof(Human), nameof(Human))]
+    [JsonDerivedType(typeof(Magical), nameof(Magical))]
+    [JsonDerivedType(typeof(Demonic), nameof(Demonic))]
+    [JsonDerivedType(typeof(Godly), nameof(Godly))]
+
     public class Entity
     {
         private string name;
@@ -82,6 +100,31 @@ namespace tahova_RPG_hra.Source.Entities
             this.Armor = armor;
             this.Speed = speed;
             this.Money = 0;
+        }
+
+        //Ally ct
+        public Entity(string name, string spritePath, int money)
+        {
+            this.Name = name;
+            this.SpritePath = spritePath;
+            this.Inventory = null;
+            this.Equipment = null;
+            this.Target = null;
+            this.Level = 1;
+            this.MaxLevel = 1;
+            this.EntityXP = 0;
+            this.XPtoLevelUp = 1;
+            this.Health = 1;
+            this.MaxHealth = 1;
+            this.Mana = 1;
+            this.MaxMana = 1;
+            this.Spells = null;
+            this.Damage = 1;
+            this.CriticalHitChance = 0;
+            this.MissChance = 0;
+            this.Armor = 1;
+            this.Speed = 1;
+            this.Money = money;
         }
 
         public string Name { get => name; set => name = value; }
@@ -379,6 +422,8 @@ namespace tahova_RPG_hra.Source.Entities
                     break;
                 case Equippable.EquippableSlot.Ring:
                     MaxMana -= tmpItem.Strength;
+                    if (Mana > MaxMana)
+                        Mana = MaxMana;
                     break;
                 case Equippable.EquippableSlot.Main_Hand:
                     Damage -= tmpItem.Strength;

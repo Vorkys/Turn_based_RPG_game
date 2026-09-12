@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using tahova_RPG_hra.Source.Spells;
+using TurnBasedRPG.Source.Spells;
 
-namespace tahova_RPG_hra.Source.Entities.EnemyTypes
+namespace TurnBasedRPG.Source.Entities.EnemyTypes
 {
-    class Slime : Enemy
+    public class Slime : Enemy
     {
         public Slime(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxLevel, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, itemDrops, goldDrop, escapeChance, xpDrop)
         {
@@ -21,7 +21,7 @@ namespace tahova_RPG_hra.Source.Entities.EnemyTypes
         //public override void ReduceLvl(int numberOfLvls) { }
     }
 
-    class Goblin : Enemy
+    public class Goblin : Enemy
     {
         public Goblin(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxLevel, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, itemDrops, goldDrop, escapeChance, xpDrop)
         {
@@ -39,7 +39,7 @@ namespace tahova_RPG_hra.Source.Entities.EnemyTypes
         //public override void ReduceLvl(int numberOfLvls) { }
     }
 
-    class Animal : Enemy
+    public class Animal : Enemy
     {
         public Animal(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxLevel, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, itemDrops, goldDrop, escapeChance, xpDrop)
         {
@@ -56,7 +56,7 @@ namespace tahova_RPG_hra.Source.Entities.EnemyTypes
         //public override void ReduceLvl(int numberOfLvls) { }
     }
 
-    class Human : Enemy
+    public class Human : Enemy
     {
         public Human(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxLevel, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, itemDrops, goldDrop, escapeChance, xpDrop)
         {
@@ -73,7 +73,7 @@ namespace tahova_RPG_hra.Source.Entities.EnemyTypes
         //public override void ReduceLvl(int numberOfLvls) { }
     }
 
-    class Magical : Enemy
+    public class Magical : Enemy
     {
         public Magical(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxLevel, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, itemDrops, goldDrop, escapeChance, xpDrop)
         {
@@ -90,7 +90,7 @@ namespace tahova_RPG_hra.Source.Entities.EnemyTypes
         //public override void ReduceLvl(int numberOfLvls) { }
     }
 
-    class Demonic : Enemy
+    public class Demonic : Enemy
     {
         public Demonic(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxLevel, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, itemDrops, goldDrop, escapeChance, xpDrop)
         {
@@ -107,7 +107,7 @@ namespace tahova_RPG_hra.Source.Entities.EnemyTypes
         //public override void ReduceLvl(int numberOfLvls) { }
     }
 
-    class Godly : Enemy
+    public class Godly : Enemy
     {
         public Godly(string name, string spritePath, int level, int maxLevel, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, List<Drop> itemDrops, int goldDrop, int escapeChance, int xpDrop) : base(name, spritePath, level, maxLevel, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, itemDrops, goldDrop, escapeChance, xpDrop)
         {

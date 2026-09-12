@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
-using tahova_RPG_hra.Source.Core;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Spells;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Spells;
 
-namespace tahova_RPG_hra.Source.Entities.AllyRoles
+namespace TurnBasedRPG.Source.Entities.AllyRoles
 {
-    class Merchant : Ally
+    public class Merchant : Ally
     {
         private List<Item> wares;
 
-        public Merchant(string name, string spritePath, Item[] inventory, Equippable[] equipment, int level, int xPtoLevelUp, int maxHealth, int maxMana, List<Spell> spells, int damage, int criticalHitChance, int missChance, int armor, int speed, int money, List<Item> wares) : base(name, spritePath, inventory, equipment, level, xPtoLevelUp, maxHealth, maxMana, spells, damage, criticalHitChance, missChance, armor, speed, money)
+        public Merchant(string name, string spritePath, int money, List<Item> wares) : base(name, spritePath, money)
         {
             this.Wares = wares;
         }

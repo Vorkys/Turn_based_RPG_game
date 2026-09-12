@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace tahova_RPG_hra.Source.Core.InputHandlers
+namespace TurnBasedRPG.Source.Core.InputHandlers
 {
     public abstract class InputHandler
     {

@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using tahova_RPG_hra.Source.Core.InputHandlers;
-using tahova_RPG_hra.Source.Entities;
-using tahova_RPG_hra.Source.GameObjects.Items;
-using tahova_RPG_hra.Source.GameObjects.Items.ItemTypes;
-using tahova_RPG_hra.Source.Locations.Nodes;
-using tahova_RPG_hra.Source.Scenes;
-using tahova_RPG_hra.Source.Utils;
-using static tahova_RPG_hra.Source.Core.GameStates.CombatState;
-using static tahova_RPG_hra.Source.Core.GameStates.MainMenuState;
-using static tahova_RPG_hra.Source.GameObjects.Items.ItemTypes.Equippable;
+using TurnBasedRPG.Source.Core.InputHandlers;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Entities.AllyRoles;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
+using TurnBasedRPG.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Utils;
 
-namespace tahova_RPG_hra.Source.Core.GameStates
+namespace TurnBasedRPG.Source.Core.GameStates
 {
     class MainMenuState : GameState
     {
@@ -52,7 +49,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar or Enter] - Confirm", "[ESC] - Back"];
+            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar/Enter] - Confirm", "[ESC] - Back"];
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -238,7 +235,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
             Console.SetCursorPosition(0, GlobalConstants.consoleSizeHeight - 4);
             //Print control box
-            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar or Enter] - Confirm", "[ESC] - Resume"];
+            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar/Enter] - Confirm", "[ESC] - Resume"];
             int tmpId = 0;
 
             //print informations box
@@ -1413,6 +1410,16 @@ namespace tahova_RPG_hra.Source.Core.GameStates
 
     class TownState : GameState
     {
+        public enum TownNodeState
+        {
+            TownInfo,
+            MerchantSell,
+            MerchantBuy,
+            QuestGiver
+        }
+        private TownNodeState currentState = TownNodeState.TownInfo;
+        private int selectedOption = 0;
+
         public TownState()
         {
             InputHandler = new TownHandler();
@@ -1434,9 +1441,50 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 Console.WriteLine();
             }
 
+            TownNode castCurrentNode = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+
             //Print control box
-            string[] keybinds = ["[W] - Tavern (heal)", "[ESC] - Exit Town"];
+            List<string> keybinds = new List<string> { "[Q] - Tavern (heal)" };
             int tmpId = 0;
+
+            if (castCurrentNode.TownPeople != null)
+            {
+                foreach (Ally ally in castCurrentNode.TownPeople)
+                {
+                    switch (ally)
+                    {
+                        case ArenaOrganisator:
+                            ArenaOrganisator castEntity = (ArenaOrganisator)ally;
+                            int enemyMinLvl = castEntity.Enemies[0].Level;
+                            int enemyMaxLvl = castEntity.Enemies[0].MaxLevel;
+
+                            foreach (Enemy enemy in castEntity.Enemies)
+                            {
+                                if (enemy.Level < enemyMinLvl)
+                                    enemyMinLvl = enemy.Level;
+                                if (enemy.MaxLevel > enemyMaxLvl)
+                                    enemyMaxLvl = enemy.MaxLevel;
+                            }
+
+                            if (!keybinds.Contains($"[W] - Arena fight (Enemy level: {enemyMinLvl}-{enemyMaxLvl})"))
+                                keybinds.Add($"[W] - Arena fight (Enemy level: {enemyMinLvl}-{enemyMaxLvl})");
+                            break;
+                        case Merchant:
+                            if (!keybinds.Contains("[E] - Sell Items"))
+                            {
+                                keybinds.Add("[E] - Sell Items");
+                                keybinds.Add("[R] - Buy Items");
+                            }
+                            break;
+                        case QuestGiver:
+                            if (!keybinds.Contains("[T] - Quest giver"))
+                                keybinds.Add("[T] - Quest giver");
+                            break;
+                    }
+                }
+            }
+            keybinds.Add("[Spacebar/Enter] - Confirm");
+            keybinds.Add("[ESC] - Back/Exit Town");
 
             for (int row = 0; row < 4; row++)
             {
@@ -1454,7 +1502,7 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                         Console.Write('H');
 
                     //print keybind if there is enough place
-                    else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
+                    else if (tmpId < keybinds.Count && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
                     {
                         Console.Write($" {keybinds[tmpId]} ");
                         column += keybinds[tmpId].Length + 1;
@@ -1467,16 +1515,333 @@ namespace tahova_RPG_hra.Source.Core.GameStates
                 Console.WriteLine();
             }
 
-            throw new NotImplementedException();
+            //Render Current Town State
+            switch (currentState)
+            {
+                case TownNodeState.TownInfo:
+                    RenderTownState();
+                    break;
+                case TownNodeState.MerchantSell:
+                case TownNodeState.MerchantBuy:
+                    RenderTownState();
+                    break;
+                case TownNodeState.QuestGiver:
+                    break;
+            }
         }
 
         public override void Update()
         {
+            //TODO - implement town rendering using switch case for Merchant and quest giver (Arena Orga needs to be added to end of combat (if end of combat and current node is Town them open town, otherwise explorationState)
+            switch (currentState)
+            {
+                case TownNodeState.TownInfo:
+                    RenderTownState();
+                    break;
+                case TownNodeState.MerchantSell:
+                    RenderTownState();
+                    //Print item name and description on the middle of screen
+                    int leftSideStart = GlobalConstants.consoleRenderSizeWidth / 6;
+                    int topSideStart = GlobalConstants.consoleRenderSizeHeight / 2;
+                    int maxNameLength = GlobalConstants.consoleRenderSizeWidth / 2;
+
+                    //Clear items names
+                    int row = 1;
+                    while(row < GlobalConstants.consoleRenderSizeHeight - 1)
+                    {
+                        Console.SetCursorPosition(leftSideStart, row);
+                        Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4) + 1));
+                        row++;
+                    }
+
+                    //Print name
+                    Console.SetCursorPosition(leftSideStart + 1, topSideStart);
+                    if (Game.Instance.Player.Inventory[selectedOption] == null)
+                        Console.Write("-----");
+                    else
+                        Console.Write(Game.Instance.Player.Inventory[selectedOption].Name.Length < maxNameLength ? Game.Instance.Player.Inventory[selectedOption].Name : Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, maxNameLength - 3) + "...");
+                    //Print sell price
+                    if (Game.Instance.Player.Inventory[selectedOption] != null)
+                        Console.Write($" | Sell for: {Game.Instance.Player.Inventory[selectedOption].SellPrice}");
+                    //Print Desc
+                    Console.SetCursorPosition(leftSideStart + 1, topSideStart + 2);
+                    int start = 0; int end = 0;
+
+                    //Horizontal length of text == GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4)
+
+                    for (int descRow = 0; descRow < 3; descRow++)
+                    {
+                        Console.SetCursorPosition(leftSideStart + 1, topSideStart + 2 + descRow);
+
+                        if (Game.Instance.Player.Inventory[selectedOption] == null)
+                        {
+                            Console.Write("No description");
+                            break;
+                        }
+
+                        //Missing description can be written fully
+                        if (Game.Instance.Player.Inventory[selectedOption].Description.Length - start < GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4))
+                        {
+                            Console.Write(Game.Instance.Player.Inventory[selectedOption].Description);
+                            break;
+                        }
+                        else
+                        {
+                            end = start + GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4) > Game.Instance.Player.Inventory[selectedOption].Description.Length ? start + (Game.Instance.Player.Inventory[selectedOption].Description.Length - start) : start + GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4);
+                            char tmpChar = Game.Instance.Player.Inventory[selectedOption].Description[start + end];
+
+                            while (tmpChar != ' ')
+                            {
+                                tmpChar = Game.Instance.Player.Inventory[selectedOption].Description[start + end];
+                            }
+                        }
+                    }
+
+                    //Print item names above current selection
+                    int itemRow = 1;
+                    while (topSideStart - 2 - itemRow > 2 && selectedOption - itemRow >= 0)
+                    {
+                        Console.SetCursorPosition(leftSideStart, topSideStart - 1 - itemRow);
+                        if (Game.Instance.Player.Inventory[selectedOption - itemRow] == null)
+                            Console.Write("-----");
+                        else
+                            Console.Write(Game.Instance.Player.Inventory[selectedOption - itemRow].Name.Length < maxNameLength ? Game.Instance.Player.Inventory[selectedOption - itemRow].Name : Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, maxNameLength - 3) + "...");
+                        itemRow++;
+                    }
+                    //Repeat for items below
+                    itemRow = 1;
+                    while (topSideStart + 5 + itemRow < GlobalConstants.consoleRenderSizeHeight && selectedOption + itemRow < Game.Instance.Player.Inventory.Count())
+                    {
+                        Console.SetCursorPosition(leftSideStart, topSideStart + 4 + itemRow);
+                        if (Game.Instance.Player.Inventory[selectedOption + itemRow] == null)
+                            Console.Write("-----");
+                        else
+                            Console.Write(Game.Instance.Player.Inventory[selectedOption + itemRow].Name.Length < maxNameLength ? Game.Instance.Player.Inventory[selectedOption + itemRow].Name : Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, maxNameLength - 3) + "...");
+                        itemRow++;
+                    }
+                    break;
+                case TownNodeState.MerchantBuy:
+                    RenderTownState();
+                    //Print item name and description on the middle of screen
+                    leftSideStart = GlobalConstants.consoleRenderSizeWidth / 6;
+                    topSideStart = GlobalConstants.consoleRenderSizeHeight / 2;
+                    maxNameLength = GlobalConstants.consoleRenderSizeWidth / 2;
+
+                    TownNode castCurrentNode = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+                    Merchant townMerchant = null;
+
+                    foreach (Ally NPC in castCurrentNode.TownPeople)
+                        if (NPC is Merchant)
+                            townMerchant = (Merchant)NPC;
+
+                    //Clear items names
+                    row = 1;
+                    while (row < GlobalConstants.consoleRenderSizeHeight - 1)
+                    {
+                        Console.SetCursorPosition(leftSideStart, row);
+                        Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4) + 1));
+                        row++;
+                    }
+
+                    //Print name
+                    Console.SetCursorPosition(leftSideStart + 1, topSideStart);
+                    if (townMerchant.Wares[selectedOption] == null)
+                        Console.Write("-----");
+                    else
+                        Console.Write(townMerchant.Wares[selectedOption].Name.Length < maxNameLength ? townMerchant.Wares[selectedOption].Name : townMerchant.Wares[selectedOption].Name.Substring(0, maxNameLength - 3) + "...");
+                    //Print buy price
+                    if (townMerchant.Wares[selectedOption] != null)
+                        Console.Write($" | Buy for: {townMerchant.Wares[selectedOption].BuyPrice}");
+                    //Print Desc
+                    Console.SetCursorPosition(leftSideStart + 1, topSideStart + 2);
+                    start = 0;end = 0;
+
+                    //Horizontal length of text == GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4)
+
+                    for (int descRow = 0; descRow < 3; descRow++)
+                    {
+                        Console.SetCursorPosition(leftSideStart + 1, topSideStart + 2 + descRow);
+
+                        if (townMerchant.Wares[selectedOption] == null)
+                        {
+                            Console.Write("No description");
+                            break;
+                        }
+
+                        //Missing description can be written fully
+                        if (townMerchant.Wares[selectedOption].Description.Length - start < GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4))
+                        {
+                            Console.Write(townMerchant.Wares[selectedOption].Description);
+                            break;
+                        }
+                        else
+                        {
+                            end = start + GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4) > townMerchant.Wares[selectedOption].Description.Length ? start + (townMerchant.Wares[selectedOption].Description.Length - start) : start + GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4);
+                            char tmpChar = townMerchant.Wares[selectedOption].Description[start + end];
+
+                            while (tmpChar != ' ')
+                            {
+                                tmpChar = townMerchant.Wares[selectedOption].Description[start + end];
+                            }
+                        }
+                    }
+
+                    //Print item names above current selection
+                    itemRow = 1;
+                    while (topSideStart - 2 - itemRow > 2 && selectedOption - itemRow >= 0)
+                    {
+                        Console.SetCursorPosition(leftSideStart, topSideStart - 1 - itemRow);
+                        if (townMerchant.Wares[selectedOption - itemRow] == null)
+                            Console.Write("-----");
+                        else
+                            Console.Write(townMerchant.Wares[selectedOption - itemRow].Name.Length < maxNameLength ? townMerchant.Wares[selectedOption - itemRow].Name : townMerchant.Wares[selectedOption].Name.Substring(0, maxNameLength - 3) + "...");
+                        itemRow++;
+                    }
+                    //Repeat for items below
+                    itemRow = 1;
+                    while (topSideStart + 5 + itemRow < GlobalConstants.consoleRenderSizeHeight && selectedOption + itemRow < townMerchant.Wares.Count())
+                    {
+                        Console.SetCursorPosition(leftSideStart, topSideStart + 4 + itemRow);
+                        if (townMerchant.Wares[selectedOption + itemRow] == null)
+                            Console.Write("-----");
+                        else
+                            Console.Write(townMerchant.Wares[selectedOption + itemRow].Name.Length < maxNameLength ? townMerchant.Wares[selectedOption + itemRow].Name : townMerchant.Wares[selectedOption].Name.Substring(0, maxNameLength - 3) + "...");
+                        itemRow++;
+                    }
+                    break;
+                case TownNodeState.QuestGiver:
+                    break;
+            }
+
             //move cursor back to end for better experience
             Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
 
-            throw new NotImplementedException();
+            //TODO - implement town rendering?
+            //throw new NotImplementedException();
         }
+
+        private void RenderTownState()
+        {
+            TownNode castCurrentNode = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+
+            switch (currentState)
+            {
+                case TownNodeState.TownInfo:
+                    //clear render screen
+                    int row = 1;
+                    while (row < GlobalConstants.consoleRenderSizeHeight - 1)
+                    {
+                        Console.SetCursorPosition(1, row);
+                        Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+                        row++;
+                    }
+
+                    //Print name
+                    Console.SetCursorPosition(GlobalConstants.consoleSizeWidth / 2 - castCurrentNode.Name.Length / 2, GlobalConstants.consoleRenderSizeHeight - 6);
+                    Console.Write(castCurrentNode.Name);
+
+                    //Print description
+                    int start = 0, end = 0;
+
+                    //Horizontal length of text == GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8)
+                    for (row = 0; row < 3; row++)
+                    {
+                        Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 8, GlobalConstants.consoleRenderSizeHeight - 4 + row);
+
+                        //Missing description can be written fully
+                        if (castCurrentNode.Description.Length - start < GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8))
+                        {
+                            Console.Write(castCurrentNode.Description);
+                            break;
+                        }
+                        else
+                        {
+                            end = start + GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8) > castCurrentNode.Description.Length ? start + (castCurrentNode.Description.Length - start) : start + GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8);
+                            char tmpChar = castCurrentNode.Description[start + end];
+
+                            while (tmpChar != ' ')
+                            {
+                                tmpChar = castCurrentNode.Description[start + end];
+                            }
+                        }
+                    }
+                    break;
+                case TownNodeState.MerchantSell:
+                case TownNodeState.MerchantBuy:
+                    //clear render screen
+                    row = 1;
+                    while (row < GlobalConstants.consoleRenderSizeHeight - 1)
+                    {
+                        Console.SetCursorPosition(1, row);
+                        Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+                        row++;
+                    }
+
+                    int leftSideStart = GlobalConstants.consoleRenderSizeWidth / 6;
+                    int topSideStart = GlobalConstants.consoleRenderSizeHeight / 2;
+
+                    for (row = 0; row < 5; row++)
+                    {
+                        Console.SetCursorPosition(leftSideStart - 2, topSideStart - 2 + row);
+                        switch (row)
+                        {
+                            case 0:
+                            case 1:
+                                Console.Write('^');
+                                break;
+                            case 2:
+                                Console.Write('-');
+                                break;
+                            case 3:
+                            case 4:
+                                Console.Write('v');
+                                break;
+                        }
+                    }
+                    break;
+                case TownNodeState.QuestGiver:
+                    break;
+            }
+        }
+
+        public bool NextElement()
+        {
+            TownNode castCurrentNode = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+            Merchant townMerchant = null;
+            QuestGiver townQuestGiver = null;
+
+            foreach (Ally NPC in castCurrentNode.TownPeople)
+            {
+                if (NPC is Merchant)
+                    townMerchant = (Merchant)NPC;
+                else if (NPC is QuestGiver)
+                    townQuestGiver = (QuestGiver)NPC;
+            }
+
+            if (currentState == TownNodeState.MerchantSell && selectedOption < Game.Instance.Player.Inventory.Count() - 1)
+                selectedOption++;
+            else if (currentState == TownNodeState.MerchantBuy && selectedOption < townMerchant.Wares.Count() - 1)
+                selectedOption++;
+            else if (currentState == TownNodeState.QuestGiver && selectedOption < townQuestGiver.Quests.Count() - 1)
+                selectedOption++;
+            else
+                return false;
+
+            return true;
+        }
+
+        public bool PreviousElement()
+        {
+            if (selectedOption > 0)
+                selectedOption--;
+            else
+                return false;
+
+            return true;
+        }
+
+        public int SelectedOption { get => selectedOption; set => selectedOption = value; }
+        internal TownNodeState CurrentState { get => currentState; set => currentState = value; }
     }
 
     class TradingState : GameState

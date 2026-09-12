@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using static tahova_RPG_hra.Source.Entities.Enemy;
+using static TurnBasedRPG.Source.Entities.Enemy;
 
-namespace tahova_RPG_hra.Source.Quests.QuestObjective
+namespace TurnBasedRPG.Source.Quests.QuestObjectives
 {
     class LootObjective : Objective
     {

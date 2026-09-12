@@ -1,4 +1,4 @@
-﻿namespace tahova_RPG_hra.Source.Utils
+﻿namespace TurnBasedRPG.Source.Utils
 {
     class GlobalConstants
     {
