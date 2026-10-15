@@ -61,28 +61,8 @@ namespace TurnBasedRPG
             Console.ReadLine();
             Console.Clear();
 
-            //string _fileName;
-            string _fileName = "map.json";
-
-            //Console.WriteLine("Insert name of map you want to load (make sure the map is located in: *yourProgramFolder*/Maps/): ");
-            //_fileName = Console.ReadLine();
-
-            //TODO check if map is found
-            if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", _fileName)))
-                Game.Instance.LoadMap(_fileName);
-
-            //else if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "savefiles", _fileName)))
-            //    Game.Instance.Load(_fileName);
-            //else
-            //{
-            //    Console.WriteLine("Invalid file name. Please make sure the map name is SAME as your input.");
-            //    Console.WriteLine("Press any key to exit program...");
-            //    Console.ReadKey();
-            //    Environment.Exit(1);
-            //}
-
             //TODO - remove after testing
-            Game.Instance.Player.IncreaseLvl(40);
+            //Game.Instance.Player.IncreaseLvl(40);
 
             Game.Instance.GameState.Render();
             while (true)

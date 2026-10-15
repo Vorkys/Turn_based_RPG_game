@@ -260,6 +260,7 @@ namespace MapMaker
             var derivedTypesMap = new Dictionary<Type, JsonDerivedType[]>
             {
                 [typeof(Node)] = [
+                    new JsonDerivedType(typeof(Node), nameof(Node)),
                     new JsonDerivedType(typeof(CombatNode), nameof(CombatNode)),
                     new JsonDerivedType(typeof(BossNode), nameof(BossNode)),
                     new JsonDerivedType(typeof(DialogNode), nameof(DialogNode)),

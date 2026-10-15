@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TurnBasedRPG.Source.Core.InputHandlers;
 using TurnBasedRPG.Source.Entities;
@@ -30,6 +32,17 @@ namespace TurnBasedRPG.Source.Core.GameStates
         public MainMenuState()
         {
             InputHandler = new MenuHandler();
+
+            string folderPath = "savefiles";
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            saveFilesPath = Directory.GetFiles(folderPath)
+                                     .Select(Path.GetFileName)
+                                     .OrderBy(filePath => Path.GetFileName(filePath))
+                                     .Reverse()
+                                     .ToArray();
         }
 
         public override void Render()
@@ -103,7 +116,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     {
                         for (int selectionRow = 0; selectionRow < saveFilesPath.Length; selectionRow++)
                         {
-                            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15 - 3, GlobalConstants.consoleSizeHeight / 5 + (1 * selectionRow));
+                            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15 - 3, GlobalConstants.consoleSizeHeight / 5 + (1 * selectionRow) + 2);
                             if (selectionRow == selectedOption)
                                 Console.Write(">>");
                             else
@@ -144,12 +157,18 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     {
                         Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + 2);
                         Console.Write("No saved files");
-                    }    
-                    for (int saveFileNumber = 0; saveFileNumber < saveFilesPath.Length; saveFileNumber++)
-                    {
-                        Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + 2 + saveFileNumber);
-                        Console.Write(saveFilesPath[saveFileNumber]);
                     }
+                    else
+                    {
+                        var sortedSaveFilesNames = saveFilesPath;
+
+                        for (int saveFileNumber = 0; saveFileNumber < saveFilesPath.Length && saveFileNumber < GlobalConstants.consoleRenderSizeHeight / 1.5; saveFileNumber++)
+                        {
+                            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + 2 + saveFileNumber);
+                            Console.Write(sortedSaveFilesNames[saveFileNumber]);
+                        }
+                    }
+                    
                     break;
                 case (MenuState.HowToPlayMenu):
                     Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5);
@@ -191,6 +210,8 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
         public MenuState CurrentState { get => currentState; set => currentState = value; }
+
+        public string[] SaveFilesPath { get => saveFilesPath; }
     }
 
     class PauseState : GameState
@@ -374,6 +395,8 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public override void Update()
         {
+            Game test = Game.Instance;
+
             int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
             int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
             //% of rendering box considered "outside"

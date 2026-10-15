@@ -24,6 +24,9 @@ namespace TurnBasedRPG.Source.Entities
             AddItem(ItemManager.IronRing);
         }
 
+        //used for Deserialization
+        public Player() { }
+
         public int ImmuneMoves { get => immuneMoves; set => immuneMoves = value; }
 
         private void AddSpell(Spell spell)
@@ -37,7 +40,7 @@ namespace TurnBasedRPG.Source.Entities
             if (Level == MaxLevel)
                 return;
 
-            if (EntityXP > XPtoLevelUp)
+            if (EntityXP >= XPtoLevelUp)
                 EntityXP -= XPtoLevelUp;
 
             while (numberOfLvls > 0 && Level < MaxLevel)

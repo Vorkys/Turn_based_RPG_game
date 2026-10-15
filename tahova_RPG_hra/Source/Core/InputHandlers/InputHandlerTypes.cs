@@ -30,7 +30,7 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             switch (castInstanceState.SelectedOption)
                             {
                                 case 0:
-                                    Game.Instance.ChangeState(GameStateType.Exploration);
+                                    Game.Instance.NewGame();
                                     break;
                                 case 1:
                                     castInstanceState.CurrentState = MainMenuState.MenuState.ContinueMenu;
@@ -48,8 +48,10 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             }
                             break;
                         case (MainMenuState.MenuState.ContinueMenu):
-                            //TODO - implement savefiles
-                            throw new NotImplementedException();
+                            if (castInstanceState.SaveFilesPath.Length == 0)
+                                return false;
+                            else
+                                Game.Instance.Load(castInstanceState.SaveFilesPath[castInstanceState.SelectedOption]);
                             break;
                         case (MainMenuState.MenuState.HowToPlayMenu):
                             return false;
@@ -497,6 +499,28 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             break;
                         case TownState.TownNodeState.MerchantBuy:
                             castInstanceState.CurrentState = TownState.TownNodeState.TownInfo;
+                            break;
+                    }
+                    break;
+                case ConsoleKey.Spacebar:
+                case ConsoleKey.Enter:
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case TownState.TownNodeState.MerchantSell:
+                            Game.Instance.Player.Sell(castInstanceState.SelectedOption);
+                            break;
+                        case TownState.TownNodeState.MerchantBuy:
+                            Merchant castMerchant = null;
+                            foreach (Ally ally in castCurrentNode.TownPeople)
+                                if (ally is Merchant)
+                                {
+                                    castMerchant = (Merchant)ally;
+                                }
+
+                            if (castMerchant == null)
+                                return false;
+                            else
+                                Game.Instance.Player.Buy(castMerchant.Wares[castInstanceState.SelectedOption]);
                             break;
                     }
                     break;

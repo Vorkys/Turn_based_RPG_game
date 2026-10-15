@@ -27,7 +27,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         //TODO - uncomment when Game implemented
         public override void Traverse()
         {
-            if (Visited)
+            if (Visited || Boss.Health <= 0)
                 return;
 
             Game.Instance.openDialog(OpenDialog);

@@ -24,9 +24,29 @@ namespace TurnBasedRPG.Source.Entities.AllyRoles
             Random rand = new Random();
 
             int randomEnemyId = rand.Next(0, Enemies.Count);
-            Enemy enemy = Enemies[randomEnemyId];
+            Enemy randEnemy = Enemies[randomEnemyId];
 
-            Game.Instance.startCombat(enemy);
+            //clone enemy
+            Enemy combatEnemy = new Enemy(
+                randEnemy.Name,
+                randEnemy.SpritePath,
+                randEnemy.Level,
+                randEnemy.MaxLevel,
+                randEnemy.MaxHealth,
+                randEnemy.MaxMana,
+                randEnemy.Spells,
+                randEnemy.Damage,
+                randEnemy.CriticalHitChance,
+                randEnemy.MissChance,
+                randEnemy.Armor,
+                randEnemy.Speed,
+                randEnemy.ItemDrops,
+                randEnemy.GoldDrop,
+                randEnemy.EscapeChance,
+                randEnemy.XpDrop
+            );
+
+            Game.Instance.startCombat(combatEnemy);
         }
     }
 }

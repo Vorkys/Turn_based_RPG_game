@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using TurnBasedRPG.Source.Locations.Nodes;
 
 namespace TurnBasedRPG.Source.Locations
@@ -29,6 +30,9 @@ namespace TurnBasedRPG.Source.Locations
             this.PlayerX = -1;
             this.PlayerY = -1;
         }
+
+        //used for deserialization
+        public Location() { }
 
         public List<List<Node>> Map { get => map; set => map = value; }
         public int EntryX { get => entryX; set => entryX = value; }

@@ -127,6 +127,9 @@ namespace TurnBasedRPG.Source.Entities
             this.Money = money;
         }
 
+        //used for Deserialization
+        public Entity() { }
+
         public string Name { get => name; set => name = value; }
         public string[] Sprite { get => sprite; set => sprite = value; }
         public string SpritePath { get => spritePath; set => spritePath = value; }
@@ -459,6 +462,31 @@ namespace TurnBasedRPG.Source.Entities
                 Target.ReduceHealth(2 * (Damage + change));
             else
                 Target.ReduceHealth(Damage + change);
+        }
+
+        public void Sell(int itemSlot)
+        {
+            if (this.inventory[itemSlot] == null)
+                return;
+            else
+            {
+                Money += Inventory[itemSlot].SellPrice;
+                RemoveItem(Inventory[itemSlot]);
+            }
+        }
+
+        public void Buy(Item item)
+        {
+            if (Game.Instance == null)
+                return;
+
+            if (Game.Instance.Player.Money < item.BuyPrice)
+                return;
+
+            bool successfullAddItem = Game.Instance.Player.AddItem(item);
+
+            if (successfullAddItem)
+                Game.Instance.Player.Money -= item.BuyPrice;
         }
     }
 }

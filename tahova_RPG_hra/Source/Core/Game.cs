@@ -1,10 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using TurnBasedRPG.Source.Core.GameStates;
 using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Entities.AllyRoles;
+using TurnBasedRPG.Source.Entities.EnemyTypes;
+using TurnBasedRPG.Source.GameObjects;
 using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
 using TurnBasedRPG.Source.Locations;
 using TurnBasedRPG.Source.Locations.Nodes;
 using TurnBasedRPG.Source.Managers;
@@ -28,7 +38,7 @@ namespace TurnBasedRPG.Source.Core
 
     public class Game
     {
-        private static readonly Game _instance = new Game();
+        private static readonly Lazy<Game> _instance = new Lazy<Game>(() => new Game());
         private Dictionary<GameStateType, GameState> gameStateMap;
         private GameState gameState;
         private List<Location> maps;
@@ -72,7 +82,7 @@ namespace TurnBasedRPG.Source.Core
         {
             get
             {
-                return _instance;
+                return _instance.Value;
             }
         }
 
@@ -83,12 +93,81 @@ namespace TurnBasedRPG.Source.Core
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + $"_{Player.Name}" + ".json";
+            string fileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + $"_{Player.Name}" + ".json";
             string filePath = Path.Combine(folderPath, fileName);
+            var derivedTypesMap = new Dictionary<Type, JsonDerivedType[]>
+            {
+                [typeof(Node)] = [
+                    new JsonDerivedType(typeof(Node), nameof(Node)),
+                    new JsonDerivedType(typeof(CombatNode), nameof(CombatNode)),
+                    new JsonDerivedType(typeof(BossNode), nameof(BossNode)),
+                    new JsonDerivedType(typeof(DialogNode), nameof(DialogNode)),
+                    new JsonDerivedType(typeof(DungeonNode), nameof(DungeonNode)),
+                    new JsonDerivedType(typeof(RewardNode), nameof(RewardNode)),
+                    new JsonDerivedType(typeof(TownNode), nameof(TownNode))
+                ],
+                [typeof(Entity)] = [
+                    new JsonDerivedType(typeof(Player), nameof(Player)),
+                    new JsonDerivedType(typeof(Ally), nameof(Ally)),
+                    new JsonDerivedType(typeof(ArenaOrganisator), nameof(ArenaOrganisator)),
+                    new JsonDerivedType(typeof(Merchant), "Merchant"),
+                    new JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver)),
+                    new JsonDerivedType(typeof(Enemy), nameof(Enemy)),
+                    new JsonDerivedType(typeof(Slime), nameof(Slime)),
+                    new JsonDerivedType(typeof(Goblin), nameof(Goblin)),
+                    new JsonDerivedType(typeof(Animal), nameof(Animal)),
+                    new JsonDerivedType(typeof(Human), nameof(Human)),
+                    new JsonDerivedType(typeof(Magical), nameof(Magical)),
+                    new JsonDerivedType(typeof(Demonic), nameof(Demonic)),
+                    new JsonDerivedType(typeof(Godly), nameof(Godly))
+                ],
+                [typeof(GameObject)] = [
+                    new JsonDerivedType(typeof(Item), nameof(Item)),
+                    new JsonDerivedType(typeof(Consumable), nameof(Consumable)),
+                    new JsonDerivedType(typeof(Equippable), nameof(Equippable)),
+                    new JsonDerivedType(typeof(HealingItem), nameof(HealingItem)),
+                    new JsonDerivedType(typeof(ManaIncreaseItem), nameof(ManaIncreaseItem)),
+                    new JsonDerivedType(typeof(HybridHealingItem), nameof(HybridHealingItem)),
+                    new JsonDerivedType(typeof(DamageItem), nameof(DamageItem)),
+                    new JsonDerivedType(typeof(ReduceMana), nameof(ReduceMana))
+                ],
+            };
 
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(this, options);
-            File.WriteAllText(filePath, jsonString);
+            var options = new JsonSerializerOptions
+            {
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver
+                {
+                    Modifiers =
+                    {
+                        typeInfo =>
+                        {
+                            if (derivedTypesMap.TryGetValue(
+                                typeInfo.Type,
+                                out var derivedTypes))
+                            {
+                                var polymorphismOptions = new JsonPolymorphismOptions
+                                {
+                                    TypeDiscriminatorPropertyName = "$type",
+                                    IgnoreUnrecognizedTypeDiscriminators = true,
+                                    UnknownDerivedTypeHandling =
+                                        JsonUnknownDerivedTypeHandling.FailSerialization
+                                };
+
+                                foreach (var derivedType in derivedTypes)
+                                {
+                                    polymorphismOptions.DerivedTypes.Add(derivedType);
+                                }
+
+                                typeInfo.PolymorphismOptions = polymorphismOptions;
+                            }
+                        }
+                    }
+                },
+                WriteIndented = true
+            };
+
+            string json = JsonSerializer.Serialize<object>(this, options);
+            File.WriteAllText(filePath, json);
         }
 
         public void LoadMap(string _fileName)
@@ -113,28 +192,111 @@ namespace TurnBasedRPG.Source.Core
             }
         }
 
-        public void Load(string _fileName)
+        public void Load(string _mapFileName)
         {
             //deserialize game
             try
             {
                 string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "savefiles");
-                string fileName = Path.Combine(folderPath, _fileName);
+                string fileName = Path.Combine(folderPath, _mapFileName);
 
-                string json = File.ReadAllText(fileName);
+                //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-                var deserializedList = JsonSerializer.Deserialize<Game>(json);
+                //string json = File.ReadAllText(fileName);
+
+                //Game? deserializedGame = JsonSerializer.Deserialize<Game>(json, options);
+
+                ////Update instance
+                //if (deserializedGame != null)
+                //{
+                //    Instance.gameStateMap = deserializedGame.gameStateMap;
+                //    Instance.gameState = deserializedGame.gameState;
+                //    Instance.maps = deserializedGame.maps;
+                //    Instance.activeMap = deserializedGame.activeMap;
+                //    Instance.player = deserializedGame.player;
+                //    Instance.activeQuests = deserializedGame.activeQuests;
+                //}
+
+                //////////////////
+                // Assuming 'jsonString' is the text read from your saved file
+                string jsonString = File.ReadAllText(fileName);
+
+                // Parse the JSON into a Document
+                using (JsonDocument doc = JsonDocument.Parse(jsonString))
+                {
+                    //Dictionary<GameStateType, GameState> loadGameStateMap = doc.RootElement
+                    //                                                        .GetProperty("GameStateMap")
+                    //                                                        .Deserialize<Dictionary<GameStateType, GameState>>();
+                    //GameState loadGameState = doc.RootElement
+                    //                          .GetProperty("GameState")
+                    //                          .Deserialize<GameState>();
+                    List<Location> loadMaps = doc.RootElement
+                                              .GetProperty("Maps")
+                                              .Deserialize<List<Location>>();
+                    int loadActiveMap = doc.RootElement
+                                        .GetProperty("ActiveMap")
+                                        .Deserialize<int>();
+                    Player loadPlayer = doc.RootElement
+                                        .GetProperty("Player")
+                                        .Deserialize<Player>();
+                    List<Quest> loadQuests = doc.RootElement
+                                             .GetProperty("ActiveQuests")
+                                             .Deserialize<List<Quest>>();
+
+                    //Instance.GameStateMap = loadGameStateMap;
+                    //Instance.GameState = loadGameState;
+                    Instance.Maps = loadMaps;
+                    Instance.ActiveMap = loadActiveMap;
+                    Instance.Player = loadPlayer;
+                    Instance.activeQuests = loadQuests;
+                }
+
+                //// Not working bcs I have complex types
+                //// Parse into a JsonNode instead of trying to instantiate 'Game'
+                //JsonNode? jsonNode = JsonNode.Parse(json);
+
+                //if (jsonNode != null)
+                //{
+                //    Console.WriteLine();
+                //    if (jsonNode["GameStateMap"] != null)
+                //        _instance.gameStateMap = jsonNode["GameStateMap"]!.GetValue<Dictionary<GameStateType, GameState>>();
+
+                //    if (jsonNode["GameState"] != null)
+                //        _instance.gameState = jsonNode["GameState"]!.GetValue<GameState>();
+
+                //    if (jsonNode["Maps"] != null)
+                //        _instance.maps = jsonNode["Maps"]!.GetValue<List<Location>>();
+
+                //    if (jsonNode["ActiveMap"] != null)
+                //        _instance.activeMap = jsonNode["ActiveMap"]!.GetValue<int>();
+
+                //    if (jsonNode["Player"] != null)
+                //        _instance.player = jsonNode["Player"]!.GetValue<Player>();
+
+                //    if (jsonNode["ActiveQuests"] != null)
+                //        _instance.activeQuests = jsonNode["ActiveQuests"]!.GetValue<List<Quest>>();
+                //}
+
+                Instance.ChangeState(GameStateType.Exploration);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Console.Write(ex);
+                Environment.Exit(-1);
             }
         }
 
-        public bool Init()
+        public void NewGame(string _mapFileName = "map.json")
         {
-            //init all managers and return true if successful, false if fail somewhere TODO - remove if unused?
-            return true;
+            //check if map exist
+            if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", _mapFileName)))
+                Instance.LoadMap(_mapFileName);
+
+            Instance.Player = EntityManager.Player;
+            Instance.Maps[ActiveMap].PlayerX = Instance.Maps[ActiveMap].EntryX;
+            Instance.Maps[ActiveMap].PlayerY = Instance.Maps[ActiveMap].EntryY;
+
+            Instance.ChangeState(GameStateType.Exploration);
         }
 
         public void ChangeState(GameStateType stateType, params object[] parameters)

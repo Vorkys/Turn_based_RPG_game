@@ -19,6 +19,8 @@ namespace TurnBasedRPG.Source.Spells
         private int power;
         private int criticalHitChance;
         private int missChance;
+        private int v1;
+        private int v2;
 
         public Spell(Entity caster, string name, string description, int cost, int power, int criticalHitChance, int missChance)
         {
@@ -30,6 +32,9 @@ namespace TurnBasedRPG.Source.Spells
             this.CriticalHitChance = criticalHitChance;
             this.MissChance = missChance;
         }
+
+        //used for deserialization
+        protected Spell() { }
 
         internal Entity Caster { get => caster; set => caster = value; }
         public string Name { get => name; set => name = value; }

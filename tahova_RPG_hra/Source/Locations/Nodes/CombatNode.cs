@@ -43,9 +43,30 @@ namespace TurnBasedRPG.Source.Locations.Nodes
             {
                 int randLvl = rand.Next(MinEnemyLvl, MaxEnemyLvl + 1);
                 Enemy randEnemy = EnemyToSpawn[rand.Next(0, EnemyToSpawn.Count)];
-                randEnemy.SetLvl(randLvl);
 
-                Game.Instance.startCombat(randEnemy);
+                //clone enemy
+                Enemy combatEnemy = new Enemy(
+                    randEnemy.Name,
+                    randEnemy.SpritePath,
+                    randEnemy.Level,
+                    randEnemy.MaxLevel,
+                    randEnemy.MaxHealth,
+                    randEnemy.MaxMana,
+                    randEnemy.Spells,
+                    randEnemy.Damage,
+                    randEnemy.CriticalHitChance,
+                    randEnemy.MissChance,
+                    randEnemy.Armor,
+                    randEnemy.Speed,
+                    randEnemy.ItemDrops,
+                    randEnemy.GoldDrop,
+                    randEnemy.EscapeChance,
+                    randEnemy.XpDrop
+                );
+
+                combatEnemy.SetLvl(randLvl);
+
+                Game.Instance.startCombat(combatEnemy);
                 Game.Instance.Player.ImmuneMoves = 4;
             }
         }

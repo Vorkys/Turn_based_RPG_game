@@ -9,6 +9,9 @@ namespace TurnBasedRPG.Source.Spells
         {
         }
 
+        //used for deserialization
+        public HealSpell() { }
+
         public override int Cast()
         {
             bool missRoll = Roll.RollDice(MissChance);
@@ -39,6 +42,9 @@ namespace TurnBasedRPG.Source.Spells
         {
         }
 
+        //used for deserialization
+        public DamageSpell() { }
+
         public override int Cast()
         {
             bool missRoll = Roll.RollDice(MissChance);
@@ -68,6 +74,9 @@ namespace TurnBasedRPG.Source.Spells
         public AbsorbSpell(Entity caster, string name, string description, int cost, int power, int criticalHitChance, int missChance) : base(caster, name, description, cost, power, criticalHitChance = 7, missChance = 3)
         {
         }
+
+        //used for deserialization
+        public AbsorbSpell() { }
 
         public override int Cast()
         {
@@ -101,6 +110,9 @@ namespace TurnBasedRPG.Source.Spells
         {
         }
 
+        //used for deserialization
+        public DarkDamageSpell() { }
+
         public override int Cast()
         {
             bool missRoll = Roll.RollDice(MissChance);
@@ -130,6 +142,9 @@ namespace TurnBasedRPG.Source.Spells
         public DarkManaStealSpell(Entity caster, string name, string description, int cost, int power, int criticalHitChance, int missChance) : base(caster, name, description, cost, power, criticalHitChance = 5, missChance = 1)
         {
         }
+
+        //used for deserialization
+        public DarkManaStealSpell() { }
 
         public override int Cast()
         {

@@ -5,6 +5,7 @@ using TurnBasedRPG.Source.Core;
 namespace TurnBasedRPG.Source.Locations.Nodes
 {
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
+    [JsonDerivedType(typeof(Node), nameof(Node))]
     [JsonDerivedType(typeof(CombatNode), nameof(CombatNode))]
     [JsonDerivedType(typeof(BossNode), nameof(BossNode))]
     [JsonDerivedType(typeof(DialogNode), nameof(DialogNode))]

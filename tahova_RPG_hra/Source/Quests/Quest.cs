@@ -21,6 +21,9 @@ namespace TurnBasedRPG.Source.Quests
         private List<Objective> objectives;
         private List<Item> rewards;
 
+        //used for Deserialization
+        public Quest() { }
+
         public Status Status { get => status; set => status = value; }
         public List<Quest> Prerequisities { get => prerequisities; set => prerequisities = value; }
         public string Name { get => name; set => name = value; }
