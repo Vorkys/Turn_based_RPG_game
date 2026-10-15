@@ -105,6 +105,7 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             break;
                         case 1:
                             Game.Instance.Save();
+                            castInstanceState.GameSaved = true;
                             break;
                         case 2:
                             Game.Instance.ChangeState(GameStateType.Menu);

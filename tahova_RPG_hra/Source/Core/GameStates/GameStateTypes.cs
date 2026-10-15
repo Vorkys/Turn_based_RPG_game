@@ -220,6 +220,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         private static string[] pauseMenuOptions = ["Resume", "Save", "Exit"];
         private int pauseMenuWidth = 6 + GlobalConstants.consoleRenderSizeWidth / 4;
         private int pauseMenuHeight = 2 * pauseMenuOptions.Length + 4 - 1;
+        private bool gameSaved = false;
 
         public PauseState()
         {
@@ -302,6 +303,12 @@ namespace TurnBasedRPG.Source.Core.GameStates
             Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 2) - (pauseMenuWidth / 2) + 2, (GlobalConstants.consoleRenderSizeHeight / 2) - (pauseMenuHeight / 2) + 2 + (2 * selectedOption));
             Console.Write(">>");
 
+            if (gameSaved == true)
+            {
+                Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 2) - (pauseMenuWidth / 2) + 5 + pauseMenuOptions[1].Length, (GlobalConstants.consoleRenderSizeHeight / 2) - (pauseMenuHeight / 2) + 2 + (2));
+                Console.Write("d");
+            }
+
             //move cursor back to end for better experience
             Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
         }
@@ -328,6 +335,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         }
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
+        public bool GameSaved { set => gameSaved = value; }
     }
 
     class ExplorationState : GameState
