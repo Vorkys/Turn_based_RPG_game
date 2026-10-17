@@ -403,8 +403,6 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public override void Update()
         {
-            Game test = Game.Instance;
-
             int playerPosX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
             int playerPosY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
             //% of rendering box considered "outside"

@@ -4,20 +4,20 @@ namespace TurnBasedRPG.Source.Locations.Nodes
 {
     public class DungeonNode : Node
     {
-        private int locationId;
+        private string newLocationName;
 
-        public DungeonNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, int locationId) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public DungeonNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, string newLocationName) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
-            this.LocationId = locationId;
+            this.NewLocationName = newLocationName;
         }
 
-        public int LocationId { get => locationId; set => locationId = value; }
+        public string NewLocationName { get => newLocationName; set => newLocationName = value; }
 
         public override void Traverse()
         {
             base.Traverse();
 
-            Game.Instance.changeLocation(LocationId);
+            Game.Instance.changeLocation(NewLocationName);
         }
     }
 }

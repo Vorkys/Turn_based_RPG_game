@@ -684,6 +684,75 @@ namespace TurnBasedRPG.Source.Managers
         );
         #endregion
 
+        #region Dungeon
+        public static Magical Ghost = new(
+            name: "Ghost",
+            spritePath: "ghost.txt",
+            level: 14,
+            maxLevel: 15,
+            maxHealth: 25,
+            maxMana: 29,
+            spells: null,
+            damage: 11,
+            criticalHitChance: 2,
+            missChance: 1,
+            armor: 5,
+            speed: 10,
+            itemDrops: new List<Drop>()
+            {
+                new Drop(ItemManager.SmallHealthPotion, 40),
+                new Drop(ItemManager.SmallManaPotion, 20)
+            },
+            goldDrop: 25,
+            escapeChance: 50,
+            xpDrop: 160
+        );
+        public static Magical Zombie = new(
+            name: "Zombie",
+            spritePath: "zombie.txt",
+            level: 14,
+            maxLevel: 15,
+            maxHealth: 27,
+            maxMana: 24,
+            spells: null,
+            damage: 10,
+            criticalHitChance: 6,
+            missChance: 2,
+            armor: 4,
+            speed: 10,
+            itemDrops: new List<Drop>()
+            {
+                new Drop(ItemManager.SmallHealthPotion, 40),
+                new Drop(ItemManager.SmallManaPotion, 20)
+            },
+            goldDrop: 25,
+            escapeChance: 50,
+            xpDrop: 160
+        );
+        public static Magical DungeonMaster = new(
+            name: "Dungeon Master",
+            spritePath: "dungeon_master.txt",
+            level: 17,
+            maxLevel: 17,
+            maxHealth: 32,
+            maxMana: 48,
+            spells: null,
+            damage: 14,
+            criticalHitChance: 6,
+            missChance: 2,
+            armor: 5,
+            speed: 14,
+            itemDrops: new List<Drop>()
+            {
+                new Drop(ItemManager.SmallHealthPotion, 100),
+                new Drop(ItemManager.SmallManaPotion, 100)
+            },
+            goldDrop: 250,
+            escapeChance: 0,
+            xpDrop: 500
+        );
+        #endregion
+
         #endregion
 
         #region Friendly

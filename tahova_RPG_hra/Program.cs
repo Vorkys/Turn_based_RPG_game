@@ -62,7 +62,7 @@ namespace TurnBasedRPG
             Console.Clear();
 
             //TODO - remove after testing
-            //Game.Instance.Player.IncreaseLvl(40);
+            Game.Instance.Player.IncreaseLvl(40);
 
             Game.Instance.GameState.Render();
             while (true)

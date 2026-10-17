@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using TurnBasedRPG.Source.Entities;
 using TurnBasedRPG.Source.Locations.Nodes;
 
@@ -599,6 +600,76 @@ namespace TurnBasedRPG.Source.Managers
                 EntityManager.ShopkeeperT2,
                 EntityManager.OrganisatorT1
             ]
+        );
+        #endregion
+
+        #region Dungeon
+        public static Node DungeonWallA = new(
+            nodeChar: ' ',
+            backgroundColor: "DarkGray",
+            foregroundColor: "Gray",
+            mapColor: "DarkGray",
+            isMovable: false
+        );
+        public static Node DungeonWallB = new(
+            nodeChar: 'X',
+            backgroundColor: "DarkGray",
+            foregroundColor: "Gray",
+            mapColor: "DarkGray",
+            isMovable: false
+        );
+        public static Node DungeonWallC = new(
+            nodeChar: '#',
+            backgroundColor: "DarkGray",
+            foregroundColor: "Gray",
+            mapColor: "DarkGray",
+            isMovable: false
+        );
+
+        public static Node DungeonFloor = new(
+            nodeChar: ' ',
+            backgroundColor: "Gray",
+            foregroundColor: "White",
+            mapColor: "Gray",
+            isMovable: true
+        );
+        public static CombatNode CombatDungeonFloor = new(
+            nodeChar: ' ',
+            backgroundColor: "Gray",
+            foregroundColor: "White",
+            mapColor: "Gray",
+            isMovable: true,
+            spawnRate: 20,
+            minEnemyLvl: 3,
+            maxEnemyLvl: 8,
+            enemyToSpawn: new List<Enemy> { EntityManager.Ghost, EntityManager.Zombie }
+        );
+        public static BossNode DungeonBoss = new(
+            nodeChar: ' ',
+            backgroundColor: "Gray",
+            foregroundColor: "Red",
+            mapColor: "Red",
+            isMovable: true,
+            openDialog: [],
+            endDialog: [],
+            boss: EntityManager.DungeonMaster
+        );
+
+        public static DungeonNode DungeonEntry = new(
+            nodeChar: 'D',
+            backgroundColor: "DarkGray",
+            foregroundColor: "Magenta",
+            mapColor: "DarkGray",
+            isMovable: true,
+            newLocationName: "Dungeon"
+        );
+        public static DungeonNode DungeonExit = new(
+            nodeChar: 'E',
+            backgroundColor: "Gray",
+            foregroundColor: "Magenta",
+            mapColor: "DarkGray",
+            isMovable: true,
+            newLocationName: "Campaign"
         );
         #endregion
     }

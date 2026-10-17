@@ -11,12 +11,12 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         private Enemy boss;
         private bool visited;
 
-        public BossNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> openDialog, List<string> endDialog, Enemy boss, bool visited) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public BossNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> openDialog, List<string> endDialog, Enemy boss) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
         {
             this.OpenDialog = openDialog;
             this.EndDialog = endDialog;
             this.Boss = boss;
-            this.Visited = visited;
+            this.Visited = true;
         }
 
         public List<string> OpenDialog { get => openDialog; set => openDialog = value; }
@@ -30,13 +30,15 @@ namespace TurnBasedRPG.Source.Locations.Nodes
             if (Visited || Boss.Health <= 0)
                 return;
 
-            Game.Instance.openDialog(OpenDialog);
+            //Game.Instance.openDialog(OpenDialog);
 
             Game.Instance.startCombat(Boss);
 
-            Game.Instance.openDialog(EndDialog);
+            //Game.Instance.openDialog(EndDialog);
 
             Game.Instance.Player.ImmuneMoves = 4;
+            //boss is dead, hide him... permanently
+            NodeChar = ' ';
         }
     }
 }

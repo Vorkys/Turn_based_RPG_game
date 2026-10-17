@@ -181,14 +181,47 @@ namespace TurnBasedRPG.Source.Core
                 string json = File.ReadAllText(fileName);
 
                 var options = new JsonSerializerOptions { WriteIndented = true };
-                var deserializedList = JsonSerializer.Deserialize<List<List<Node>>>(json, options);
+                var deserializedMap = JsonSerializer.Deserialize<Location>(json, options);
                 //TODO - remove comment; old map = 23, 78, 23, 78 ; new map = 4, 7, 4, 7
-                Location map = new(deserializedList, 2, 2, 2, 2);
-                Maps.Add(map);
+                //Location map = new(deserializedList, 2, 2);
+                Maps.Add(deserializedMap);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+            }
+        }
+
+        public void LoadMaps()
+        {
+            //deserialize maps
+            try
+            {
+                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Maps", "MainStory");
+
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                DirectoryInfo place = new DirectoryInfo(folderPath);
+                FileInfo[] files = place.GetFiles();
+
+                if (files.Length != 0)
+                    foreach (FileInfo file in files)
+                    {
+                        string test = Path.GetFullPath(file.FullName);
+                        string json = File.ReadAllText(test);
+
+                        var options = new JsonSerializerOptions { WriteIndented = true };
+                        var deserializedMap = JsonSerializer.Deserialize<Location>(json, options);
+                        //TODO - remove comment; old map = 23, 78, 23, 78 ; new map = 4, 7, 4, 7
+                        //Location map = new(deserializedList, 2, 2);
+                        Maps.Add(deserializedMap);
+                    }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                Environment.Exit(1);
             }
         }
 
@@ -289,8 +322,11 @@ namespace TurnBasedRPG.Source.Core
         public void NewGame(string _mapFileName = "map.json")
         {
             //check if map exist
-            if (File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", _mapFileName)))
-                Instance.LoadMap(_mapFileName);
+            if (Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", "MainStory")))
+                Instance.LoadMaps();
+
+            //TODO - test
+            Instance.changeLocation("Campaign");
 
             Instance.Player = EntityManager.Player;
             Instance.Maps[ActiveMap].PlayerX = Instance.Maps[ActiveMap].EntryX;
@@ -348,10 +384,6 @@ namespace TurnBasedRPG.Source.Core
                 Instance.Maps[ActiveMap].PlayerX = destinationX;
                 Instance.Maps[ActiveMap].PlayerY = destinationY;
                 Instance.Maps[ActiveMap].Map[destinationX][destinationY].Traverse();
-
-                //save new player coords
-                Instance.Maps[ActiveMap].PlayerX = destinationX;
-                Instance.Maps[ActiveMap].PlayerY = destinationY;
             }
         }
 
@@ -388,6 +420,12 @@ namespace TurnBasedRPG.Source.Core
                 return;
 
             MovePlayer(Instance.Maps[ActiveMap].PlayerX, Instance.Maps[ActiveMap].PlayerY + 1);
+        }
+
+        public void TeleportPlayerToCoordinates(int x, int y)
+        {
+            if (x < Instance.Maps[ActiveMap].Map[0].Count && y < Instance.Maps[ActiveMap].Map.Count)
+                MovePlayer(x, y);
         }
 
         public void openDialog(List<string> dialog)
@@ -435,9 +473,53 @@ namespace TurnBasedRPG.Source.Core
             Environment.Exit(0);
         }
 
-        public void changeLocation(int locationId)
+        public void changeLocation(string mapName)
         {
-            //TODO
+            if (mapName == "" || mapName == null)
+                return;
+
+            bool mapFound = false;
+
+            //test
+            int testX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
+            int testY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
+            int TestX = Game.Instance.Maps[Game.Instance.ActiveMap].EntryX;
+            int TestY = Game.Instance.Maps[Game.Instance.ActiveMap].EntryY;
+
+            //store last player place if from Main map
+            if (Instance.Maps[ActiveMap].Name == "Campaign")
+            {
+                Instance.Maps[ActiveMap].EntryX = Instance.Maps[ActiveMap].PlayerX;
+                Instance.Maps[ActiveMap].EntryY = Instance.Maps[ActiveMap].PlayerY;
+            }
+
+            for (int map = 0; map < Instance.Maps.Count; map++)
+                if (Instance.Maps[map].Name == mapName)
+                {
+                    Instance.ActiveMap = map;
+                    mapFound = true;
+                    break;
+                }
+
+            if (!mapFound)
+            {
+                Console.WriteLine("Map not found. Program shutting off.");
+                Environment.Exit(1);
+            }
+
+            Instance.Maps[ActiveMap].PlayerX = Instance.Maps[ActiveMap].EntryX;
+            Instance.Maps[ActiveMap].PlayerY = Instance.Maps[ActiveMap].EntryY;
+
+            //test
+            int _testX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
+            int _testY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
+            int _TestX = Game.Instance.Maps[Game.Instance.ActiveMap].EntryX;
+            int _TestY = Game.Instance.Maps[Game.Instance.ActiveMap].EntryY;
+
+            Instance.GameState.Render();
+            Instance.GameState.Update();
+
+            //throw new NotImplementedException();
         }
 
         public void openTown(TownNode town)

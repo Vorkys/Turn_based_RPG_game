@@ -7,33 +7,27 @@ namespace TurnBasedRPG.Source.Locations
 {
     public class Location
     {
+        private string name;
         private List<List<Node>> map;
         private int entryX;
         private int entryY;
         private int playerX;
         private int playerY;
 
-        public Location(List<List<Node>> location, int entryX, int entryY, int playerX, int playerY)
+        public Location(string name, List<List<Node>> location, int entryX, int entryY)
         {
+            this.Name = name;
             this.Map = location;
             this.EntryX = entryX;
             this.EntryY = entryY;
-            this.PlayerX = playerX;
-            this.PlayerY = playerY;
-        }
-
-        public Location(List<List<Node>> location, int entryX, int entryY)
-        {
-            this.Map = location;
-            this.EntryX = entryX;
-            this.EntryY = entryY;
-            this.PlayerX = -1;
-            this.PlayerY = -1;
+            this.PlayerX = entryX;
+            this.PlayerY = entryY;
         }
 
         //used for deserialization
         public Location() { }
 
+        public string Name { get => name; set => name = value; }
         public List<List<Node>> Map { get => map; set => map = value; }
         public int EntryX { get => entryX; set => entryX = value; }
         public int EntryY { get => entryY; set => entryY = value; }
