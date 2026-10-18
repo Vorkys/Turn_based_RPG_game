@@ -518,7 +518,8 @@ namespace TurnBasedRPG.Source.Managers
             townSprite: "hometown.txt",
             townPeople: [
                 EntityManager.ShopkeeperT1Plains,
-                EntityManager.OrganisatorT1
+                EntityManager.OrganisatorT1,
+                EntityManager.PlainsTownToHeaven
             ]
         );
         //Forest town
@@ -566,7 +567,8 @@ namespace TurnBasedRPG.Source.Managers
             townSprite: "hometown.txt",
             townPeople: [
                 EntityManager.ShopkeeperT2,
-                EntityManager.OrganisatorT3Savana
+                EntityManager.OrganisatorT3Savana,
+                EntityManager.SavanaCampToAshLandCamp
             ]
         );
         //Ash land camp
@@ -582,7 +584,8 @@ namespace TurnBasedRPG.Source.Managers
             townSprite: "hometown.txt",
             townPeople: [
                 EntityManager.ShopkeeperT2,
-                EntityManager.OrganisatorT1
+                EntityManager.OrganisatorT1,
+                EntityManager.AshLandCampToSavanaCamp
             ]
         );
         //Heaven tavern
@@ -598,7 +601,8 @@ namespace TurnBasedRPG.Source.Managers
             townSprite: "hometown.txt",
             townPeople: [
                 EntityManager.ShopkeeperT2,
-                EntityManager.OrganisatorT1
+                EntityManager.OrganisatorT1,
+                EntityManager.HeavenToPlainsTown
             ]
         );
         #endregion
@@ -645,7 +649,7 @@ namespace TurnBasedRPG.Source.Managers
             enemyToSpawn: new List<Enemy> { EntityManager.Ghost, EntityManager.Zombie }
         );
         public static BossNode DungeonBoss = new(
-            nodeChar: ' ',
+            nodeChar: 'B',
             backgroundColor: "Gray",
             foregroundColor: "Red",
             mapColor: "Red",
@@ -657,7 +661,7 @@ namespace TurnBasedRPG.Source.Managers
 
         public static DungeonNode DungeonEntry = new(
             nodeChar: 'D',
-            backgroundColor: "DarkGray",
+            backgroundColor: "Green",
             foregroundColor: "Magenta",
             mapColor: "DarkGray",
             isMovable: true,

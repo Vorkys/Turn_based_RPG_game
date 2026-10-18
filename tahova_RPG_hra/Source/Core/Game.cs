@@ -110,8 +110,9 @@ namespace TurnBasedRPG.Source.Core
                     new JsonDerivedType(typeof(Player), nameof(Player)),
                     new JsonDerivedType(typeof(Ally), nameof(Ally)),
                     new JsonDerivedType(typeof(ArenaOrganisator), nameof(ArenaOrganisator)),
-                    new JsonDerivedType(typeof(Merchant), "Merchant"),
+                    new JsonDerivedType(typeof(Merchant), nameof(Merchant)),
                     new JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver)),
+                    new JsonDerivedType(typeof(Transporter), nameof(Transporter)),
                     new JsonDerivedType(typeof(Enemy), nameof(Enemy)),
                     new JsonDerivedType(typeof(Slime), nameof(Slime)),
                     new JsonDerivedType(typeof(Goblin), nameof(Goblin)),
@@ -422,10 +423,10 @@ namespace TurnBasedRPG.Source.Core
             MovePlayer(Instance.Maps[ActiveMap].PlayerX, Instance.Maps[ActiveMap].PlayerY + 1);
         }
 
-        public void TeleportPlayerToCoordinates(int x, int y)
+        public void TeleportPlayerToCoordinates(int mapHeight, int mapWidth)
         {
-            if (x < Instance.Maps[ActiveMap].Map[0].Count && y < Instance.Maps[ActiveMap].Map.Count)
-                MovePlayer(x, y);
+            if (mapWidth < Instance.Maps[ActiveMap].Map[0].Count && mapHeight < Instance.Maps[ActiveMap].Map.Count)
+                MovePlayer(mapHeight, mapWidth);
         }
 
         public void openDialog(List<string> dialog)

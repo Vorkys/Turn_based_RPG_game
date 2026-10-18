@@ -835,6 +835,50 @@ namespace TurnBasedRPG.Source.Managers
 
         #endregion
 
+        #region Transporters
+        public static Transporter SavanaCampToAshLandCamp = new(
+            name: "Transporter",
+            spritePath: "human.txt",
+            money: 0,
+            newLocationName: "Ash Land Camp",
+            newX: 20,
+            newY: 127,
+            cost: 50,
+            requiredQuest: null
+        );
+        public static Transporter AshLandCampToSavanaCamp = new(
+            name: "Transporter",
+            spritePath: "human.txt",
+            money: 0,
+            newLocationName: "Savana Camp",
+            newX: 16,
+            newY: 124,
+            cost: 50,
+            requiredQuest: null
+        );
+
+        public static Transporter PlainsTownToHeaven = new(
+            name: "Heavenly Transporter",
+            spritePath: "human.txt",
+            money: 0,
+            newLocationName: "Heaven",
+            newX: 26,
+            newY: 41,
+            cost: 150,
+            requiredQuest: null
+        );
+        public static Transporter HeavenToPlainsTown = new(
+            name: "Heavenly Transporter",
+            spritePath: "human.txt",
+            money: 0,
+            newLocationName: "Heaven",
+            newX: 18,
+            newY: 13,
+            cost: 150,
+            requiredQuest: null
+        );
+        #endregion
+
         #region QuestGivers
         #endregion
 

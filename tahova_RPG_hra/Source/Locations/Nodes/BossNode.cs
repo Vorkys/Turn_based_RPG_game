@@ -16,7 +16,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
             this.OpenDialog = openDialog;
             this.EndDialog = endDialog;
             this.Boss = boss;
-            this.Visited = true;
+            this.Visited = false;
         }
 
         public List<string> OpenDialog { get => openDialog; set => openDialog = value; }
@@ -30,6 +30,8 @@ namespace TurnBasedRPG.Source.Locations.Nodes
             if (Visited || Boss.Health <= 0)
                 return;
 
+            Visited = true;
+
             //Game.Instance.openDialog(OpenDialog);
 
             Game.Instance.startCombat(Boss);
@@ -38,6 +40,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
 
             Game.Instance.Player.ImmuneMoves = 4;
             //boss is dead, hide him... permanently
+            ForegroundColor = BackgroundColor;
             NodeChar = ' ';
         }
     }

@@ -489,6 +489,19 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             castInstanceState.CurrentState = TownState.TownNodeState.MerchantBuy;
                         }
                     break;
+                //QuestGiver
+                case ConsoleKey.T:
+                    break;
+                case ConsoleKey.Z:
+                    if (castCurrentNode.TownPeople == null)
+                        return false;
+                    foreach (Ally ally in castCurrentNode.TownPeople)
+                        if (ally is Transporter)
+                        {
+                            Transporter castNpc = (Transporter)ally;
+                            castNpc.Talk();
+                        }
+                    break;
                 case ConsoleKey.Escape:
                     switch (castInstanceState.CurrentState)
                     {

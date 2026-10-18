@@ -1509,6 +1509,11 @@ namespace TurnBasedRPG.Source.Core.GameStates
                             if (!keybinds.Contains("[T] - Quest giver"))
                                 keybinds.Add("[T] - Quest giver");
                             break;
+                        case Transporter:
+                            Transporter tmpAlly = (Transporter)ally;
+                            if (!keybinds.Contains($"[Z] - Transporter (cost: {tmpAlly.Cost} > {tmpAlly.NewLocationName})"))
+                                keybinds.Add($"[Z] - Transporter ({tmpAlly.Cost}G > {tmpAlly.NewLocationName})");
+                            break;
                     }
                 }
             }
@@ -1780,18 +1785,23 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         //Missing description can be written fully
                         if (castCurrentNode.Description.Length - start < GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8))
                         {
-                            Console.Write(castCurrentNode.Description);
+                            end = castCurrentNode.Description.Length;
+                            Console.Write(castCurrentNode.Description.Substring(start, end - start));
                             break;
                         }
                         else
                         {
                             end = start + GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8) > castCurrentNode.Description.Length ? start + (castCurrentNode.Description.Length - start) : start + GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8);
-                            char tmpChar = castCurrentNode.Description[start + end];
+                            int tmpEnd = end;
+                            
+                            //find when last whole word ends
+                            while (castCurrentNode.Description[tmpEnd] != ' ')
+                                tmpEnd--;
 
-                            while (tmpChar != ' ')
-                            {
-                                tmpChar = castCurrentNode.Description[start + end];
-                            }
+                            //Print what can be printed
+                            Console.Write(castCurrentNode.Description.Substring(start, tmpEnd - start));
+                            //move start to new location + add empty space so next row dont start with ' '
+                            start = tmpEnd + 1;
                         }
                     }
                     break;
