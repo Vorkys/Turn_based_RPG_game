@@ -1482,22 +1482,6 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 {
                     switch (ally)
                     {
-                        case ArenaOrganisator:
-                            ArenaOrganisator castEntity = (ArenaOrganisator)ally;
-                            int enemyMinLvl = castEntity.Enemies[0].Level;
-                            int enemyMaxLvl = castEntity.Enemies[0].MaxLevel;
-
-                            foreach (Enemy enemy in castEntity.Enemies)
-                            {
-                                if (enemy.Level < enemyMinLvl)
-                                    enemyMinLvl = enemy.Level;
-                                if (enemy.MaxLevel > enemyMaxLvl)
-                                    enemyMaxLvl = enemy.MaxLevel;
-                            }
-
-                            if (!keybinds.Contains($"[W] - Arena fight (Enemy level: {enemyMinLvl}-{enemyMaxLvl})"))
-                                keybinds.Add($"[W] - Arena fight (Enemy level: {enemyMinLvl}-{enemyMaxLvl})");
-                            break;
                         case Merchant:
                             if (!keybinds.Contains("[E] - Sell Items"))
                             {
@@ -1513,6 +1497,22 @@ namespace TurnBasedRPG.Source.Core.GameStates
                             Transporter tmpAlly = (Transporter)ally;
                             if (!keybinds.Contains($"[Z] - Transporter (cost: {tmpAlly.Cost} > {tmpAlly.NewLocationName})"))
                                 keybinds.Add($"[Z] - Transporter ({tmpAlly.Cost}G > {tmpAlly.NewLocationName})");
+                            break;
+                        case ArenaOrganisator:
+                            ArenaOrganisator castEntity = (ArenaOrganisator)ally;
+                            int enemyMinLvl = castEntity.Enemies[0].Level;
+                            int enemyMaxLvl = castEntity.Enemies[0].MaxLevel;
+
+                            foreach (Enemy enemy in castEntity.Enemies)
+                            {
+                                if (enemy.Level < enemyMinLvl)
+                                    enemyMinLvl = enemy.Level;
+                                if (enemy.MaxLevel > enemyMaxLvl)
+                                    enemyMaxLvl = enemy.MaxLevel;
+                            }
+
+                            if (!keybinds.Contains($"[U] - Arena fight (Enemy level: {enemyMinLvl}-{enemyMaxLvl})"))
+                                keybinds.Add($"[U] - Arena fight (Enemy level: {enemyMinLvl}-{enemyMaxLvl})");
                             break;
                     }
                 }

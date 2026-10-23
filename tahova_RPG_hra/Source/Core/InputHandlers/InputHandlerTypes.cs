@@ -502,6 +502,16 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             castNpc.Talk();
                         }
                     break;
+                case ConsoleKey.U:
+                    if (castCurrentNode.TownPeople == null)
+                        return false;
+                    foreach (Ally ally in castCurrentNode.TownPeople)
+                        if (ally is ArenaOrganisator)
+                        {
+                            ArenaOrganisator castNpc = (ArenaOrganisator)ally;
+                            castNpc.Talk();
+                        }
+                    break;
                 case ConsoleKey.Escape:
                     switch (castInstanceState.CurrentState)
                     {
