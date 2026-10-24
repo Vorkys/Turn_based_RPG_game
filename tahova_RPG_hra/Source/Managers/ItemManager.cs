@@ -48,9 +48,9 @@ namespace TurnBasedRPG.Source.Managers
             slot: Equippable.EquippableSlot.Off_Hand,
             strength: 1
             );
-        public static Equippable IronRing = new(
-            name: "Iron ring",
-            description: "An old iron ring. Provide 3 mana.",
+        public static Equippable CopperRing = new(
+            name: "Copper ring",
+            description: "An old copper ring. Provide 3 mana.",
             buyPrice: 6,
             sellPrice: 2,
             slot: Equippable.EquippableSlot.Ring,
@@ -84,11 +84,96 @@ namespace TurnBasedRPG.Source.Managers
             );
         public static DamageItem SmallGrenade = new(
             name: "Small grenade",
-            description: "Homemade small grenade. Deals 5 damage to target.",
+            description: "Homemade small grenade. Deals 7 damage to target.",
             buyPrice: 15,
             sellPrice: 6,
             maxQuantity: 50,
-            power: 5
+            power: 7
+            );
+        #endregion
+
+        #region T2_items
+        public static Equippable LeatherHelmet = new(
+            name: "Leather helmet",
+            description: "Leather helmet, used by hunters. Provide 2 defence.",
+            buyPrice: 19,
+            sellPrice: 8,
+            slot: Equippable.EquippableSlot.Helm,
+            strength: 2
+            );
+        public static Equippable LeatherBody = new(
+            name: "Leather body armor",
+            description: "Leather chest, used by hunters. Provide 3 defence.",
+            buyPrice: 24,
+            sellPrice: 12,
+            slot: Equippable.EquippableSlot.Body,
+            strength: 3
+            );
+        public static Equippable LeatherLegs = new(
+            name: "Leather legs",
+            description: "Leather legs, used by hunters. Provide 2 defence.",
+            buyPrice: 19,
+            sellPrice: 8,
+            slot: Equippable.EquippableSlot.Legs,
+            strength: 2
+            );
+        public static Equippable StoneSword = new(
+            name: "Stone sword",
+            description: "Stone sword often used for training. Provide 2 attack.",
+            buyPrice: 20,
+            sellPrice: 9,
+            slot: Equippable.EquippableSlot.Main_Hand,
+            strength: 2
+            );
+        public static Equippable LeatherShield = new(
+            name: "Leather shield",
+            description: "Leather shield, used by hunters. Provide 2 defence.",
+            buyPrice: 32,
+            sellPrice: 14,
+            slot: Equippable.EquippableSlot.Off_Hand,
+            strength: 2
+            );
+        public static Equippable IronRing = new(
+            name: "Iron ring",
+            description: "An old iron ring. Provide 7 mana.",
+            buyPrice: 24,
+            sellPrice: 10,
+            slot: Equippable.EquippableSlot.Ring,
+            strength: 7
+            );
+        //Consumables
+        public static HealingItem HealthPotion = new(
+            name: "Health potion",
+            description: "Glass flask with a red liquid. Provides 7 health.",
+            buyPrice: 12,
+            sellPrice: 8,
+            maxQuantity: 10,
+            power: 12
+            );
+        public static ManaIncreaseItem ManaPotion = new(
+            name: "Mana potion",
+            description: "Glass flask with a blue liquid. Provides 9 mana.",
+            buyPrice: 18,
+            sellPrice: 8,
+            maxQuantity: 10,
+            power: 9
+            );
+        public static HybridHealingItem PinkPotion = new(
+            name: "Pink potion",
+            description: "Glass flask with a pink liquid. Provides 9 health & 6 mana.",
+            buyPrice: 12,
+            sellPrice: 7,
+            maxQuantity: 10,
+            power: 9,
+            manaIncrease: 6
+            );
+        public static DamageItem Grenade = new(
+            name: "Grenade",
+            description: "Improved homemade grenade. Deals 11 damage to target.",
+            buyPrice: 25,
+            sellPrice: 15,
+            maxQuantity: 50,
+            power: 11
             );
         #endregion
 

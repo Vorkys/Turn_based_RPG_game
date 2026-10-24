@@ -824,7 +824,7 @@ namespace TurnBasedRPG.Source.Managers
                 ItemManager.SmallHealthPotion,
                 ItemManager.SmallManaPotion,
                 ItemManager.SmallPinkPotion,
-                ItemManager.IronRing,
+                ItemManager.CopperRing,
                 ItemManager.WoodenSword,
                 ItemManager.WoodenShield,
                 ItemManager.WoodenHelmet,

@@ -21,7 +21,6 @@ namespace TurnBasedRPG.Source.Entities
 
             AddItem(ItemManager.SmallHealthPotion, 3);
             AddItem(ItemManager.SmallManaPotion, 2);
-            AddItem(ItemManager.IronRing);
         }
 
         //used for Deserialization
