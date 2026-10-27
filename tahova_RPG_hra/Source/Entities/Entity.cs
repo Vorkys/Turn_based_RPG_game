@@ -355,13 +355,13 @@ namespace TurnBasedRPG.Source.Entities
                 switch (tmpItem.Slot)
                 {
                     case Equippable.EquippableSlot.Helm:
-                        Armor -= tmpItem.Strength;
+                        Health -= tmpItem.Strength;
                         break;
                     case Equippable.EquippableSlot.Body:
-                        Armor -= tmpItem.Strength;
+                        Health -= tmpItem.Strength;
                         break;
                     case Equippable.EquippableSlot.Legs:
-                        Armor -= tmpItem.Strength;
+                        Health -= tmpItem.Strength;
                         break;
                     case Equippable.EquippableSlot.Ring:
                         MaxMana -= tmpItem.Strength;
@@ -379,17 +379,17 @@ namespace TurnBasedRPG.Source.Entities
                 AddItem(tmpItem);
             }
 
-            ////Add stats from new equipment
+            //Add stats from new equipment
             switch (item.Slot)
             {
                 case Equippable.EquippableSlot.Helm:
-                    Armor += item.Strength;
+                    Health += item.Strength;
                     break;
                 case Equippable.EquippableSlot.Body:
-                    Armor += item.Strength;
+                    Health += item.Strength;
                     break;
                 case Equippable.EquippableSlot.Legs:
-                    Armor += item.Strength;
+                    Health += item.Strength;
                     break;
                 case Equippable.EquippableSlot.Ring:
                     MaxMana += item.Strength;
@@ -416,13 +416,13 @@ namespace TurnBasedRPG.Source.Entities
             switch (tmpItem.Slot)
             {
                 case Equippable.EquippableSlot.Helm:
-                    Armor -= tmpItem.Strength;
+                    Health -= tmpItem.Strength;
                     break;
                 case Equippable.EquippableSlot.Body:
-                    Armor -= tmpItem.Strength;
+                    Health -= tmpItem.Strength;
                     break;
                 case Equippable.EquippableSlot.Legs:
-                    Armor -= tmpItem.Strength;
+                    Health -= tmpItem.Strength;
                     break;
                 case Equippable.EquippableSlot.Ring:
                     MaxMana -= tmpItem.Strength;
