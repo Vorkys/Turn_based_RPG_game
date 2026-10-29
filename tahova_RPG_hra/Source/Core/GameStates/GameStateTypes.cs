@@ -62,7 +62,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar/Enter] - Confirm", "[ESC] - Back"];
+            string[] keybinds = ["[W/S or ^/v arrows] - Move", "[Spacebar/Enter] - Confirm", "[ESC] - Back", "[DEL] - delete save file, cannot be undone"];
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -83,9 +83,14 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     //print keybind if there is enough place
                     else if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
                     {
+                        if (tmpId == 3)
+                            Console.ForegroundColor = ConsoleColor.Red;
+
                         Console.Write($" {keybinds[tmpId]} ");
                         column += keybinds[tmpId].Length + 1;
                         tmpId++;
+
+                        Console.ResetColor();
                     }
                     else
                         Console.Write(' ');
@@ -181,6 +186,20 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     }
                     break;
             }
+        }
+
+        public void UpdateSaveFilesPath()
+        {
+            string folderPath = "savefiles";
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            saveFilesPath = Directory.GetFiles(folderPath)
+                                     .Select(Path.GetFileName)
+                                     .OrderBy(filePath => Path.GetFileName(filePath))
+                                     .Reverse()
+                                     .ToArray();
         }
 
         public bool NextSelection()

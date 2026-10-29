@@ -234,36 +234,11 @@ namespace TurnBasedRPG.Source.Core
                 string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "savefiles");
                 string fileName = Path.Combine(folderPath, _mapFileName);
 
-                //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-
-                //string json = File.ReadAllText(fileName);
-
-                //Game? deserializedGame = JsonSerializer.Deserialize<Game>(json, options);
-
-                ////Update instance
-                //if (deserializedGame != null)
-                //{
-                //    Instance.gameStateMap = deserializedGame.gameStateMap;
-                //    Instance.gameState = deserializedGame.gameState;
-                //    Instance.maps = deserializedGame.maps;
-                //    Instance.activeMap = deserializedGame.activeMap;
-                //    Instance.player = deserializedGame.player;
-                //    Instance.activeQuests = deserializedGame.activeQuests;
-                //}
-
-                //////////////////
-                // Assuming 'jsonString' is the text read from your saved file
                 string jsonString = File.ReadAllText(fileName);
 
                 // Parse the JSON into a Document
                 using (JsonDocument doc = JsonDocument.Parse(jsonString))
                 {
-                    //Dictionary<GameStateType, GameState> loadGameStateMap = doc.RootElement
-                    //                                                        .GetProperty("GameStateMap")
-                    //                                                        .Deserialize<Dictionary<GameStateType, GameState>>();
-                    //GameState loadGameState = doc.RootElement
-                    //                          .GetProperty("GameState")
-                    //                          .Deserialize<GameState>();
                     List<Location> loadMaps = doc.RootElement
                                               .GetProperty("Maps")
                                               .Deserialize<List<Location>>();
@@ -277,41 +252,44 @@ namespace TurnBasedRPG.Source.Core
                                              .GetProperty("ActiveQuests")
                                              .Deserialize<List<Quest>>();
 
-                    //Instance.GameStateMap = loadGameStateMap;
-                    //Instance.GameState = loadGameState;
                     Instance.Maps = loadMaps;
                     Instance.ActiveMap = loadActiveMap;
                     Instance.Player = loadPlayer;
                     Instance.activeQuests = loadQuests;
                 }
 
-                //// Not working bcs I have complex types
-                //// Parse into a JsonNode instead of trying to instantiate 'Game'
-                //JsonNode? jsonNode = JsonNode.Parse(json);
-
-                //if (jsonNode != null)
-                //{
-                //    Console.WriteLine();
-                //    if (jsonNode["GameStateMap"] != null)
-                //        _instance.gameStateMap = jsonNode["GameStateMap"]!.GetValue<Dictionary<GameStateType, GameState>>();
-
-                //    if (jsonNode["GameState"] != null)
-                //        _instance.gameState = jsonNode["GameState"]!.GetValue<GameState>();
-
-                //    if (jsonNode["Maps"] != null)
-                //        _instance.maps = jsonNode["Maps"]!.GetValue<List<Location>>();
-
-                //    if (jsonNode["ActiveMap"] != null)
-                //        _instance.activeMap = jsonNode["ActiveMap"]!.GetValue<int>();
-
-                //    if (jsonNode["Player"] != null)
-                //        _instance.player = jsonNode["Player"]!.GetValue<Player>();
-
-                //    if (jsonNode["ActiveQuests"] != null)
-                //        _instance.activeQuests = jsonNode["ActiveQuests"]!.GetValue<List<Quest>>();
-                //}
-
                 Instance.ChangeState(GameStateType.Exploration);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex);
+                Environment.Exit(-1);
+            }
+        }
+
+        public void Delete(string _mapFileName)
+        {
+            try
+            {
+                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "savefiles");
+                string fileName = Path.Combine(folderPath, _mapFileName);
+
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+
+                    MainMenuState castState = (MainMenuState)Game.Instance.GameState;
+                    int tmpSelection = castState.SelectedOption;
+
+                    castState.UpdateSaveFilesPath();
+
+                    castState.Render();
+
+                    if (tmpSelection > castState.SaveFilesPath.Count())
+                        castState.SelectedOption = castState.SaveFilesPath.Count();
+                }
+
+
             }
             catch (Exception ex)
             {

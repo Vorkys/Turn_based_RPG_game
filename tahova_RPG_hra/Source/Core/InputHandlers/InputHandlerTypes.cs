@@ -57,6 +57,14 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             return false;
                     }
                     break;
+                case ConsoleKey.Delete:
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case (MainMenuState.MenuState.ContinueMenu):
+                            Game.Instance.Delete(castInstanceState.SaveFilesPath[castInstanceState.SelectedOption]);
+                            break;
+                    }
+                    break;
                 case ConsoleKey.Escape:
                     switch (castInstanceState.CurrentState)
                     {
