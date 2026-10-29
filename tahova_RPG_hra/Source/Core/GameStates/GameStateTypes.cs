@@ -1102,10 +1102,10 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         equippedItemLine = 4;
                         break;
                     case 2:
-                        equippedItemLine = 7;
+                        equippedItemLine = 10;
                         break;
                     case 3:
-                        equippedItemLine = 10;
+                        equippedItemLine = 7;
                         break;
                     case 4:
                         equippedItemLine = 13;
@@ -1226,10 +1226,10 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         equippedItemLine = 4;
                         break;
                     case 2:
-                        equippedItemLine = 7;
+                        equippedItemLine = 10;
                         break;
                     case 3:
-                        equippedItemLine = 10;
+                        equippedItemLine = 7;
                         break;
                     case 4:
                         equippedItemLine = 13;

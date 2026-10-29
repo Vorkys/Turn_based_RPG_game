@@ -355,13 +355,13 @@ namespace TurnBasedRPG.Source.Entities
                 switch (tmpItem.Slot)
                 {
                     case Equippable.EquippableSlot.Helm:
-                        Health -= tmpItem.Strength;
+                        MaxHealth -= tmpItem.Strength;
                         break;
                     case Equippable.EquippableSlot.Body:
-                        Health -= tmpItem.Strength;
+                        MaxHealth -= tmpItem.Strength;
                         break;
                     case Equippable.EquippableSlot.Legs:
-                        Health -= tmpItem.Strength;
+                        MaxHealth -= tmpItem.Strength;
                         break;
                     case Equippable.EquippableSlot.Ring:
                         MaxMana -= tmpItem.Strength;
@@ -383,13 +383,13 @@ namespace TurnBasedRPG.Source.Entities
             switch (item.Slot)
             {
                 case Equippable.EquippableSlot.Helm:
-                    Health += item.Strength;
+                    MaxHealth += item.Strength;
                     break;
                 case Equippable.EquippableSlot.Body:
-                    Health += item.Strength;
+                    MaxHealth += item.Strength;
                     break;
                 case Equippable.EquippableSlot.Legs:
-                    Health += item.Strength;
+                    MaxHealth += item.Strength;
                     break;
                 case Equippable.EquippableSlot.Ring:
                     MaxMana += item.Strength;
@@ -416,13 +416,13 @@ namespace TurnBasedRPG.Source.Entities
             switch (tmpItem.Slot)
             {
                 case Equippable.EquippableSlot.Helm:
-                    Health -= tmpItem.Strength;
+                    MaxHealth -= tmpItem.Strength;
                     break;
                 case Equippable.EquippableSlot.Body:
-                    Health -= tmpItem.Strength;
+                    MaxHealth -= tmpItem.Strength;
                     break;
                 case Equippable.EquippableSlot.Legs:
-                    Health -= tmpItem.Strength;
+                    MaxHealth -= tmpItem.Strength;
                     break;
                 case Equippable.EquippableSlot.Ring:
                     MaxMana -= tmpItem.Strength;
@@ -436,6 +436,9 @@ namespace TurnBasedRPG.Source.Entities
                     Armor -= tmpItem.Strength;
                     break;
             }
+
+            if (Health > MaxHealth)
+                health = MaxHealth;
 
             Game.Instance.Player.AddItem(Game.Instance.Player.Equipment[EquipmentInventoryId]);
             Game.Instance.Player.Equipment[EquipmentInventoryId] = null;

@@ -426,15 +426,5 @@ namespace TurnBasedRPG.Source.Managers
             power: 40
             );
         #endregion
-
-        //T3 ring TODO - used for testing 6.4.2026
-        public static Equippable DiamondRing = new(
-            name: "Diamond ring",
-            description: "A very expensive diamond ring. Provide 20 mana.",
-            buyPrice: 600,
-            sellPrice: 200,
-            slot: Equippable.EquippableSlot.Ring,
-            strength: 20
-            );
     }
 }
