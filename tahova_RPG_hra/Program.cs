@@ -12,6 +12,8 @@ namespace TurnBasedRPG
             Console.SetBufferSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
             Console.Clear();
 
+            Console.Title = "ASCII Adventure";
+
             for (int i = 0; i < GlobalConstants.consoleSizeHeight; i++)
             {
                 if (i == 0)
