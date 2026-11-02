@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using TurnBasedRPG.Source.Entities.AllyRoles;
-using TurnBasedRPG.Source.GameObjects.Items;
-using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
-using TurnBasedRPG.Source.Spells;
 
 namespace TurnBasedRPG.Source.Entities
 {

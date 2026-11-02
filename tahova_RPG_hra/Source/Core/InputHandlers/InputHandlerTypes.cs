@@ -267,8 +267,8 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                         case CombatState.CombatDialogState.SpellDialog:
                         case CombatState.CombatDialogState.ItemDialog:
                             return castInstanceState.NextElement();
-                    case CombatState.CombatDialogState.DefaultDialog:
-                    case CombatState.CombatDialogState.AwaitConfirmDialog:
+                        case CombatState.CombatDialogState.DefaultDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
                     }
                     break;

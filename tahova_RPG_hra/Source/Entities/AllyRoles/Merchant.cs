@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using TurnBasedRPG.Source.Core;
 using TurnBasedRPG.Source.GameObjects.Items;
-using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
-using TurnBasedRPG.Source.Spells;
 
 namespace TurnBasedRPG.Source.Entities.AllyRoles
 {

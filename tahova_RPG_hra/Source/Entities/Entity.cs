@@ -291,7 +291,7 @@ namespace TurnBasedRPG.Source.Entities
             item.Owner = this;
 
             //Is the item already in the inventory and has some space in stack to add more?
-            bool isItemInInventory = Inventory.OfType<Item>().Any(_item =>  _item.Name == item.Name && _item.Quantity < _item.MaxQuantity);
+            bool isItemInInventory = Inventory.OfType<Item>().Any(_item => _item.Name == item.Name && _item.Quantity < _item.MaxQuantity);
 
             //Add item to current stack in Inventory
             if (isItemInInventory)

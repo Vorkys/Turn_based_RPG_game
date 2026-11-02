@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace TurnBasedRPG.Source.GameObjects.Items.ItemTypes
+﻿namespace TurnBasedRPG.Source.GameObjects.Items.ItemTypes
 {
     public class Consumable : Item
     {

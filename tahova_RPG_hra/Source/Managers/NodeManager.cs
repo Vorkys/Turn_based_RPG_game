@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using TurnBasedRPG.Source.Entities;
 using TurnBasedRPG.Source.Locations.Nodes;
 

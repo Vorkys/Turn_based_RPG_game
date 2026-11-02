@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -173,7 +172,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                             Console.Write(sortedSaveFilesNames[saveFileNumber]);
                         }
                     }
-                    
+
                     break;
                 case (MenuState.HowToPlayMenu):
                     Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5);
@@ -363,7 +362,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         {
             InputHandler = new ExplorationHandler();
         }
-        
+
         public override void Render()
         {
             Console.Clear();
@@ -842,7 +841,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         }
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
-        public string CombatDialog { get => combatDialog ; set => combatDialog = value; }
+        public string CombatDialog { get => combatDialog; set => combatDialog = value; }
         public CombatDialogState CurrentState { get => currentState; set => currentState = value; }
     }
 
@@ -1259,7 +1258,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 }
 
                 Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 25) - maxStickmanStringLength - 4 - (maxItemNameLength + 1), 2 + equippedItemLine);
-                    Console.Write(new string(' ', maxItemNameLength - itemName.Length) + itemName);
+                Console.Write(new string(' ', maxItemNameLength - itemName.Length) + itemName);
             }
         }
 
@@ -1600,7 +1599,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
                     //Clear items names
                     int row = 1;
-                    while(row < GlobalConstants.consoleRenderSizeHeight - 1)
+                    while (row < GlobalConstants.consoleRenderSizeHeight - 1)
                     {
                         Console.SetCursorPosition(leftSideStart, row);
                         Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4) + 1));
@@ -1707,7 +1706,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         Console.Write($" | Buy for: {townMerchant.Wares[selectedOption].BuyPrice}");
                     //Print Desc
                     Console.SetCursorPosition(leftSideStart + 1, topSideStart + 2);
-                    start = 0;end = 0;
+                    start = 0; end = 0;
 
                     //Horizontal length of text == GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4)
 
@@ -1812,7 +1811,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         {
                             end = start + GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8) > castCurrentNode.Description.Length ? start + (castCurrentNode.Description.Length - start) : start + GlobalConstants.consoleRenderSizeWidth - (2 * GlobalConstants.consoleRenderSizeWidth / 8);
                             int tmpEnd = end;
-                            
+
                             //find when last whole word ends
                             while (castCurrentNode.Description[tmpEnd] != ' ')
                                 tmpEnd--;
