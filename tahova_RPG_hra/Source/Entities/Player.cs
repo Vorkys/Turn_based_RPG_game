@@ -75,23 +75,47 @@ namespace TurnBasedRPG.Source.Entities
 
                 switch (Level)
                 {
-                    case 2:
-                        AddSpell(SpellManager.MinorHeal);
-                        break;
                     case 3:
                         AddSpell(SpellManager.Scorch);
                         break;
-                    case 6:
-                        AddSpell(SpellManager.IceSpikes);
-                        break;
-                    case 7:
-                        AddSpell(SpellManager.ShadowPunch);
+                    case 5:
+                        AddSpell(SpellManager.MinorHeal);
                         break;
                     case 8:
+                        AddSpell(SpellManager.IceSpike);
+                        break;
+                    case 11:
+                        AddSpell(SpellManager.ShadowPunch);
+                        break;
+                    case 13:
                         AddSpell(SpellManager.LesserHeal);
                         break;
-                    case 14:
-                        AddSpell(SpellManager.AbsorbBolt);
+                    case 16:
+                        AddSpell(SpellManager.Absorb);
+                        break;
+                    case 19:
+                        AddSpell(SpellManager.ThornSlash);
+                        break;
+                    case 21:
+                        AddSpell(SpellManager.Heal);
+                        break;
+                    case 24:
+                        AddSpell(SpellManager.EarthShock);
+                        break;
+                    case 27:
+                        AddSpell(SpellManager.MajorHeal);
+                        break;
+                    case 29:
+                        AddSpell(SpellManager.MindShock);
+                        break;
+                    case 32:
+                        AddSpell(SpellManager.HolySmite);
+                        break;
+                    case 35:
+                        AddSpell(SpellManager.HolyHeal);
+                        break;
+                    case 40:
+                        AddSpell(SpellManager.Armagedon);
                         break;
                 }
 

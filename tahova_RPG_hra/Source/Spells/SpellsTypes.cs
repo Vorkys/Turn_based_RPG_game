@@ -69,6 +69,41 @@ namespace TurnBasedRPG.Source.Spells
         }
     }
 
+    class ThornDamageSpell : Spell
+    {
+        public ThornDamageSpell(Entity caster, string name, string description, int cost, int power, int criticalHitChance, int missChance) : base(caster, name, description, cost, power, criticalHitChance = 10, missChance = 2)
+        {
+        }
+
+        //used for deserialization
+        public ThornDamageSpell() { }
+
+        public override int Cast()
+        {
+            bool missRoll = Roll.RollDice(MissChance);
+
+            if (missRoll)
+                return 0;
+
+            bool critRoll = Roll.RollDice(CriticalHitChance);
+
+            if (!critRoll)
+            {
+                Caster.Target.ReduceHealth(Power);
+                Caster.ReduceMana(Cost);
+                Caster.ReduceHealth(Cost / 3);
+                return 1;
+            }
+            else
+            {
+                Caster.Target.ReduceHealth(Power * 2);
+                Caster.ReduceMana(Cost);
+                Caster.ReduceHealth(Cost / 3);
+                return 2;
+            }
+        }
+    }
+
     class AbsorbSpell : Spell
     {
         public AbsorbSpell(Entity caster, string name, string description, int cost, int power, int criticalHitChance, int missChance) : base(caster, name, description, cost, power, criticalHitChance = 7, missChance = 3)
