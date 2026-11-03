@@ -151,7 +151,7 @@ namespace TurnBasedRPG.Source.Entities
         public int MissChance { get => missChance; set => missChance = value; }
         public int Armor { get => armor; set => armor = value; }
         public int Speed { get => speed; set => speed = value; }
-        public int Money { get => money; set => money = value; }
+        public int Money { get => money; set { if (money < Int32.MaxValue) money = value; } }
 
         public void LoadSprite()
         {
