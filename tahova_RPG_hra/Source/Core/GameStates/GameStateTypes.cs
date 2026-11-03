@@ -1149,6 +1149,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             int maxItemNameLength = 20;
             int maxDialogLength = 80;
             int dialogRowStart = 1 + Game.Instance.Player.Sprite.Length + 2 + statLabels.Length + 2;
+            int start = 0, end = 0;
 
             switch (currentState)
             {
@@ -1187,10 +1188,41 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     }
                     Console.Write(" >>");
                     //Desc
-                    Console.SetCursorPosition(2, dialogRowStart + 1);
-                    Console.Write(new string(' ', maxDialogLength));
-                    Console.SetCursorPosition(2, dialogRowStart + 1);
-                    Console.Write(itemDescription);
+                    start = 0; end = 0;
+
+                    //clear possible previous info
+                    for (int row = 0; row < 3; row++)
+                    {
+                        Console.SetCursorPosition(2, dialogRowStart + 1 + row);
+                        Console.Write(new string(' ', maxDialogLength));
+                    }
+
+                    if (Game.Instance.Player.Inventory[selectedOption] != null)
+                        for (int row = 0; row < 3; row++)
+                        {
+                            //Missing desc can be written fully
+                            if (Game.Instance.Player.Inventory[selectedOption].Description.Length - start <= maxDialogLength)
+                            {
+                                end = Game.Instance.Player.Inventory[selectedOption].Description.Length;
+                                Console.SetCursorPosition(2, dialogRowStart + 1 + row);
+                                Console.Write(Game.Instance.Player.Inventory[selectedOption].Description.Substring(start, end - start));
+                                break;
+                            }
+                            else
+                            {
+                                end = start + maxDialogLength > Game.Instance.Player.Inventory[selectedOption].Description.Length ? start + (Game.Instance.Player.Inventory[selectedOption].Description.Length - start) : start + maxDialogLength;
+                                int tmpEnd = end;
+
+                                //find when last whole word ends
+                                while (Game.Instance.Player.Inventory[selectedOption].Description[tmpEnd] != ' ')
+                                    tmpEnd--;
+
+                                //print what can be printed
+                                Console.SetCursorPosition(2, dialogRowStart + 1 + row);
+                                Console.Write(Game.Instance.Player.Inventory[selectedOption].Description.Substring(start, tmpEnd - start));
+                                start = tmpEnd + 1;
+                            }
+                        }
                     break;
                 case InventoryDialogState.SpellDialog:
                     if (Game.Instance.Player.Spells.Count == 0)
@@ -1199,30 +1231,62 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         Console.Write(new string(' ', maxDialogLength));
                         Console.SetCursorPosition(2, dialogRowStart + 1);
                         Console.Write(new string(' ', maxDialogLength));
+                        Console.SetCursorPosition(2, dialogRowStart + 2);
+                        Console.Write(new string(' ', maxDialogLength));
+                        Console.SetCursorPosition(2, dialogRowStart + 3);
+                        Console.Write(new string(' ', maxDialogLength));
                         Console.SetCursorPosition(2, dialogRowStart);
                         Console.Write(" You dont have any spells yet.");
                     }
                     else
                     {
                         string spellName = Game.Instance.Player.Spells[selectedOption].Name.Length < maxItemNameLength ? Game.Instance.Player.Spells[selectedOption].Name : string.Concat(Game.Instance.Player.Spells[selectedOption].Name.AsSpan(0, maxItemNameLength - 3), "...");
-                        string spellDescription = Game.Instance.Player.Spells[selectedOption].Description.Length + 2 <= maxDialogLength ? Game.Instance.Player.Spells[selectedOption].Description : string.Concat(Game.Instance.Player.Spells[selectedOption].Description.AsSpan(0, maxDialogLength - 3), "...");
 
                         Console.SetCursorPosition(2, dialogRowStart);
                         Console.Write(new string(' ', maxDialogLength));
                         Console.SetCursorPosition(2, dialogRowStart);
                         Console.Write($"<< {selectedOption + 1}/{Game.Instance.Player.Spells.Count} {spellName} ({Game.Instance.Player.Spells[selectedOption].Cost}) >>");
-                        Console.SetCursorPosition(2, dialogRowStart + 1);
-                        Console.Write(new string(' ', maxDialogLength));
-                        Console.SetCursorPosition(2, dialogRowStart + 1);
-                        Console.Write(spellDescription);
+                        //Desc
+                        start = 0; end = 0;
+
+                        //clear possible previous info
+                        for (int row = 0; row < 3; row++)
+                        {
+                            Console.SetCursorPosition(2, dialogRowStart + 1 + row);
+                            Console.Write(new string(' ', maxDialogLength));
+                        }
+
+                        for (int row = 0; row < 3; row++)
+                        {
+                            //Missing desc can be written fully
+                            if (Game.Instance.Player.Spells[selectedOption].Description.Length - start <= maxDialogLength)
+                            {
+                                end = Game.Instance.Player.Spells[selectedOption].Description.Length;
+                                Console.SetCursorPosition(2, dialogRowStart + 1 + row);
+                                Console.Write(Game.Instance.Player.Spells[selectedOption].Description.Substring(start, end - start));
+                                break;
+                            }
+                            else
+                            {
+                                end = start + maxDialogLength > Game.Instance.Player.Spells[selectedOption].Description.Length ? start + (Game.Instance.Player.Spells[selectedOption].Description.Length - start) : start + maxDialogLength;
+                                int tmpEnd = end;
+
+                                //find when last whole word ends
+                                while (Game.Instance.Player.Spells[selectedOption].Description[tmpEnd] != ' ')
+                                    tmpEnd--;
+
+                                //print what can be printed
+                                Console.SetCursorPosition(2, dialogRowStart + 1 + row);
+                                Console.Write(Game.Instance.Player.Spells[selectedOption].Description.Substring(start, tmpEnd - start));
+                                start = tmpEnd + 1;
+                            }
+                        }
                     }
                     break;
             }
 
             //move cursor back to end for better experience
             Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
-
-            //throw new NotImplementedException();
         }
 
         public void UpdateEquipment()
@@ -1729,12 +1793,16 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         else
                         {
                             end = start + GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4) > townMerchant.Wares[selectedOption].Description.Length ? start + (townMerchant.Wares[selectedOption].Description.Length - start) : start + GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4);
-                            char tmpChar = townMerchant.Wares[selectedOption].Description[start + end];
+                            int tmpEnd = end;
 
-                            while (tmpChar != ' ')
-                            {
-                                tmpChar = townMerchant.Wares[selectedOption].Description[start + end];
-                            }
+                            //find when last whole word ends
+                            while (castCurrentNode.Description[tmpEnd] != ' ')
+                                tmpEnd--;
+
+                            //Print what can be printed
+                            Console.Write(castCurrentNode.Description.Substring(start, tmpEnd - start));
+                            //move start to new location + add empty space so next row dont start with ' '
+                            start = tmpEnd + 1;
                         }
                     }
 
