@@ -25,14 +25,17 @@ namespace TurnBasedRPG.Source.Entities
     {
         public struct Drop
         {
-            public Item Item { get; }
-            public int DropChance { get; }
+            public Item Item { get; set; }
+            public int DropChance { get; set; }
 
             public Drop(Item item, int dropChance)
             {
                 Item = item;
                 DropChance = dropChance;
             }
+
+            //used for deserialization
+            public Drop() { }
         }
 
         private List<Drop> itemDrops;
@@ -147,23 +150,30 @@ namespace TurnBasedRPG.Source.Entities
 
         public bool ChooseMove()
         {
+            if (Health <= 0)
+            {
+                Defeated();
+                return false;
+            }
+
+            CombatState castInstanceState = (CombatState)Game.Instance.GameState;
             int healthPercentage = (this.Health * 100) / this.MaxHealth;
+            string combatDialogText = "";
+
+            if (isMissed)
+                combatDialogText += $"{Name} missed you with his attack and dealt 0 HP";
 
             if (healthPercentage < 25 && Inventory != null)
                 //search inventory for health potion
                 for (int id = 0; id < Inventory.Length; id++)
-                    if (Inventory[id].Name.ToLower().Contains("potion"))
+                    if (Inventory[id] is HealingItem)
                     {
+                        HealingItem castHealingItem = (HealingItem)Inventory[id];
                         Inventory[id].Use();
+                        combatDialogText += $"{Name} used {castHealingItem.Name} and recovered {castHealingItem.Power} HP.";
 
-                        if (Game.Instance.GameState is CombatState)
-                        {
-                            //TODO - BP text "cast"
-                            CombatState castGameState = (CombatState)Game.Instance.GameState;
-                            castGameState.CombatDialog = $"Enemy {Name}: used {Inventory[id].Name}.";
-                        }
+                        castInstanceState.CombatDialog = combatDialogText;
 
-                        this.RemoveItem(Inventory[id]);
                         return true;
                     }
 
@@ -185,14 +195,7 @@ namespace TurnBasedRPG.Source.Entities
             //attack
             if (random == 0)
             {
-                this.AttackTarget(this.Damage);
-
-                if (Game.Instance.GameState is CombatState)
-                {
-                    CombatState castGameState = (CombatState)Game.Instance.GameState;
-                    castGameState.CombatDialog = $"Enemy {Name}: attacked {Game.Instance.Player.Name}.";
-                }
-
+                AttackTarget(Damage);
                 return true;
             }
             //spell
@@ -203,13 +206,7 @@ namespace TurnBasedRPG.Source.Entities
 
                     if (Spells[random].Cost <= this.Mana)
                     {
-                        Spells[random].Cast();
-
-                        if (Game.Instance.GameState is CombatState)
-                        {
-                            CombatState castGameState = (CombatState)Game.Instance.GameState;
-                            castGameState.CombatDialog = $"Enemy {Name}: casted {Spells[random].Name}.";
-                        }
+                        CastSpell(random);
                         return true;
                     }
                 }
@@ -219,22 +216,32 @@ namespace TurnBasedRPG.Source.Entities
 
         public virtual void Defeated()
         {
-            //check for quest items
-            foreach (Quest quest in Game.Instance.ActiveQuests)
-                foreach (Objective objective in quest.Objectives)
-                    objective.UpdateObjective(ItemDrops);
+            Node castCurrentNode = Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+            CombatState castInstanceState = (CombatState)Game.Instance.GameState;
 
-            //item drops
-            if (ItemDrops != null)
-            {
-                for (int i = 0; i < ItemDrops.Count; i++)
+            //check for quest items/monster type + Arena monsters cant give objective progression; QoL - items dont need to be in players Inv, just need to "encounter" them
+            if (castCurrentNode is not TownNode)
+                foreach (Quest quest in Game.Instance.ActiveQuests)
+                    foreach (Objective objective in quest.Objectives)
+                        objective.UpdateObjective(ItemDrops);
+
+            if (castCurrentNode is not TownNode)
+                foreach (Quest quest in Game.Instance.ActiveQuests)
+                    foreach (Objective objective in quest.Objectives)
+                        objective.UpdateObjective(this);
+
+            //item drops + Arena monsters cant drop any items
+            if (castCurrentNode is not TownNode)
+                if (ItemDrops != null)
                 {
-                    bool dropRoll = Roll.RollDice(ItemDrops[i].DropChance);
+                    for (int i = 0; i < ItemDrops.Count; i++)
+                    {
+                        bool dropRoll = Roll.RollDice(ItemDrops[i].DropChance);
 
-                    if (dropRoll)
-                        Game.Instance.Player.AddItem(ItemDrops[i].Item);
+                        if (dropRoll)
+                            castInstanceState.AddItemToDropTable(ItemDrops[i].Item);
+                    }
                 }
-            }
 
             //player add XP
             int lvlDif = Game.Instance.Player.Level - this.Level;
@@ -254,42 +261,127 @@ namespace TurnBasedRPG.Source.Entities
                 Game.Instance.Player.IncreaseLvl();
 
             //player add Gold
+            double randomMoneyModifier;
             Random rand = new Random();
+
             //rand num 0.9 || 1.0 || 1.1
-            double randomMoneyModifier = rand.Next(9, 12) / 10;
+            randomMoneyModifier = rand.Next(9, 12) / 10.0;
 
             Game.Instance.Player.Money += (int)(this.GoldDrop * randomMoneyModifier);
-
-            //Update quest journal
-            foreach (Quest quest in Game.Instance.ActiveQuests)
-                foreach (Objective objective in quest.Objectives)
-                    objective.UpdateObjective(this);
-
-            //Heal player after each combat
-            Game.Instance.Player.IncreaseHealth((int)(Game.Instance.Player.MaxHealth / 4));
-            Game.Instance.Player.IncreaseMana((int)(Game.Instance.Player.MaxHealth / 6));
+            castInstanceState.DroppedMoney = (int)(this.GoldDrop * randomMoneyModifier);
 
             Game.Instance.Player.Target = null;
-            //If player was in combat when standing on a Town node then he probably was in the Arena to open town by default (so he doesnt have to move out and in to load town)
-            Node castCurrentNode = Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
+            //QoL - If player was in combat when standing on a Town node then he probably was in the Arena to open town by default (so he doesnt have to move out and in to load town)
             if (castCurrentNode is TownNode)
             {
                 Game.Instance.Player.Health = Game.Instance.Player.MaxHealth;
                 Game.Instance.Player.Mana = Game.Instance.Player.MaxMana;
                 castCurrentNode.Traverse();
             }
-            else
+            else if (castInstanceState.DropTable.Count == 0)
                 Game.Instance.ChangeState(GameStateType.Exploration);
+            else
+                castInstanceState.CurrentState = CombatState.CombatDialogState.DropDialog;
         }
 
-        public override void AttackTarget(int damage)
+        public override int AttackTarget(int damage)
         {
-            base.AttackTarget(damage);
+            CombatState castInstanceState = (CombatState)Game.Instance.GameState;
+            int damageToDeal = base.AttackTarget(damage);
+            string combatDialogText = "";
 
+            if (isMissed)
+                combatDialogText += $"{Name} missed you with his attack and dealt 0 HP";
+            else if (isCritical)
+                combatDialogText += $"{Name} Critically hits you and deal {damageToDeal} HP!";
+            else
+                combatDialogText += $"{Name} hits you and deal {damageToDeal} HP.";
+
+            Target.ReduceHealth(damageToDeal);
+
+            castInstanceState.CombatDialog = combatDialogText;
+            castInstanceState.LastTurnWasPlayer = false;
+
+            //Player is killed
             if (this.Target.Health <= 0)
                 Game.Instance.GameOver();
+            //Enemy somehow killed himself
             else if (this.Health <= 0)
                 this.Defeated();
+
+            return 0;
+        }
+
+        public bool CastSpell(int spellIndex)
+        {
+            CombatState castInstanceState = (CombatState)Game.Instance.GameState;
+            string combatDialogText = "";
+            bool spellCasted = false;
+
+            switch (Spells[spellIndex])
+            {
+                case HealSpell spell:
+                    if (spell.Cost <= Mana)
+                    {
+                        spell.Cast();
+                        combatDialogText += $"{Name} cast {spell.Name} and recovered {spell.Power} HP.";
+                        spellCasted = true;
+                    }
+                    break;
+                case DamageSpell spell:
+                    if (spell.Cost <= Mana)
+                    {
+                        spell.Cast();
+                        combatDialogText += $"{Name} cast {spell.Name} and deal {spell.Power} HP to you.";
+                        spellCasted = true;
+                    }
+                    break;
+                case ThornDamageSpell spell:
+                    if (spell.Cost <= Mana && spell.Cost / 3 < Health)
+                    {
+                        spell.Cast();
+                        combatDialogText += $"{Name} cast {spell.Name} and deal {spell.Power} HP to you but lost {spell.Cost / 3} HP doing so.";
+                        spellCasted = true;
+                    }
+                    break;
+                case AbsorbSpell spell:
+                    if (spell.Cost <= Mana)
+                    {
+                        spell.Cast();
+                        combatDialogText += $"{Name} cast {spell.Name} and deal {spell.Power} HP to you. {Name} absorbed {spell.Power / 3} HP.";
+                        spellCasted = true;
+                    }
+                    break;
+                case DarkDamageSpell spell:
+                    if (spell.Cost < Health)
+                    {
+                        spell.Cast();
+                        combatDialogText += $"{Name} cast {spell.Name} and deal {spell.Power} HP to you but lost {spell.Cost} HP doing so.";
+                        spellCasted = true;
+                    }
+                    break;
+                case DarkManaStealSpell spell:
+                    if (spell.Cost <= Mana)
+                    {
+                        spell.Cast();
+                        combatDialogText += $"{Name} cast {spell.Name} and reduced your MP by {spell.Power} HP.";
+                        spellCasted = true;
+                    }
+                    break;
+            }
+
+            if (spellCasted && combatDialogText.Length > GlobalConstants.consoleRenderSizeWidth - 2)
+            {
+                castInstanceState.CombatDialog = combatDialogText.Substring(0, GlobalConstants.consoleRenderSizeWidth - 2);
+                castInstanceState.LastTurnWasPlayer = false;
+            }
+            else if (spellCasted)
+            {
+                castInstanceState.CombatDialog = combatDialogText;
+                castInstanceState.LastTurnWasPlayer = false;
+            }
+
+            return spellCasted;
         }
     }
 }

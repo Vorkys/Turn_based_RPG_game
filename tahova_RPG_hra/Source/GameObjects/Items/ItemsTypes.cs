@@ -8,6 +8,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         {
         }
 
+        //used for deserialization
+        public HealingItem() { }
+
         public override bool Use()
         {
             Owner.IncreaseHealth(Power);
@@ -21,6 +24,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         public ManaIncreaseItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power, int quantity = 1) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
         {
         }
+
+        //used for deserialization
+        public ManaIncreaseItem() { }
 
         public override bool Use()
         {
@@ -39,6 +45,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
             this.ManaIncrease = manaIncrease;
         }
 
+        //used for deserialization
+        public HybridHealingItem() { }
+
         public override bool Use()
         {
             Owner.IncreaseHealth(Power);
@@ -56,6 +65,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         {
         }
 
+        //used for deserialization
+        public DamageItem() { }
+
         public override bool Use()
         {
             Owner.Target.ReduceHealth(Power);
@@ -69,6 +81,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         public ReduceMana(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power, int quantity = 1) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
         {
         }
+
+        //used for deserialization
+        public ReduceMana() { }
 
         public override bool Use()
         {

@@ -198,6 +198,9 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             break;
                         case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
+                        case CombatState.CombatDialogState.DropDialog:
+                            Game.Instance.ChangeState(GameStateType.Exploration);
+                            break;
                     }
                     break;
                 //Normal attack from Player
@@ -229,6 +232,50 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                         case CombatState.CombatDialogState.ItemDialog:
                         case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
+                        case CombatState.CombatDialogState.DropDialog:
+                            castInstanceState.PreviousElement();
+                            break;
+                    }
+                    break;
+                case ConsoleKey.UpArrow:
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case CombatState.CombatDialogState.DefaultDialog:
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
+                            return false;
+                        case CombatState.CombatDialogState.DropDialog:
+                            castInstanceState.PreviousElement();
+                            break;
+                    }
+                    break;
+                case ConsoleKey.S:
+                case ConsoleKey.DownArrow:
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case CombatState.CombatDialogState.DefaultDialog:
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
+                            return false;
+                        case CombatState.CombatDialogState.DropDialog:
+                            castInstanceState.NextElement();
+                            break;
+                    }
+                    break;
+                case ConsoleKey.Delete:
+                    switch (castInstanceState.CurrentState)
+                    {
+                        case CombatState.CombatDialogState.DefaultDialog:
+                        case CombatState.CombatDialogState.SpellDialog:
+                        case CombatState.CombatDialogState.ItemDialog:
+                        case CombatState.CombatDialogState.AwaitConfirmDialog:
+                            return false;
+                        case CombatState.CombatDialogState.DropDialog:
+                            if (castInstanceState.InventorySelected && Game.Instance.Player.Inventory[castInstanceState.SelectedOption] != null)
+                                Game.Instance.Player.RemoveItem(Game.Instance.Player.Inventory[castInstanceState.SelectedOption]);
+                            break;
                     }
                     break;
                 //Open Item menu
@@ -257,6 +304,9 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                         case CombatState.CombatDialogState.DefaultDialog:
                         case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
+                        case CombatState.CombatDialogState.DropDialog:
+                            castInstanceState.InventorySelected = true;
+                            break;
                     }
                     break;
                 //Next item of list when list is open
@@ -270,6 +320,9 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                         case CombatState.CombatDialogState.DefaultDialog:
                         case CombatState.CombatDialogState.AwaitConfirmDialog:
                             return false;
+                        case CombatState.CombatDialogState.DropDialog:
+                            castInstanceState.InventorySelected = false;
+                            break;
                     }
                     break;
                 //Confirm action
@@ -280,11 +333,8 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                         case CombatState.CombatDialogState.DefaultDialog:
                             return false;
                         case CombatState.CombatDialogState.SpellDialog:
-                            if (Game.Instance.Player.Spells[castInstanceState.SelectedOption].Cost <= Game.Instance.Player.Mana)
+                            if (Game.Instance.Player.CastSpell(castInstanceState.SelectedOption))
                             {
-                                Game.Instance.Player.Spells[castInstanceState.SelectedOption].Cast();
-                                castInstanceState.CombatDialog = $"Player: casted {Game.Instance.Player.Spells[castInstanceState.SelectedOption].Name}";
-                                castInstanceState.CurrentState = CombatState.CombatDialogState.AwaitConfirmDialog;
                                 castInstanceState.SelectedOption = 0;
                                 castInstanceState.RerenderCombat();
                             }
@@ -294,9 +344,7 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                         case CombatState.CombatDialogState.ItemDialog:
                             if (Game.Instance.Player.Inventory[castInstanceState.SelectedOption] is Consumable)
                             {
-                                Game.Instance.Player.Inventory[castInstanceState.SelectedOption].Use();
-                                castInstanceState.CombatDialog = $"Player: used {Game.Instance.Player.Inventory[castInstanceState.SelectedOption].Name}";
-                                castInstanceState.CurrentState = CombatState.CombatDialogState.AwaitConfirmDialog;
+                                Game.Instance.Player.UseItem(castInstanceState.SelectedOption);
                                 castInstanceState.SelectedOption = 0;
                                 castInstanceState.RerenderCombat();
                             }
@@ -304,17 +352,45 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                                 return false;
                             break;
                         case CombatState.CombatDialogState.AwaitConfirmDialog:
-                            if (castInstanceState.CombatDialog.Contains("Player:"))
+                            Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
+
+                            //last turn was player, let Enemy play
+                            if (castInstanceState.LastTurnWasPlayer)
                             {
-                                Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
-                                castEnemy.ChooseMove();
-                                castInstanceState.RerenderCombat();
+                                //if enemy/player dies
+                                if (Game.Instance.Player.Health <= 0)
+                                    Game.Instance.GameOver();
+                                else if (Game.Instance.Player.Target.Health <= 0)
+                                    castEnemy.Defeated();
+                                else
+                                    castEnemy.ChooseMove();
+
+                                if (Game.Instance.GameState is CombatState)
+                                    castInstanceState.RerenderCombat();
                             }
+                            //Enemy played, Players turn
                             else
                             {
-                                castInstanceState.CurrentState = CombatState.CombatDialogState.DefaultDialog;
-                                castInstanceState.SelectedOption = 0;
-                                castInstanceState.RerenderCombat();
+                                //if enemy/player dies
+                                if (Game.Instance.Player.Health <= 0)
+                                    Game.Instance.GameOver();
+                                else if (Game.Instance.Player.Target.Health <= 0)
+                                    castEnemy.Defeated();
+                                else
+                                {
+                                    castInstanceState.CurrentState = CombatState.CombatDialogState.DefaultDialog;
+                                    castInstanceState.SelectedOption = 0;
+                                }
+
+                                if (Game.Instance.GameState is CombatState)
+                                    castInstanceState.RerenderCombat();
+                            }
+                            break;
+                        case CombatState.CombatDialogState.DropDialog:
+                            if (!castInstanceState.InventorySelected && Game.Instance.Player.FreeSpaceInInventory())
+                            {
+                                Game.Instance.Player.AddItem(castInstanceState.DropTable[castInstanceState.SelectedOption]);
+                                castInstanceState.RemoveItemFromDropTable(castInstanceState.DropTable[castInstanceState.SelectedOption]);
                             }
                             break;
                     }
@@ -402,13 +478,13 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                     break;
                 case ConsoleKey.D3:
                 case ConsoleKey.NumPad3:
-                    Game.Instance.Player.Unequip(2);
+                    Game.Instance.Player.Unequip(3);
                     castInstanceState.UpdateEquipment();
                     castInstanceState.UpdateStats();
                     break;
                 case ConsoleKey.D4:
                 case ConsoleKey.NumPad4:
-                    Game.Instance.Player.Unequip(3);
+                    Game.Instance.Player.Unequip(2);
                     castInstanceState.UpdateEquipment();
                     castInstanceState.UpdateStats();
                     break;

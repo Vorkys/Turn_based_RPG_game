@@ -49,6 +49,8 @@ namespace TurnBasedRPG.Source.Entities
         private int damage;
         private int criticalHitChance;
         private int missChance;
+        protected bool isMissed;
+        protected bool isCritical;
         private int armor;
         private int speed;
         //private Status[] statuses;
@@ -444,12 +446,10 @@ namespace TurnBasedRPG.Source.Entities
             Game.Instance.Player.Equipment[EquipmentInventoryId] = null;
         }
 
-        public virtual void AttackTarget(int damage)
+        public virtual int AttackTarget(int damage)
         {
             bool miss = Roll.RollDice(MissChance);
-
-            if (miss)
-                Target.ReduceHealth(0);
+            bool critical = Roll.RollDice(CriticalHitChance);
 
             double attackDif;
             Random rand = new Random();
@@ -460,12 +460,27 @@ namespace TurnBasedRPG.Source.Entities
             double _change = (damage * attackDif) - Damage;
             int change = Convert.ToInt32(_change);
 
-            bool critical = Roll.RollDice(CriticalHitChance);
-
-            if (critical)
-                Target.ReduceHealth(2 * (Damage + change));
+            if (miss)
+            {
+                isMissed = true;
+                isCritical = false;
+                return 0;
+            }
+            else if (critical)
+            {
+                isMissed = false;
+                isCritical = true;
+                return 2 * (Damage + change) - target.Armor;
+            }
             else
-                Target.ReduceHealth(Damage + change);
+            {
+                isCritical = false;
+                isMissed = false;
+                if (Damage + change - target.Armor < 0)
+                    return 0;
+                else
+                    return Damage + change - target.Armor;
+            }
         }
 
         public void Sell(int itemSlot)

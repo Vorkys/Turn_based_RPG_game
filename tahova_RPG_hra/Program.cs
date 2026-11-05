@@ -1,5 +1,7 @@
 ﻿using System;
 using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.Managers;
 using TurnBasedRPG.Source.Utils;
 
 namespace TurnBasedRPG
@@ -8,8 +10,8 @@ namespace TurnBasedRPG
     {
         public static void Main(string[] args)
         {
-            Console.SetWindowSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
-            Console.SetBufferSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
+            Console.SetWindowSize(GlobalConstants.consoleSizeWidth, GlobalConstants.consoleSizeHeight);
+            Console.SetBufferSize(GlobalConstants.consoleSizeWidth, GlobalConstants.consoleSizeHeight);
             Console.Clear();
 
             Console.Title = "ASCII Adventure";

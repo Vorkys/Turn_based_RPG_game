@@ -23,6 +23,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items.ItemTypes
             this.Strength = strength;
         }
 
+        //used for deserialization
+        protected Equippable() { }
+
         public EquippableSlot Slot { get => slot; set => slot = value; }
         public int Strength { get => strength; set => strength = value; }
 

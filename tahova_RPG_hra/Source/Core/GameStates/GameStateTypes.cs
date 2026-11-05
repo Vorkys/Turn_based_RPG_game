@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using TurnBasedRPG.Source.Core.InputHandlers;
@@ -411,8 +412,6 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
                 Console.WriteLine();
             }
-
-            //Map printed using Update()
         }
 
         //Keep in memory the player position when the map was last rendered
@@ -520,7 +519,8 @@ namespace TurnBasedRPG.Source.Core.GameStates
             DefaultDialog,
             SpellDialog,
             ItemDialog,
-            AwaitConfirmDialog
+            AwaitConfirmDialog,
+            DropDialog
         }
         private CombatDialogState currentState = CombatDialogState.DefaultDialog;
         //cant use Game.Instance since it is null when this class is created
@@ -529,10 +529,17 @@ namespace TurnBasedRPG.Source.Core.GameStates
         {
             ["[Q] - Attack enemy", $"[W] - Show spells ({spellNumber})", "[E] - Show items", "[ESC] - Pause"],
             ["[A/<] - Previous selection", "[D/>] - Next selection", "[Spacebar/Enter] - Use", "[ESC] - Back"],
-            ["[Spacebar/Enter] - Confirm"]
+            ["[Spacebar/Enter] - Confirm"],
+            ["[A/< | D/>] - Change Table", "[W/^ | S/V] - Select Item", "[Spacebar/Enter] - Take Loot", "[DEL] - Discard Item (only inv)", "[ESC] - Close"]
         };
         private string combatDialog;
         private int selectedOption = 0;
+        private bool lastTurnWasPlayer = false;
+        private bool inventorySelected = false;
+        private int lastSelectedOption = 0;
+        private List<Item> dropTable = new List<Item>();
+        private int droppedMoney = 0;
+        private bool renderedItems = false;
 
         public CombatState()
         {
@@ -668,6 +675,87 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     else
                         Console.Write(string.Concat(" ", combatDialog.AsSpan(0, GlobalConstants.consoleRenderSizeWidth - 4), "... "));
                     break;
+                case CombatDialogState.DropDialog:
+                    int maxTextLength = (GlobalConstants.consoleSizeWidth / 2) - 10;
+                    int startTextLeft = 4;
+                    int startTextTop = (GlobalConstants.consoleRenderSizeHeight / 2);
+
+                    startTextLeft = !inventorySelected ? startTextLeft + (GlobalConstants.consoleSizeWidth / 2) : startTextLeft;
+
+                    //Clear previous items
+                    for (int row = 1; row < GlobalConstants.consoleRenderSizeHeight - 1; row++)
+                    {
+                        Console.SetCursorPosition(startTextLeft, row);
+                        Console.Write(new string(' ', maxTextLength));
+                    }
+
+                    Console.SetCursorPosition(2, 1);
+                    Console.Write($"Money: {Game.Instance.Player.Money - droppedMoney} + {droppedMoney}");
+
+                    switch (inventorySelected)
+                    {
+                        case true:
+                            //Print selected item
+                            Console.SetCursorPosition(startTextLeft + 1, startTextTop);
+                            if (Game.Instance.Player.Inventory[selectedOption] == null)
+                                Console.Write("-----");
+                            else
+                                Console.Write(Game.Instance.Player.Inventory[selectedOption].Name.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[selectedOption].Name + $" ({Game.Instance.Player.Inventory[selectedOption].Quantity})");
+                            //Desc
+                            Console.SetCursorPosition(startTextLeft + 1, startTextTop + 2);
+                            if (Game.Instance.Player.Inventory[selectedOption] == null)
+                                Console.Write("No Description");
+                            else
+                                Console.Write(Game.Instance.Player.Inventory[selectedOption].Description.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[selectedOption].Description.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[selectedOption].Description);
+
+                            //Print items above selected item
+                            for (int item = selectedOption - 1; item >= 0 && startTextTop - 2 - (selectedOption - item) > 0; item--)
+                            {
+                                Console.SetCursorPosition(startTextLeft, startTextTop - 2 - (selectedOption - item));
+                                if (Game.Instance.Player.Inventory[item] == null)
+                                    Console.Write("-----");
+                                else
+                                    Console.Write(Game.Instance.Player.Inventory[item].Name.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[item].Name.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[item].Name);
+                            }
+                            //Print items bellow selected item
+                            for (int item = selectedOption + 1; item <= Game.Instance.Player.Inventory.Length - 1 && startTextTop + 4 + (item - selectedOption) < GlobalConstants.consoleRenderSizeHeight; item++)
+                            {
+                                Console.SetCursorPosition(startTextLeft, startTextTop + 4 + (item - selectedOption));
+                                if (Game.Instance.Player.Inventory[item] == null)
+                                    Console.Write("-----");
+                                else
+                                    Console.Write(Game.Instance.Player.Inventory[item].Name.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[item].Name.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[item].Name);
+                            }
+                            break;
+                        case false:
+                            //No items dropped => go directly to explo
+                            if (dropTable.Count == 0)
+                            {
+                                Game.Instance.ChangeState(GameStateType.Exploration);
+                                break;
+                            }
+                            //Print selected item
+                            Console.SetCursorPosition(startTextLeft + 1, startTextTop);
+                            Console.Write(dropTable[selectedOption].Name.Length > maxTextLength - 1 ? dropTable[selectedOption].Name.Substring(0, maxTextLength - 4) + "..." : dropTable[selectedOption].Name);
+                            //Desc
+                            Console.SetCursorPosition(startTextLeft + 1, startTextTop + 2);
+                            Console.Write(dropTable[selectedOption].Description.Length > maxTextLength - 1 ? dropTable[selectedOption].Description.Substring(0, maxTextLength - 4) + "..." : dropTable[selectedOption].Description);
+
+                            //Print items above selected item
+                            for (int item = selectedOption - 1; item >= 0 && startTextTop - 2 - (selectedOption - item) > 0; item--)
+                            {
+                                Console.SetCursorPosition(startTextLeft, startTextTop - 2 - (selectedOption - item));
+                                Console.Write(dropTable[item].Name.Length > maxTextLength - 1 ? dropTable[item].Name.Substring(0, maxTextLength - 4) + "..." : dropTable[item].Name);
+                            }
+                            //Print items bellow selected item
+                            for (int item = selectedOption + 1; item <= dropTable.Count - 1 && startTextTop + 4 + (item - selectedOption) < GlobalConstants.consoleRenderSizeHeight; item++)
+                            {
+                                Console.SetCursorPosition(startTextLeft, startTextTop + 4 + (item - selectedOption));
+                                Console.Write(dropTable[item].Name.Length > maxTextLength - 1 ? dropTable[item].Name.Substring(0, maxTextLength - 4) + "..." : dropTable[item].Name);
+                            }
+                            break;
+                    }
+                    break;
             }
 
             //move cursor back to end for better experience
@@ -676,80 +764,212 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public void RerenderCombat()
         {
-            Game.Instance.Player.LoadSprite();
-            Game.Instance.Player.Target.LoadSprite();
-
-            //Print enemy sprite
-            for (int row = 0; row < Game.Instance.Player.Target.Sprite.Length; row++)
+            //Print main box info
+            switch (currentState)
             {
-                Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1 - Game.Instance.Player.Target.Sprite[row].Length, 1 + row);
-                Console.Write(Game.Instance.Player.Target.Sprite[row]);
+                case CombatDialogState.DefaultDialog:
+                case CombatDialogState.SpellDialog:
+                case CombatDialogState.ItemDialog:
+                case CombatDialogState.AwaitConfirmDialog:
+                    Game.Instance.Player.LoadSprite();
+                    Game.Instance.Player.Target.LoadSprite();
+
+                    //Print enemy sprite
+                    for (int row = 0; row < Game.Instance.Player.Target.Sprite.Length; row++)
+                    {
+                        Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1 - Game.Instance.Player.Target.Sprite[row].Length, 1 + row);
+                        Console.Write(Game.Instance.Player.Target.Sprite[row]);
+                    }
+                    //Print player sprite
+                    for (int row = 0; row < Game.Instance.Player.Sprite.Length; row++)
+                    {
+                        Console.SetCursorPosition(1, GlobalConstants.consoleRenderSizeHeight - 1 - Game.Instance.Player.Sprite.Length + row);
+                        Console.Write(Game.Instance.Player.Sprite[row]);
+                    }
+
+                    #region Enemy_info
+                    int entityNameAllowedLength = 33 - (3 + Game.Instance.Player.MaxLevel.ToString().Length);
+                    int entityNameLength = Game.Instance.Player.Target.Name.Length;
+                    //Print ENEMY info
+                    Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 33, Game.Instance.Player.Target.Sprite.Length);
+                    //Print enemy name (cut name if too long) and LVL
+                    Console.Write(entityNameLength < entityNameAllowedLength ? Game.Instance.Player.Target.Name : Game.Instance.Player.Target.Name.Substring(0, entityNameAllowedLength - 3) + "...");
+                    Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 6 - Game.Instance.Player.MaxLevel.ToString().Length, Game.Instance.Player.Target.Sprite.Length);
+                    Console.Write("Lvl: " + Game.Instance.Player.Target.Level);
+                    //Print health
+                    Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 33, Game.Instance.Player.Target.Sprite.Length + 1);
+                    int entityBarPercent = Game.Instance.Player.Target.Health > 0 ? (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth : 0;
+                    Console.Write('<');
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(new string('=', entityBarPercent));
+                    Console.ResetColor();
+                    Console.Write(new string('-', 30 - entityBarPercent));
+                    Console.Write('>');
+                    #endregion
+
+                    #region Player_info
+                    entityNameLength = Game.Instance.Player.Name.Length;
+                    //Name & LVL
+                    Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 5);
+                    Console.Write(entityNameLength < entityNameAllowedLength ? Game.Instance.Player.Name : Game.Instance.Player.Name.Substring(0, entityNameAllowedLength - 3) + "...");
+                    Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length + 33 - 6 - Game.Instance.Player.MaxLevel.ToString().Length, GlobalConstants.consoleRenderSizeHeight - 5);
+                    Console.Write("Lvl: " + Game.Instance.Player.Level);
+                    //Health
+                    Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 4);
+                    entityBarPercent = Game.Instance.Player.Health > 0 ? (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth : 0;
+                    Console.Write('<');
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(new string('=', entityBarPercent));
+                    Console.ResetColor();
+                    Console.Write(new string('-', 30 - entityBarPercent));
+                    Console.Write('>');
+                    Console.Write($" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
+                    //Mana
+                    Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 3);
+                    entityBarPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
+                    Console.Write('<');
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(new string('~', entityBarPercent));
+                    Console.ResetColor();
+                    Console.Write(new string('-', 30 - entityBarPercent));
+                    Console.Write('>');
+                    Console.Write($" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
+                    //EXP
+                    Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 2);
+                    entityBarPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
+                    Console.Write('|');
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write(new string('=', entityBarPercent));
+                    Console.ResetColor();
+                    Console.Write(new string('-', 30 - entityBarPercent));
+                    Console.Write('|');
+                    Console.Write($" XP: {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}");
+                    #endregion
+                    break;
+                case CombatDialogState.DropDialog:
+                    int startArrowsLeft = 2;
+                    int startArrowsTop = (GlobalConstants.consoleRenderSizeHeight / 2) - 2;
+                    int maxTextLength = (GlobalConstants.consoleSizeWidth / 2) - 10;
+                    int startTextLeft = 4;
+                    int startTextTop = (GlobalConstants.consoleRenderSizeHeight / 2);
+
+                    if (!renderedItems)
+                    {
+                        renderedItems = true;
+
+                        //Clear main box
+                        for(int row = 0; row < GlobalConstants.consoleRenderSizeHeight - 2; row++)
+                        {
+                            Console.SetCursorPosition(1, 1 + row);
+                            Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+                        }
+
+                        //Print splitter
+                        for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight - 2; row++)
+                        {
+                            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth / 2, 1 + row);
+                            Console.Write('|');
+                        }
+
+                        #region Print_items
+                        //Print selected item
+                        Console.SetCursorPosition(startTextLeft + 1, startTextTop);
+                        if (Game.Instance.Player.Inventory[selectedOption] == null)
+                            Console.Write("-----");
+                        else
+                            Console.Write(Game.Instance.Player.Inventory[selectedOption].Name.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[selectedOption].Name + $" ({Game.Instance.Player.Inventory[selectedOption].Quantity})");
+                        //Desc
+                        Console.SetCursorPosition(startTextLeft + 1, startTextTop + 2);
+                        if (Game.Instance.Player.Inventory[selectedOption] == null)
+                            Console.Write("No Description");
+                        else
+                            Console.Write(Game.Instance.Player.Inventory[selectedOption].Description.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[selectedOption].Description.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[selectedOption].Description);
+
+                        //Print items above selected item
+                        for (int item = selectedOption - 1; item >= 0 && startTextTop - 2 - (selectedOption - item) > 0; item--)
+                        {
+                            Console.SetCursorPosition(startTextLeft, startTextTop - 2 - (selectedOption - item));
+                            if (Game.Instance.Player.Inventory[item] == null)
+                                Console.Write("-----");
+                            else
+                                Console.Write(Game.Instance.Player.Inventory[item].Name.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[item].Name.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[item].Name);
+                        }
+                        //Print items bellow selected item
+                        for (int item = selectedOption + 1; item <= Game.Instance.Player.Inventory.Length - 1 && startTextTop + 4 + (item - selectedOption) < GlobalConstants.consoleRenderSizeHeight; item++)
+                        {
+                            Console.SetCursorPosition(startTextLeft, startTextTop + 4 + (item - selectedOption));
+                            if (Game.Instance.Player.Inventory[item] == null)
+                                Console.Write("-----");
+                            else
+                                Console.Write(Game.Instance.Player.Inventory[item].Name.Length > maxTextLength - 1 ? Game.Instance.Player.Inventory[item].Name.Substring(0, maxTextLength - 4) + "..." : Game.Instance.Player.Inventory[item].Name);
+                        }
+                        //Enemy drop table
+                        startTextLeft += GlobalConstants.consoleSizeWidth / 2;
+
+                        //Print selected item
+                        Console.SetCursorPosition(startTextLeft + 1, startTextTop);
+                        Console.Write(dropTable[selectedOption].Name.Length > maxTextLength - 1 ? dropTable[selectedOption].Name.Substring(0, maxTextLength - 4) + "..." : dropTable[selectedOption].Name);
+                        //Desc
+                        Console.SetCursorPosition(startTextLeft + 1, startTextTop + 2);
+                        Console.Write(dropTable[selectedOption].Description.Length > maxTextLength - 1 ? dropTable[selectedOption].Description.Substring(0, maxTextLength - 4) + "..." : dropTable[selectedOption].Description);
+
+                        //Print items above selected item
+                        for (int item = selectedOption - 1; item >= 0 && startTextTop - 2 - (selectedOption - item) > 0; item--)
+                        {
+                            Console.SetCursorPosition(startTextLeft, startTextTop - 2 - (selectedOption - item));
+                            Console.Write(dropTable[item].Name.Length > maxTextLength - 1 ? dropTable[item].Name.Substring(0, maxTextLength - 4) + "..." : dropTable[item].Name);
+                        }
+                        //Print items bellow selected item
+                        for (int item = selectedOption + 1; item <= dropTable.Count - 1 && startTextTop + 4 + (item - selectedOption) < GlobalConstants.consoleRenderSizeHeight; item++)
+                        {
+                            Console.SetCursorPosition(startTextLeft, startTextTop + 4 + (item - selectedOption));
+                            Console.Write(dropTable[item].Name.Length > maxTextLength - 1 ? dropTable[item].Name.Substring(0, maxTextLength - 4) + "..." : dropTable[item].Name);
+                        }
+                        #endregion
+                    }
+
+                    //Clear previous arrows
+                    for (int row = 0; row < 5; row++)
+                    {
+                        Console.SetCursorPosition(startArrowsLeft, startArrowsTop + row);
+                        Console.Write(' ');
+                        Console.SetCursorPosition(startArrowsLeft + (GlobalConstants.consoleSizeWidth / 2), startArrowsTop + row);
+                        Console.Write(' ');
+                    }
+
+                    //Print new arrows
+                    startArrowsLeft = !inventorySelected ? startArrowsLeft + (GlobalConstants.consoleSizeWidth / 2) : startArrowsLeft;
+
+                    for (int row = 0; row < 5; row++)
+                    {
+                        Console.SetCursorPosition(startArrowsLeft, startArrowsTop + row);
+                        switch (row)
+                        {
+                            case 0:
+                            case 1:
+                                Console.Write('^');
+                                break;
+                            case 2:
+                                Console.Write('-');
+                                break;
+                            case 3:
+                            case 4:
+                                Console.Write('v');
+                                break;
+                        }
+                    }
+                    break;
             }
-            //Print player sprite
-            for (int row = 0; row < Game.Instance.Player.Sprite.Length; row++)
-            {
-                Console.SetCursorPosition(1, GlobalConstants.consoleRenderSizeHeight - 1 - Game.Instance.Player.Sprite.Length + row);
-                Console.Write(Game.Instance.Player.Sprite[row]);
-            }
 
-            int entityNameAllowedLength = 33 - (3 + Game.Instance.Player.MaxLevel.ToString().Length);
-            int entityNameLength = Game.Instance.Player.Target.Name.Length;
-            //Print ENEMY info
-            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 33, Game.Instance.Player.Target.Sprite.Length);
-            //Print enemy name (cut name if too long) and LVL
-            Console.Write(entityNameLength < entityNameAllowedLength ? Game.Instance.Player.Target.Name : Game.Instance.Player.Target.Name.Substring(0, entityNameAllowedLength - 3) + "...");
-            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 6 - Game.Instance.Player.MaxLevel.ToString().Length, Game.Instance.Player.Target.Sprite.Length);
-            Console.Write("Lvl: " + Game.Instance.Player.Target.Level);
-            //Print health
-            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - Game.Instance.Player.Target.Sprite[0].Length - 33, Game.Instance.Player.Target.Sprite.Length + 1);
-            int entityBarPercent = Game.Instance.Player.Target.Health > 0 ? (Game.Instance.Player.Target.Health * 30) / Game.Instance.Player.Target.MaxHealth : 0;
-            Console.Write('<');
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(new string('=', entityBarPercent));
-            Console.ResetColor();
-            Console.Write(new string('-', 30 - entityBarPercent));
-            Console.Write('>');
-
-            //Print PLAYER info
-            entityNameLength = Game.Instance.Player.Name.Length;
-            //Name & LVL
-            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 5);
-            Console.Write(entityNameLength < entityNameAllowedLength ? Game.Instance.Player.Name : Game.Instance.Player.Name.Substring(0, entityNameAllowedLength - 3) + "...");
-            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length + 33 - 6 - Game.Instance.Player.MaxLevel.ToString().Length, GlobalConstants.consoleRenderSizeHeight - 5);
-            Console.Write("Lvl: " + Game.Instance.Player.Level);
-            //Health
-            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 4);
-            entityBarPercent = Game.Instance.Player.Health > 0 ? (Game.Instance.Player.Health * 30) / Game.Instance.Player.MaxHealth : 0;
-            Console.Write('<');
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(new string('=', entityBarPercent));
-            Console.ResetColor();
-            Console.Write(new string('-', 30 - entityBarPercent));
-            Console.Write('>');
-            Console.Write($" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
-            //Mana
-            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 3);
-            entityBarPercent = (Game.Instance.Player.Mana * 30) / Game.Instance.Player.MaxMana;
-            Console.Write('<');
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write(new string('~', entityBarPercent));
-            Console.ResetColor();
-            Console.Write(new string('-', 30 - entityBarPercent));
-            Console.Write('>');
-            Console.Write($" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
-            //EXP
-            Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 2);
-            entityBarPercent = (Game.Instance.Player.EntityXP * 30) / Game.Instance.Player.XPtoLevelUp;
-            Console.Write('|');
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(new string('=', entityBarPercent));
-            Console.ResetColor();
-            Console.Write(new string('-', 30 - entityBarPercent));
-            Console.Write('|');
-            Console.Write($" XP: {Game.Instance.Player.EntityXP}/{Game.Instance.Player.XPtoLevelUp}");
-
-            //Fill info box
+            //Fill info box (keybinds)
             int tmpId = 0;
+
+            //clear previous
+            for (int row = 0; row < 3; row++)
+            {
+                Console.SetCursorPosition(1, GlobalConstants.consoleSizeHeight - 4 + row);
+                Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+            }
 
             switch (currentState)
             {
@@ -813,14 +1033,34 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         }
                     }
                     break;
+                case CombatDialogState.DropDialog:
+                    for (int row = 0; row < 3; row++)
+                    {
+                        for (int column = 1; column < GlobalConstants.consoleRenderSizeWidth && tmpId < dialogKeybinds[3].Length; column++)
+                        {
+                            if (dialogKeybinds[3][tmpId].Length + 2 < GlobalConstants.consoleRenderSizeWidth - column)
+                            {
+                                Console.SetCursorPosition(column, GlobalConstants.consoleSizeHeight - 4 + row);
+                                Console.Write($" {dialogKeybinds[3][tmpId]} ");
+                                column += dialogKeybinds[3][tmpId].Length + 1;
+                                tmpId++;
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
         public bool NextElement()
         {
+            Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
             if (currentState == CombatDialogState.SpellDialog && selectedOption < Game.Instance.Player.Spells.Count - 1)
                 selectedOption++;
             else if (currentState == CombatDialogState.ItemDialog && selectedOption < Game.Instance.Player.Inventory.Length - 1)
+                selectedOption++;
+            else if (currentState == CombatDialogState.DropDialog && inventorySelected && selectedOption < Game.Instance.Player.Inventory.Length - 1)
+                selectedOption++;
+            else if (currentState == CombatDialogState.DropDialog && !inventorySelected && selectedOption < DropTable.Count - 1)
                 selectedOption++;
             else
                 return false;
@@ -834,15 +1074,39 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 selectedOption--;
             else if (currentState == CombatDialogState.ItemDialog && selectedOption > 0)
                 selectedOption--;
+            else if (currentState == CombatDialogState.DropDialog && selectedOption > 0)
+                selectedOption--;
             else
                 return false;
 
             return true;
         }
+        
+        public void AddItemToDropTable(Item item) { dropTable.Add(item); }
+        
+        public void RemoveItemFromDropTable(Item item)
+        {
+            dropTable.Remove(item);
+
+            //no Loot left, close DropDialog
+            if (dropTable.Count == 0)
+            {
+                Game.Instance.ChangeState(GameStateType.Exploration);
+                Game.Instance.GameState.Render();
+                return;
+            }
+
+            if (selectedOption >= dropTable.Count)
+                selectedOption--;
+        }
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
-        public string CombatDialog { get => combatDialog; set => combatDialog = value; }
+        public string CombatDialog { get => combatDialog; set { combatDialog = value; currentState = CombatDialogState.AwaitConfirmDialog; RerenderCombat(); } }
+        public bool LastTurnWasPlayer { get => lastTurnWasPlayer; set => lastTurnWasPlayer = value;  }
+        public bool InventorySelected { get => inventorySelected; set { inventorySelected = value; (selectedOption, lastSelectedOption) = (lastSelectedOption, selectedOption); RerenderCombat(); } }
         public CombatDialogState CurrentState { get => currentState; set => currentState = value; }
+        public int DroppedMoney { get => droppedMoney; set => droppedMoney = value; }
+        public List<Item> DropTable { get => dropTable; set => dropTable = value; }
     }
 
     class DialogState : GameState
@@ -1219,7 +1483,13 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
                                 //print what can be printed
                                 Console.SetCursorPosition(2, dialogRowStart + 1 + row);
-                                Console.Write(Game.Instance.Player.Inventory[selectedOption].Description.Substring(start, tmpEnd - start));
+                                if (tmpEnd - start < 0)
+                                {
+                                    Console.Write("...");
+                                    break;
+                                }
+                                else
+                                    Console.Write(Game.Instance.Player.Inventory[selectedOption].Description.Substring(start, tmpEnd - start));
                                 start = tmpEnd + 1;
                             }
                         }
@@ -1277,7 +1547,14 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
                                 //print what can be printed
                                 Console.SetCursorPosition(2, dialogRowStart + 1 + row);
-                                Console.Write(Game.Instance.Player.Spells[selectedOption].Description.Substring(start, tmpEnd - start));
+                                Console.SetCursorPosition(2, dialogRowStart + 1 + row);
+                                if (tmpEnd - start < 0)
+                                {
+                                    Console.Write("...");
+                                    break;
+                                }
+                                else
+                                    Console.Write(Game.Instance.Player.Spells[selectedOption].Description.Substring(start, tmpEnd - start));
                                 start = tmpEnd + 1;
                             }
                         }
@@ -1835,9 +2112,6 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
             //move cursor back to end for better experience
             Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
-
-            //TODO - implement town rendering?
-            //throw new NotImplementedException();
         }
 
         private void RenderTownState()

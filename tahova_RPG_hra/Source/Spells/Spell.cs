@@ -6,6 +6,7 @@ namespace TurnBasedRPG.Source.Spells
     [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
     [JsonDerivedType(typeof(HealSpell), nameof(HealSpell))]
     [JsonDerivedType(typeof(DamageSpell), nameof(DamageSpell))]
+    [JsonDerivedType(typeof(ThornDamageSpell), nameof(ThornDamageSpell))]
     [JsonDerivedType(typeof(AbsorbSpell), nameof(AbsorbSpell))]
     [JsonDerivedType(typeof(DarkDamageSpell), nameof(DarkDamageSpell))]
     [JsonDerivedType(typeof(DarkManaStealSpell), nameof(DarkManaStealSpell))]

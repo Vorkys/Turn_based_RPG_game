@@ -9,6 +9,9 @@
             this.Power = power;
         }
 
+        //used for deserialization
+        protected Consumable() { }
+
         public int Power { get => power; set => power = value; }
     }
 }

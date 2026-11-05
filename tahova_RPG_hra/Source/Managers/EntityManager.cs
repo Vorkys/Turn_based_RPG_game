@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using TurnBasedRPG.Source.Entities;
 using TurnBasedRPG.Source.Entities.AllyRoles;
 using TurnBasedRPG.Source.Entities.EnemyTypes;
@@ -47,7 +48,7 @@ namespace TurnBasedRPG.Source.Managers
             speed: 1,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 15)
+                new Drop(ItemManager.SmallHealthPotion, 10)
             },
             goldDrop: 2,
             escapeChance: 80,
@@ -69,7 +70,7 @@ namespace TurnBasedRPG.Source.Managers
             speed: 5,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
+                new Drop(ItemManager.SmallHealthPotion, 10),
                 new Drop(ItemManager.SmallManaPotion, 10)
             },
             goldDrop: 5,
@@ -92,8 +93,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 5,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.SmallHealthPotion, 10),
+                new Drop(ItemManager.SmallManaPotion, 10),
+                new Drop(ItemManager.WoodenShield, 5)
             },
             goldDrop: 7,
             escapeChance: 60,
@@ -115,8 +117,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 6,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.SmallHealthPotion, 20),
+                new Drop(ItemManager.SmallManaPotion, 10),
+                new Drop(ItemManager.SmallGrenade, 5)
             },
             goldDrop: 7,
             escapeChance: 60,
@@ -138,8 +141,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 4,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.SmallHealthPotion, 10),
+                new Drop(ItemManager.SmallManaPotion, 10),
+                new Drop(ItemManager.WoodenSword, 5)
             },
             goldDrop: 10,
             escapeChance: 70,
@@ -161,8 +165,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 7,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.SmallHealthPotion, 20),
+                new Drop(ItemManager.SmallManaPotion, 10),
+                new Drop(ItemManager.CopperRing, 5)
             },
             goldDrop: 4,
             escapeChance: 60,
@@ -186,8 +191,8 @@ namespace TurnBasedRPG.Source.Managers
             speed: 4,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.HealthPotion, 10),
+                new Drop(ItemManager.ManaPotion, 10)
             },
             goldDrop: 8,
             escapeChance: 60,
@@ -209,8 +214,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 10,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.HealthPotion, 10),
+                new Drop(ItemManager.ManaPotion, 10),
+                new Drop(ItemManager.LeatherShield, 5)
             },
             goldDrop: 20,
             escapeChance: 60,
@@ -232,8 +238,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 11,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.HealthPotion, 10),
+                new Drop(ItemManager.ManaPotion, 10),
+                new Drop(ItemManager.PinkPotion, 10)
             },
             goldDrop: 20,
             escapeChance: 60,
@@ -255,8 +262,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 10,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.HealthPotion, 10),
+                new Drop(ItemManager.ManaPotion, 10),
+                new Drop(ItemManager.IronRing, 5)
             },
             goldDrop: 25,
             escapeChance: 60,
@@ -278,8 +286,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 13,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.HealthPotion, 10),
+                new Drop(ItemManager.ManaPotion, 10),
+                new Drop(ItemManager.IronRing, 5)
             },
             goldDrop: 35,
             escapeChance: 70,
@@ -301,8 +310,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 10,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.HealthPotion, 20),
+                new Drop(ItemManager.ManaPotion, 10),
+                new Drop(ItemManager.Grenade, 10)
             },
             goldDrop: 35,
             escapeChance: 60,
@@ -326,8 +336,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 15,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.BigHealthPotion, 10),
+                new Drop(ItemManager.BigManaPotion, 10),
+                new Drop(ItemManager.IronShield, 5)
             },
             goldDrop: 60,
             escapeChance: 60,
@@ -349,8 +360,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 15,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.BigHealthPotion, 10),
+                new Drop(ItemManager.BigManaPotion, 10),
+                new Drop(ItemManager.IronShield, 5)
             },
             goldDrop: 65,
             escapeChance: 60,
@@ -372,8 +384,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 18,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.BigHealthPotion, 10),
+                new Drop(ItemManager.BigManaPotion, 10),
+                new Drop(ItemManager.BigGrenade, 5)
             },
             goldDrop: 75,
             escapeChance: 60,
@@ -395,8 +408,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 17,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.BigHealthPotion, 10),
+                new Drop(ItemManager.BigManaPotion, 10),
+                new Drop(ItemManager.GoldRing, 5)
             },
             goldDrop: 85,
             escapeChance: 60,
@@ -418,8 +432,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 16,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.BigHealthPotion, 10),
+                new Drop(ItemManager.BigManaPotion, 10),
+                new Drop(ItemManager.BigPinkPotion, 10)
             },
             goldDrop: 95,
             escapeChance: 60,
@@ -441,8 +456,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 20,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.BigHealthPotion, 10),
+                new Drop(ItemManager.BigManaPotion, 10),
+                new Drop(ItemManager.BigPinkPotion, 5)
             },
             goldDrop: 95,
             escapeChance: 60,
@@ -466,8 +482,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 23,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.HellishSword, 5)
             },
             goldDrop: 120,
             escapeChance: 60,
@@ -489,8 +506,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 21,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.Dynamite, 5)
             },
             goldDrop: 135,
             escapeChance: 70,
@@ -512,8 +530,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 26,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.HellishSword, 5)
             },
             goldDrop: 170,
             escapeChance: 60,
@@ -535,8 +554,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 27,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.EnormousPinkPotion, 5)
             },
             goldDrop: 175,
             escapeChance: 60,
@@ -558,8 +578,13 @@ namespace TurnBasedRPG.Source.Managers
             speed: 27,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.HellishHelmet, 5),
+                new Drop(ItemManager.HellishBody, 5),
+                new Drop(ItemManager.HellishLegs, 5),
+                new Drop(ItemManager.HellishShield, 3),
+                new Drop(ItemManager.HellishSword, 3)
             },
             goldDrop: 180,
             escapeChance: 60,
@@ -581,8 +606,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 29,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.Dynamite, 10)
             },
             goldDrop: 210,
             escapeChance: 60,
@@ -606,8 +632,9 @@ namespace TurnBasedRPG.Source.Managers
             speed: 32,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 15),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.EnormousPinkPotion, 10)
             },
             goldDrop: 250,
             escapeChance: 60,
@@ -629,8 +656,11 @@ namespace TurnBasedRPG.Source.Managers
             speed: 30,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.HeavenlyHelmet, 3),
+                new Drop(ItemManager.HeavenlyBody, 3),
+                new Drop(ItemManager.HeavenlyLegs, 3)
             },
             goldDrop: 270,
             escapeChance: 70,
@@ -652,8 +682,12 @@ namespace TurnBasedRPG.Source.Managers
             speed: 32,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.HeavenlyHelmet, 3),
+                new Drop(ItemManager.HeavenlyBody, 3),
+                new Drop(ItemManager.HeavenlyLegs, 3),
+                new Drop(ItemManager.HeavenlySword, 2)
             },
             goldDrop: 300,
             escapeChance: 60,
@@ -675,8 +709,12 @@ namespace TurnBasedRPG.Source.Managers
             speed: 35,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 30),
-                new Drop(ItemManager.SmallManaPotion, 10)
+                new Drop(ItemManager.EnormousHealthPotion, 10),
+                new Drop(ItemManager.EnormousManaPotion, 10),
+                new Drop(ItemManager.HeavenlyHelmet, 3),
+                new Drop(ItemManager.HeavenlyBody, 3),
+                new Drop(ItemManager.HeavenlyLegs, 3),
+                new Drop(ItemManager.HeavenlySword, 2)
             },
             goldDrop: 330,
             escapeChance: 60,
@@ -700,8 +738,8 @@ namespace TurnBasedRPG.Source.Managers
             speed: 10,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 40),
-                new Drop(ItemManager.SmallManaPotion, 20)
+                new Drop(ItemManager.HealthPotion, 10),
+                new Drop(ItemManager.ManaPotion, 5)
             },
             goldDrop: 25,
             escapeChance: 50,
@@ -722,8 +760,8 @@ namespace TurnBasedRPG.Source.Managers
             speed: 10,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 40),
-                new Drop(ItemManager.SmallManaPotion, 20)
+                new Drop(ItemManager.HealthPotion, 10),
+                new Drop(ItemManager.ManaPotion, 5)
             },
             goldDrop: 25,
             escapeChance: 50,
@@ -744,8 +782,10 @@ namespace TurnBasedRPG.Source.Managers
             speed: 14,
             itemDrops: new List<Drop>()
             {
-                new Drop(ItemManager.SmallHealthPotion, 100),
-                new Drop(ItemManager.SmallManaPotion, 100)
+                new Drop(ItemManager.BigHealthPotion, 100),
+                new Drop(ItemManager.BigManaPotion, 50),
+                new Drop(ItemManager.IronRing, 50),
+                new Drop(ItemManager.IronSword, 5)
             },
             goldDrop: 250,
             escapeChance: 0,
@@ -810,9 +850,11 @@ namespace TurnBasedRPG.Source.Managers
                 ItemManager.SmallPinkPotion,
                 ItemManager.WoodenSword,
                 ItemManager.WoodenShield,
+                ItemManager.CopperRing,
                 ItemManager.WoodenHelmet,
                 ItemManager.WoodenBody,
-                ItemManager.WoodenLegs
+                ItemManager.WoodenLegs,
+                ItemManager.SmallGrenade
             }
             );
 
@@ -821,18 +863,68 @@ namespace TurnBasedRPG.Source.Managers
             spritePath: "human.txt",
             money: 1000,
             wares: new List<Item> {
-                ItemManager.SmallHealthPotion,
-                ItemManager.SmallManaPotion,
-                ItemManager.SmallPinkPotion,
-                ItemManager.CopperRing,
-                ItemManager.WoodenSword,
-                ItemManager.WoodenShield,
-                ItemManager.WoodenHelmet,
-                ItemManager.WoodenBody,
-                ItemManager.WoodenLegs
+                ItemManager.HealthPotion,
+                ItemManager.ManaPotion,
+                ItemManager.PinkPotion,
+                ItemManager.StoneSword,
+                ItemManager.LeatherShield,
+                ItemManager.IronRing,
+                ItemManager.LeatherHelmet,
+                ItemManager.LeatherBody,
+                ItemManager.LeatherLegs,
+                ItemManager.Grenade
             }
             );
 
+        public static Merchant ShopkeeperT3 = new(
+            name: "Keeper of the local tavern.",
+            spritePath: "human.txt",
+            money: 1000,
+            wares: new List<Item> {
+                ItemManager.BigHealthPotion,
+                ItemManager.BigManaPotion,
+                ItemManager.BigPinkPotion,
+                ItemManager.IronSword,
+                ItemManager.IronShield,
+                ItemManager.GoldRing,
+                ItemManager.IronHelmet,
+                ItemManager.IronHelmet,
+                ItemManager.IronBody,
+                ItemManager.IronLegs,
+                ItemManager.BigGrenade
+            }
+            );
+
+        public static Merchant ShopkeeperT4 = new(
+            name: "Keeper of the local tavern.",
+            spritePath: "human.txt",
+            money: 1000,
+            wares: new List<Item> {
+                ItemManager.EnormousHealthPotion,
+                ItemManager.EnormousManaPotion,
+                ItemManager.EnormousPinkPotion,
+                ItemManager.HellishSword,
+                ItemManager.HellishShield,
+                ItemManager.GoldRingWithSaphire,
+                ItemManager.HellishHelmet,
+                ItemManager.HellishBody,
+                ItemManager.HellishLegs,
+                ItemManager.Dynamite
+            }
+            );
+
+        public static Merchant ShopkeeperT5 = new(
+            name: "Keeper of the local tavern.",
+            spritePath: "human.txt",
+            money: 1000,
+            wares: new List<Item> {
+                ItemManager.BottomlessHealthPotion,
+                ItemManager.BottomlessManaPotion,
+                ItemManager.BottomlessPinkPotion,
+                ItemManager.GoldRingWithDiamond,
+                ItemManager.TNT
+            }
+            );
         #endregion
 
         #region Transporters

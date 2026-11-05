@@ -45,6 +45,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
             this.MaxQuantity = maxQuantity;
         }
 
+        //used for deserialization
+        protected Item() { }
+
         internal Entity Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }

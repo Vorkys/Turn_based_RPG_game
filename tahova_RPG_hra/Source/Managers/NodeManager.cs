@@ -549,7 +549,7 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
-                EntityManager.ShopkeeperT2,
+                EntityManager.ShopkeeperT3,
                 EntityManager.OrganisatorT3Desert
             ]
         );
@@ -565,7 +565,7 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
-                EntityManager.ShopkeeperT2,
+                EntityManager.ShopkeeperT3,
                 EntityManager.OrganisatorT3Savana,
                 EntityManager.SavanaCampToAshLandCamp
             ]
@@ -582,8 +582,7 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
-                EntityManager.ShopkeeperT2,
-                EntityManager.OrganisatorT1,
+                EntityManager.ShopkeeperT4,
                 EntityManager.AshLandCampToSavanaCamp
             ]
         );
@@ -599,8 +598,7 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
-                EntityManager.ShopkeeperT2,
-                EntityManager.OrganisatorT1,
+                EntityManager.ShopkeeperT5,
                 EntityManager.HeavenToPlainsTown
             ]
         );
