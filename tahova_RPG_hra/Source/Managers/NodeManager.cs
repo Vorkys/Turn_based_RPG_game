@@ -641,8 +641,8 @@ namespace TurnBasedRPG.Source.Managers
             mapColor: "Gray",
             isMovable: true,
             spawnRate: 20,
-            minEnemyLvl: 3,
-            maxEnemyLvl: 8,
+            minEnemyLvl: 14,
+            maxEnemyLvl: 15,
             enemyToSpawn: new List<Enemy> { EntityManager.Ghost, EntityManager.Zombie }
         );
         public static BossNode DungeonBoss = new(
