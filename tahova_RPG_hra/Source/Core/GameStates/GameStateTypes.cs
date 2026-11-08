@@ -29,7 +29,6 @@ namespace TurnBasedRPG.Source.Core.GameStates
         private string[] saveFilesPath = [];
         private string[] menuSelections = ["New game", "Continue", "How to play?", "Exit"];
         private string[] manual = ["1. Explore the world", "2. Rest in camps, villages and towns", "3. Become stronger killing enemies", "4. Dont fight stronger enemies!", "5. Complete Quests (Check Journal)"];
-        private int saveFilesPage = 0;
         private int saveFilesNameToRender = (int)(GlobalConstants.consoleRenderSizeHeight / 1.5) - 1;
 
         public MainMenuState()

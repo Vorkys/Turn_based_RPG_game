@@ -295,7 +295,7 @@ namespace TurnBasedRPG.Source.Managers
                 _016
             },
             name: "Cure myself!",
-            description: "I should drink the mixture.",
+            description: "I should drink the mixture. After that I will be cured and be able to roam the world however I wish!",
             objectives: null,
             rewards: null,
             rewardMoney: 0
