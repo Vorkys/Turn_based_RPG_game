@@ -36,13 +36,5 @@ https://docs.google.com/spreadsheets/d/1gUhlrCLBu2qNzamf21vJsLRPSi-7dqDCMxIDyiMQ
 5. copy into "Maps" folder and change name in game program
 6. run (publish) and enjoy!
 ---
-### Playtester form:
-https://docs.google.com/forms/d/e/1FAIpQLSd3zkT27ca6Td1WEQKUL8GpCUw8aQfIb-KP8zMQrzQfvkyAaA/viewform?usp=dialog
-
-- playtime (time)
-- what he liked (free text)
-- what he didnt like (free text)
-- what would he recommend/change (free text)
-- is he a dev? (yes/no)
-- does he think the code is readable and easy to add content to? (yes/no)
-- more comments (free text)
+### Technical tester Form:
+https://forms.gle/MUL44FKXyQkueidX8
