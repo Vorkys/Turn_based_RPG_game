@@ -31,6 +31,8 @@ namespace TurnBasedRPG.Source.Core.GameStates
         private string[] saveFilesPath = [];
         private string[] menuSelections = ["New game", "Continue", "How to play?", "Exit"];
         private string[] manual = ["1. Explore the world", "2. Rest in camps, villages and towns", "3. Become stronger killing enemies", "4. Dont fight stronger enemies!", "5. Reach heaven"];
+        private int saveFilesPage = 0;
+        private int saveFilesNameToRender = (int)(GlobalConstants.consoleRenderSizeHeight / 1.5) - 1;
 
         public MainMenuState()
         {
@@ -122,10 +124,10 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 case (MenuState.ContinueMenu):
                     if (saveFilesPath.Length > 0)
                     {
-                        for (int selectionRow = 0; selectionRow < saveFilesPath.Length; selectionRow++)
+                        for (int selectionRow = 0; selectionRow < saveFilesNameToRender; selectionRow++)
                         {
-                            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15 - 3, GlobalConstants.consoleSizeHeight / 5 + (1 * selectionRow) + 2);
-                            if (selectionRow == selectedOption)
+                            Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15 - 3, (GlobalConstants.consoleSizeHeight / 5) + 2 + (selectionRow % saveFilesNameToRender));
+                            if (selectedOption % saveFilesNameToRender == selectionRow)
                                 Console.Write(">>");
                             else
                                 Console.Write("  ");
@@ -168,15 +170,20 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     }
                     else
                     {
-                        var sortedSaveFilesNames = saveFilesPath;
+                        string[] tmpSaveFilesPath = saveFilesPath.Skip(saveFilesNameToRender * (int)(selectedOption / saveFilesNameToRender)).Take(saveFilesNameToRender).ToArray();
 
-                        for (int saveFileNumber = 0; saveFileNumber < saveFilesPath.Length && saveFileNumber < GlobalConstants.consoleRenderSizeHeight / 1.5; saveFileNumber++)
+                        for (int saveFileNumber = 0; saveFileNumber < tmpSaveFilesPath.Length && saveFileNumber < saveFilesNameToRender; saveFileNumber++)
                         {
                             Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5 + 2 + saveFileNumber);
-                            Console.Write(sortedSaveFilesNames[saveFileNumber]);
+                            Console.Write(tmpSaveFilesPath[saveFileNumber]);
+                        }
+
+                        if (saveFilesPath.Length > saveFilesNameToRender)
+                        {
+                            Console.SetCursorPosition((GlobalConstants.consoleRenderSizeWidth / 15), GlobalConstants.consoleSizeHeight / 5 + 3 + saveFilesNameToRender);
+                            Console.Write("There are more pages, if you continue UP or Down the names will refresh.");
                         }
                     }
-
                     break;
                 case (MenuState.HowToPlayMenu):
                     Console.SetCursorPosition(GlobalConstants.consoleRenderSizeWidth / 15, GlobalConstants.consoleSizeHeight / 5);
@@ -211,7 +218,13 @@ namespace TurnBasedRPG.Source.Core.GameStates
             if (currentState == MenuState.MainMenu && selectedOption < menuStateLength)
                 selectedOption++;
             else if (currentState == MenuState.ContinueMenu && selectedOption < saveFilesPath.Length - 1)
+            {
                 selectedOption++;
+
+                if (selectedOption % saveFilesNameToRender == 0)
+                    RerenderMenu();
+            }
+                
             else
                 return false;
 
@@ -223,7 +236,12 @@ namespace TurnBasedRPG.Source.Core.GameStates
             if (currentState == MenuState.MainMenu && selectedOption > 0)
                 selectedOption--;
             else if (currentState == MenuState.ContinueMenu && selectedOption > 0)
+            {
                 selectedOption--;
+
+                if (selectedOption % saveFilesNameToRender == saveFilesNameToRender - 1)
+                    RerenderMenu();
+            }
             else
                 return false;
 
