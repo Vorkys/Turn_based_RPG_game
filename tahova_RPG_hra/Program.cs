@@ -8,8 +8,8 @@ namespace TurnBasedRPG
     {
         public static void Main(string[] args)
         {
-            Console.SetWindowSize(GlobalConstants.consoleSizeWidth, GlobalConstants.consoleSizeHeight);
-            Console.SetBufferSize(GlobalConstants.consoleSizeWidth, GlobalConstants.consoleSizeHeight);
+            Console.SetWindowSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
+            Console.SetBufferSize(GlobalConstants.consoleSizeWidth + 1, GlobalConstants.consoleSizeHeight);
             Console.Clear();
 
             Console.Title = "ASCII Adventure";
@@ -18,7 +18,7 @@ namespace TurnBasedRPG
             {
                 if (i == 0)
                 {
-                    Console.WriteLine(new string('=', GlobalConstants.consoleSizeWidth));
+                    Console.Write(new string('=', GlobalConstants.consoleSizeWidth + 1));
                     continue;
                 }
                 else if (i == GlobalConstants.consoleSizeHeight - 1)
