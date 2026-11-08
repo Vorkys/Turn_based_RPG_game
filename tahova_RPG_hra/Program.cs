@@ -1,7 +1,5 @@
 ﻿using System;
 using TurnBasedRPG.Source.Core;
-using TurnBasedRPG.Source.Entities;
-using TurnBasedRPG.Source.Managers;
 using TurnBasedRPG.Source.Utils;
 
 namespace TurnBasedRPG

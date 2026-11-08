@@ -369,7 +369,7 @@ namespace TurnBasedRPG.Source.Core
             {
                 Instance.Maps[ActiveMap].PlayerX = destinationX;
                 Instance.Maps[ActiveMap].PlayerY = destinationY;
-                Instance.Maps[ActiveMap].Map[destinationX][destinationY].Traverse(); 
+                Instance.Maps[ActiveMap].Map[destinationX][destinationY].Traverse();
             }
         }
 

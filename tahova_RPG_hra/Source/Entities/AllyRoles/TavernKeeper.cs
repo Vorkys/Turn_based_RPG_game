@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TurnBasedRPG.Source.Core;
-using TurnBasedRPG.Source.Quests;
+﻿using TurnBasedRPG.Source.Core;
 
 namespace TurnBasedRPG.Source.Entities.AllyRoles
 {

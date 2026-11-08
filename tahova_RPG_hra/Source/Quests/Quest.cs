@@ -119,7 +119,7 @@ namespace TurnBasedRPG.Source.Quests
             else
                 return false;
         }
-        
+
         public bool AbleToGetRewards()
         {
             if (rewards == null)

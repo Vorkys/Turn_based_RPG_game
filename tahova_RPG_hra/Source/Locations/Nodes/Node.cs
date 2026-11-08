@@ -40,7 +40,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         }
 
         //used for deserialization
-        public Node () { }
+        public Node() { }
 
         public char NodeChar { get => nodeChar; set => nodeChar = value; }
         public string BackgroundColor { get => backgroundColor; set => backgroundColor = value; }

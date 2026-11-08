@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using TurnBasedRPG.Source.Core;
 using TurnBasedRPG.Source.Core.GameStates;
-using TurnBasedRPG.Source.Entities;
-using TurnBasedRPG.Source.GameObjects.Items;
 using TurnBasedRPG.Source.Utils;
 using static TurnBasedRPG.Source.Entities.Enemy;
 

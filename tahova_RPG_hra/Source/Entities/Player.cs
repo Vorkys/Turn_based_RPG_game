@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Collections.Generic;
 using TurnBasedRPG.Source.Core;
 using TurnBasedRPG.Source.Core.GameStates;
 using TurnBasedRPG.Source.GameObjects.Items;
@@ -189,7 +187,7 @@ namespace TurnBasedRPG.Source.Entities
                     if (spell.Cost <= Mana && spell.Cost / 3 < Health)
                     {
                         spell.Cast();
-                        combatDialogText += $"You cast {spell.Name} and deal {spell.Power} HP to your target but lost {spell.Cost/3} HP doing so.";
+                        combatDialogText += $"You cast {spell.Name} and deal {spell.Power} HP to your target but lost {spell.Cost / 3} HP doing so.";
                         spellCasted = true;
                     }
                     break;
@@ -197,7 +195,7 @@ namespace TurnBasedRPG.Source.Entities
                     if (spell.Cost <= Mana)
                     {
                         spell.Cast();
-                        combatDialogText += $"You cast {spell.Name} and deal {spell.Power} HP to your target. You absorbed {spell.Power/3} HP.";
+                        combatDialogText += $"You cast {spell.Name} and deal {spell.Power} HP to your target. You absorbed {spell.Power / 3} HP.";
                         spellCasted = true;
                     }
                     break;

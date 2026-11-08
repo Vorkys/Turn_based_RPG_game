@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using TurnBasedRPG.Source.GameObjects.Items;
 using TurnBasedRPG.Source.Quests;
 using TurnBasedRPG.Source.Quests.QuestObjectives;
 using static TurnBasedRPG.Source.Quests.Quest;
@@ -14,7 +12,7 @@ namespace TurnBasedRPG.Source.Managers
             prerequisities: null,
             name: "What should i do?",
             description: "I am so bored I dont know what I should do. Maybe killing a few Cute Slimes and go back to my Village East of my position will help me think.",
-            objectives: new List<Objective>() { 
+            objectives: new List<Objective>() {
                 new KillObjective(
                     enemyName: EntityManager.CuteSlime.Name,
                     requiredKills: 5

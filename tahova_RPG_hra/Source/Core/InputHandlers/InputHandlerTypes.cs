@@ -522,7 +522,7 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                         Game.Instance.ChangeState(GameStateType.Exploration);
                     break;
                 case ConsoleKey.UpArrow:
-                case ConsoleKey.W:    
+                case ConsoleKey.W:
                     castInstanceState.PreviousElement();
                     break;
                 case ConsoleKey.DownArrow:

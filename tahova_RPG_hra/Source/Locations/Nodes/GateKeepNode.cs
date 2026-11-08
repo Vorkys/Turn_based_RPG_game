@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using TurnBasedRPG.Source.Core;
-using TurnBasedRPG.Source.Entities;
 using TurnBasedRPG.Source.Quests;
 
 namespace TurnBasedRPG.Source.Locations.Nodes

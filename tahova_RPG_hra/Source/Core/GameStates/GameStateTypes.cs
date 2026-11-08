@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.IO;
 using System.Linq;
 using TurnBasedRPG.Source.Core.InputHandlers;
@@ -12,7 +11,6 @@ using TurnBasedRPG.Source.Locations.Nodes;
 using TurnBasedRPG.Source.Quests;
 using TurnBasedRPG.Source.Quests.QuestObjectives;
 using TurnBasedRPG.Source.Utils;
-using static TurnBasedRPG.Source.Core.GameStates.InventoryState;
 
 namespace TurnBasedRPG.Source.Core.GameStates
 {
@@ -224,7 +222,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 if (selectedOption % saveFilesNameToRender == 0)
                     RerenderMenu();
             }
-                
+
             else
                 return false;
 
@@ -882,7 +880,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         renderedItems = true;
 
                         //Clear main box
-                        for(int row = 0; row < GlobalConstants.consoleRenderSizeHeight - 2; row++)
+                        for (int row = 0; row < GlobalConstants.consoleRenderSizeHeight - 2; row++)
                         {
                             Console.SetCursorPosition(1, 1 + row);
                             Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
@@ -1105,9 +1103,9 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
             return true;
         }
-        
+
         public void AddItemToDropTable(Item item) { dropTable.Add(item); }
-        
+
         public void RemoveItemFromDropTable(Item item)
         {
             dropTable.Remove(item);
@@ -1126,7 +1124,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
         public string CombatDialog { get => combatDialog; set { combatDialog = value; currentState = CombatDialogState.AwaitConfirmDialog; RerenderCombat(); } }
-        public bool LastTurnWasPlayer { get => lastTurnWasPlayer; set => lastTurnWasPlayer = value;  }
+        public bool LastTurnWasPlayer { get => lastTurnWasPlayer; set => lastTurnWasPlayer = value; }
         public bool InventorySelected { get => inventorySelected; set { inventorySelected = value; (selectedOption, lastSelectedOption) = (lastSelectedOption, selectedOption); RerenderCombat(); } }
         public CombatDialogState CurrentState { get => currentState; set => currentState = value; }
         public int DroppedMoney { get => droppedMoney; set => droppedMoney = value; }
@@ -1800,7 +1798,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 Console.WriteLine();
             }
 
-            
+
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -1903,7 +1901,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 {
                     int tmpCounter = 0;
                     end = questInfoMaxCols;
-                    
+
                     while (tmpCounter < questInfoMaxCols / 4 && questDesc[start + end] != ' ')
                     {
                         end--;
