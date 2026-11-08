@@ -9,7 +9,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         private Item[] rewards;
         private bool visited;
 
-        public RewardNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, Item[] rewards) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public RewardNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, Item[] rewards) : base(nodeChar, backgroundColor, foregroundColor, mapColor, isMovable)
         {
             this.Rewards = rewards;
             this.Visited = false;

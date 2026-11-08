@@ -10,7 +10,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         private string townSprite;
         private Ally[] townPeople;
 
-        public TownNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, string name, string description, string townSprite, Ally[] townPeople) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public TownNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, string name, string description, string townSprite, Ally[] townPeople) : base(nodeChar, backgroundColor, foregroundColor, mapColor, isMovable)
         {
             this.Name = name;
             this.Description = description;
@@ -28,14 +28,6 @@ namespace TurnBasedRPG.Source.Locations.Nodes
             base.Traverse();
 
             Game.Instance.openTown(this);
-        }
-
-        public bool Contains(Ally ally)
-        {
-            for (int _ally = 0; _ally < townPeople.Length; _ally++)
-                if (townPeople[_ally] == ally) return true;
-
-            return false;
         }
     }
 }

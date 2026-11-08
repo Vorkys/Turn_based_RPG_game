@@ -20,6 +20,7 @@ namespace TurnBasedRPG.Source.Entities
     [JsonDerivedType(typeof(ArenaOrganisator), nameof(ArenaOrganisator))]
     [JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver))]
     [JsonDerivedType(typeof(Transporter), nameof(Transporter))]
+    [JsonDerivedType(typeof(TavernKeeper), nameof(TavernKeeper))]
     [JsonDerivedType(typeof(Enemy), nameof(Enemy))]
     [JsonDerivedType(typeof(Slime), nameof(Slime))]
     [JsonDerivedType(typeof(Goblin), nameof(Goblin))]

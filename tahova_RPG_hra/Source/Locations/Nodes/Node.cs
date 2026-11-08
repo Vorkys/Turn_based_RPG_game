@@ -12,6 +12,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
     [JsonDerivedType(typeof(DungeonNode), nameof(DungeonNode))]
     [JsonDerivedType(typeof(RewardNode), nameof(RewardNode))]
     [JsonDerivedType(typeof(TownNode), nameof(TownNode))]
+    [JsonDerivedType(typeof(GateKeepNode), nameof(GateKeepNode))]
     public class Node
     {
         private char nodeChar;
@@ -29,9 +30,21 @@ namespace TurnBasedRPG.Source.Locations.Nodes
             IsMovable = isMovable;
         }
 
+        //ct for GateKeepNode
+        public Node(char nodeChar, string backgroundColor, string foregroundColor, string mapColor)
+        {
+            NodeChar = nodeChar;
+            BackgroundColor = backgroundColor;
+            ForegroundColor = foregroundColor;
+            MapColor = mapColor;
+        }
+
+        //used for deserialization
+        public Node () { }
+
         public char NodeChar { get => nodeChar; set => nodeChar = value; }
-        public string ForegroundColor { get => foregroundColor; set => foregroundColor = value; }
         public string BackgroundColor { get => backgroundColor; set => backgroundColor = value; }
+        public string ForegroundColor { get => foregroundColor; set => foregroundColor = value; }
         public string MapColor { get => mapColor; set => mapColor = value; }
         public bool IsMovable { get => isMovable; set => isMovable = value; }
 

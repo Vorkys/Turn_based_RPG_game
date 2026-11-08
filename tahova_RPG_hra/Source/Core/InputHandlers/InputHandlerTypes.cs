@@ -140,10 +140,6 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                 case ConsoleKey.Escape:
                     Game.Instance.Pause();
                     break;
-                //TODO - DEBUG add player lvl for spells
-                //case ConsoleKey.Q:
-                //    Game.Instance.Player.IncreaseLvl(2);
-                //    break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
                     Game.Instance.MovePlayerUp();
@@ -162,6 +158,9 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                     break;
                 case ConsoleKey.I:
                     Game.Instance.ChangeState(GameStateType.Inventory);
+                    break;
+                case ConsoleKey.J:
+                    Game.Instance.ChangeState(GameStateType.Journal);
                     break;
                 default:
                     return false;
@@ -512,19 +511,38 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
     {
         public override bool handle(ConsoleKey inputKey)
         {
+            JournalState castInstanceState = (JournalState)Game.Instance.GameState;
+
             switch (inputKey)
             {
                 case ConsoleKey.Escape:
-                    Game.Instance.ChangeState(GameStateType.Exploration);
+                    if (castInstanceState.IsFocused)
+                        castInstanceState.IsFocused = false;
+                    else
+                        Game.Instance.ChangeState(GameStateType.Exploration);
                     break;
                 case ConsoleKey.UpArrow:
-                case ConsoleKey.W:
+                case ConsoleKey.W:    
+                    castInstanceState.PreviousElement();
                     break;
                 case ConsoleKey.DownArrow:
                 case ConsoleKey.S:
+                    castInstanceState.NextElement();
+                    break;
+                case ConsoleKey.LeftArrow:
+                case ConsoleKey.A:
+                    castInstanceState.PreviousElement(true);
+                    break;
+                case ConsoleKey.RightArrow:
+                case ConsoleKey.D:
+                    castInstanceState.NextElement(true);
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:
+                    if (!castInstanceState.IsFocused)
+                        castInstanceState.IsFocused = true;
+                    else
+                        return false;
                     break;
                 default:
                     return false;
@@ -544,8 +562,14 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
             switch (inputKey)
             {
                 case ConsoleKey.Q:
-                    Game.Instance.Player.Health = Game.Instance.Player.MaxHealth;
-                    Game.Instance.Player.Mana = Game.Instance.Player.MaxMana;
+                    if (castCurrentNode.TownPeople == null)
+                        return false;
+                    foreach (Ally ally in castCurrentNode.TownPeople)
+                        if (ally is TavernKeeper)
+                        {
+                            TavernKeeper castNpc = (TavernKeeper)ally;
+                            castNpc.Talk();
+                        }
                     break;
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
@@ -575,6 +599,14 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                     break;
                 //QuestGiver
                 case ConsoleKey.T:
+                    if (castCurrentNode.TownPeople == null)
+                        return false;
+                    foreach (Ally ally in castCurrentNode.TownPeople)
+                        if (ally is QuestGiver)
+                        {
+                            QuestGiver castNpc = (QuestGiver)ally;
+                            castNpc.Talk();
+                        }
                     break;
                 case ConsoleKey.Z:
                     if (castCurrentNode.TownPeople == null)

@@ -11,20 +11,37 @@ namespace TurnBasedRPG.Source.Entities.AllyRoles
 
         public QuestGiver(string name, string spritePath, int money, List<Quest> quests) : base(name, spritePath, money)
         {
-            this.Quests = quests;
+            Quests = quests;
         }
 
         public List<Quest> Quests { get => quests; set => quests = value; }
 
         public override void Talk()
         {
-            Game.Instance.openDialog(EntryDialog);
+            foreach (Quest quest in Game.Instance.ActiveQuests)
+                quest.RecalculateActiveQuestsStatus();
 
             foreach (Quest quest in quests)
-                if (quest.isOpen())
-                    Game.Instance.AddQuest(quest);
+            {
+                quest.RecalculateOpenStatus();
 
-            Console.WriteLine("New quest(s) are added.");
+                bool isQuestAddable = true;
+
+                //when quest is taken can no longer take it again
+                if (quest.isOpen())
+                {
+                    //make sure quest isnt already taken
+                    foreach (Quest activeQuests in Game.Instance.ActiveQuests)
+                        if (quest.Name == activeQuests.Name)
+                        {
+                            isQuestAddable = false;
+                            break;
+                        }
+
+                    if (isQuestAddable)
+                        Game.Instance.AddQuest(quest);
+                }
+            }
         }
     }
 }

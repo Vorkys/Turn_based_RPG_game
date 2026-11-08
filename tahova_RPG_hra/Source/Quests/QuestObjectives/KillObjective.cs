@@ -1,4 +1,6 @@
-﻿using TurnBasedRPG.Source.Entities;
+﻿using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Core.GameStates;
+using TurnBasedRPG.Source.Entities;
 
 namespace TurnBasedRPG.Source.Quests.QuestObjectives
 {
@@ -8,13 +10,16 @@ namespace TurnBasedRPG.Source.Quests.QuestObjectives
         private int requiredKills;
         private int currentKills;
 
-        public KillObjective(bool isCompleted, string description, string enemyName, int requiredKills, int currentKills) : base(isCompleted, description)
+        public KillObjective(string enemyName, int requiredKills)
         {
             this.enemyName = enemyName;
             this.requiredKills = requiredKills;
-            this.currentKills = currentKills;
-            Description = $"Kill {RequiredKills} {EnemyName}(s).";
+            this.currentKills = 0;
+            Description = $"Kill {RequiredKills} wild {EnemyName}(s).";
         }
+
+        //used for Deserialization
+        public KillObjective() { }
 
         public string EnemyName { get => enemyName; set => enemyName = value; }
         public int RequiredKills { get => requiredKills; set => requiredKills = value; }
@@ -25,8 +30,13 @@ namespace TurnBasedRPG.Source.Quests.QuestObjectives
             if (IsCompleted)
                 return;
 
+            CombatState castInstanceState = (CombatState)Game.Instance.GameState;
+
             if (enemy.Name.ToLower().Contains(EnemyName.ToLower()))
-                this.CurrentKills++;
+            {
+                CurrentKills++;
+                castInstanceState.QuestInfoText = "Quest objective updated!";
+            }
 
             if (CurrentKills >= RequiredKills)
                 IsCompleted = true;

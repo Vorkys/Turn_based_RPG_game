@@ -426,5 +426,43 @@ namespace TurnBasedRPG.Source.Managers
             power: 40
             );
         #endregion
+
+        #region Quest_Items
+        //T1
+        public static Item WolfTusk = new(
+            name: "Wolf tusk",
+            description: "Wolf tusk. Can be looted from Wolves in the Plains.",
+            buyPrice: 0,
+            sellPrice: 0,
+            maxQuantity: 99
+        );
+
+        //T2
+        public static Item MagicDust = new(
+            name: "Magic Dust",
+            description: "This dust is only found in the Forest. Drops from magical beings.",
+            buyPrice: 0,
+            sellPrice: 0,
+            maxQuantity: 99
+        );
+
+        //T4
+        public static Item CorruptedHeart = new(
+            name: "Corrupted Hearth",
+            description: "This Heart could help scientists to find a cure for me.",
+            buyPrice: 0,
+            sellPrice: 0,
+            maxQuantity: 99
+        );
+
+        //T5
+        public static Item HolyHeart = new(
+            name: "Holy Heart",
+            description: "I need to add this to a holy mixture in combination with Corrupted Heart.",
+            buyPrice: 0,
+            sellPrice: 0,
+            maxQuantity: 99
+        );
+        #endregion
     }
 }

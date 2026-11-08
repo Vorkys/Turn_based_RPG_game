@@ -237,6 +237,9 @@ namespace MapMaker
                             case '6':
                                 row.Add(NodeManager.HeavenTavern);
                                 break;
+                            case '7':
+                                row.Add(NodeManager.AbondonedTemple);
+                                break;
                             default:
                                 row.Add(NodeManager.DEBUG_ERROR);
                                 break;
@@ -256,6 +259,9 @@ namespace MapMaker
                                     row.Add(NodeManager.DungeonWallB);
                                 else
                                     row.Add(NodeManager.DungeonWallA);
+                                break;
+                            case '-':
+                                row.Add(NodeManager.DungeonGateKeeper);
                                 break;
                             case ':':
                                 row.Add(NodeManager.DungeonFloor);
@@ -304,7 +310,8 @@ namespace MapMaker
                     new JsonDerivedType(typeof(DialogNode), nameof(DialogNode)),
                     new JsonDerivedType(typeof(DungeonNode), nameof(DungeonNode)),
                     new JsonDerivedType(typeof(RewardNode), nameof(RewardNode)),
-                    new JsonDerivedType(typeof(TownNode), nameof(TownNode))
+                    new JsonDerivedType(typeof(TownNode), nameof(TownNode)),
+                    new JsonDerivedType(typeof(GateKeepNode), nameof(GateKeepNode))
                 ],
                 [typeof(Entity)] = [
                     new JsonDerivedType(typeof(Player), nameof(Player)),
@@ -313,6 +320,7 @@ namespace MapMaker
                     new JsonDerivedType(typeof(Merchant), nameof(Merchant)),
                     new JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver)),
                     new JsonDerivedType(typeof(Transporter), nameof(Transporter)),
+                    new JsonDerivedType(typeof(TavernKeeper), nameof(TavernKeeper)),
                     new JsonDerivedType(typeof(Enemy), nameof(Enemy)),
                     new JsonDerivedType(typeof(Slime), nameof(Slime)),
                     new JsonDerivedType(typeof(Goblin), nameof(Goblin)),

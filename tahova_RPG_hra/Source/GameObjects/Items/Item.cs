@@ -46,7 +46,7 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         }
 
         //used for deserialization
-        protected Item() { }
+        public Item() { }
 
         internal Entity Owner { get => owner; set => owner = value; }
         public string Name { get => name; set => name = value; }

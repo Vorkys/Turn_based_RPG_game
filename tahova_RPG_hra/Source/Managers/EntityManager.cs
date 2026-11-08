@@ -4,6 +4,7 @@ using TurnBasedRPG.Source.Entities;
 using TurnBasedRPG.Source.Entities.AllyRoles;
 using TurnBasedRPG.Source.Entities.EnemyTypes;
 using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.Quests;
 using static TurnBasedRPG.Source.Entities.Enemy;
 
 namespace TurnBasedRPG.Source.Managers
@@ -167,7 +168,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.SmallHealthPotion, 20),
                 new Drop(ItemManager.SmallManaPotion, 10),
-                new Drop(ItemManager.CopperRing, 5)
+                new Drop(ItemManager.CopperRing, 5),
+                new Drop(ItemManager.WolfTusk, 80)
             },
             goldDrop: 4,
             escapeChance: 60,
@@ -192,7 +194,8 @@ namespace TurnBasedRPG.Source.Managers
             itemDrops: new List<Drop>()
             {
                 new Drop(ItemManager.HealthPotion, 10),
-                new Drop(ItemManager.ManaPotion, 10)
+                new Drop(ItemManager.ManaPotion, 10),
+                new Drop(ItemManager.MagicDust, 3)
             },
             goldDrop: 8,
             escapeChance: 60,
@@ -264,7 +267,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.HealthPotion, 10),
                 new Drop(ItemManager.ManaPotion, 10),
-                new Drop(ItemManager.IronRing, 5)
+                new Drop(ItemManager.IronRing, 5),
+                new Drop(ItemManager.MagicDust, 10)
             },
             goldDrop: 25,
             escapeChance: 60,
@@ -288,7 +292,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.HealthPotion, 10),
                 new Drop(ItemManager.ManaPotion, 10),
-                new Drop(ItemManager.IronRing, 5)
+                new Drop(ItemManager.IronRing, 5),
+                new Drop(ItemManager.MagicDust, 10)
             },
             goldDrop: 35,
             escapeChance: 70,
@@ -312,7 +317,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.HealthPotion, 20),
                 new Drop(ItemManager.ManaPotion, 10),
-                new Drop(ItemManager.Grenade, 10)
+                new Drop(ItemManager.Grenade, 10),
+                new Drop(ItemManager.MagicDust, 10)
             },
             goldDrop: 35,
             escapeChance: 60,
@@ -532,7 +538,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.EnormousHealthPotion, 10),
                 new Drop(ItemManager.EnormousManaPotion, 10),
-                new Drop(ItemManager.HellishSword, 5)
+                new Drop(ItemManager.HellishSword, 5),
+                new Drop(ItemManager.CorruptedHeart, 2)
             },
             goldDrop: 170,
             escapeChance: 60,
@@ -556,7 +563,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.EnormousHealthPotion, 10),
                 new Drop(ItemManager.EnormousManaPotion, 10),
-                new Drop(ItemManager.EnormousPinkPotion, 5)
+                new Drop(ItemManager.EnormousPinkPotion, 5),
+                new Drop(ItemManager.CorruptedHeart, 2)
             },
             goldDrop: 175,
             escapeChance: 60,
@@ -584,7 +592,8 @@ namespace TurnBasedRPG.Source.Managers
                 new Drop(ItemManager.HellishBody, 5),
                 new Drop(ItemManager.HellishLegs, 5),
                 new Drop(ItemManager.HellishShield, 3),
-                new Drop(ItemManager.HellishSword, 3)
+                new Drop(ItemManager.HellishSword, 3),
+                new Drop(ItemManager.CorruptedHeart, 2)
             },
             goldDrop: 180,
             escapeChance: 60,
@@ -608,7 +617,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.EnormousHealthPotion, 10),
                 new Drop(ItemManager.EnormousManaPotion, 10),
-                new Drop(ItemManager.Dynamite, 10)
+                new Drop(ItemManager.Dynamite, 10),
+                new Drop(ItemManager.CorruptedHeart, 2)
             },
             goldDrop: 210,
             escapeChance: 60,
@@ -797,6 +807,14 @@ namespace TurnBasedRPG.Source.Managers
 
         #region Friendly
 
+        #region Tavern
+        public static TavernKeeper TavernKeeper = new(
+            name: "Tavern Keeper",
+            spritePath: "human.txt",
+            money: 0
+        );
+        #endregion
+
         #region ArenaOrganisators
         public static ArenaOrganisator OrganisatorT1 = new(
             name: "Town arena organisator",
@@ -936,7 +954,7 @@ namespace TurnBasedRPG.Source.Managers
             newX: 20,
             newY: 127,
             cost: 50,
-            requiredQuest: null
+            requiredQuest: QuestManager._009
         );
         public static Transporter AshLandCampToSavanaCamp = new(
             name: "Transporter",
@@ -946,7 +964,7 @@ namespace TurnBasedRPG.Source.Managers
             newX: 16,
             newY: 124,
             cost: 50,
-            requiredQuest: null
+            requiredQuest: QuestManager._009
         );
 
         public static Transporter PlainsTownToHeaven = new(
@@ -957,7 +975,7 @@ namespace TurnBasedRPG.Source.Managers
             newX: 26,
             newY: 41,
             cost: 150,
-            requiredQuest: null
+            requiredQuest: QuestManager._013
         );
         public static Transporter HeavenToPlainsTown = new(
             name: "Heavenly Transporter",
@@ -967,15 +985,91 @@ namespace TurnBasedRPG.Source.Managers
             newX: 18,
             newY: 13,
             cost: 150,
-            requiredQuest: null
+            requiredQuest: QuestManager._013
         );
         #endregion
 
         #region QuestGivers
-        #endregion
+        public static QuestGiver T0QuestGiver = new(
+            name: "T0 Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._001,
+                QuestManager._002
+            }
+        );
 
-        #region Others
+        public static QuestGiver T1QuestGiver = new(
+            name: "T1 Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._003,
+                QuestManager._004,
+                QuestManager._014,
+            }
+        );
 
+        public static QuestGiver T2QuestGiver = new(
+            name: "T2 Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._005,
+                QuestManager._006,
+                QuestManager._007
+            }
+        );
+
+        public static QuestGiver T3QuestGiver = new(
+            name: "T3 Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._008,
+                QuestManager._009
+            }
+        );
+
+        public static QuestGiver SavanaQuestGiver = new(
+            name: "T4 Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._010
+            }
+        );
+
+        public static QuestGiver T4QuestGiver = new(
+            name: "T3 Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._011,
+                QuestManager._012,
+                QuestManager._013
+            }
+        );
+
+        public static QuestGiver T5QuestGiver = new(
+            name: "T5 Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._015,
+                QuestManager._016
+            }
+        );
+
+        public static QuestGiver AbondonedTempleQuestGiver = new(
+            name: "Abondoned Temple Guest Giver",
+            spritePath: "human.txt",
+            money: 0,
+            quests: new List<Quest>() {
+                QuestManager._017
+            }
+        );
         #endregion
 
         #endregion

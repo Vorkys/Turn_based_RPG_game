@@ -8,7 +8,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         private List<string> dialog;
         private bool visited;
 
-        public DialogNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> dialog) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public DialogNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> dialog) : base(nodeChar, backgroundColor, foregroundColor, mapColor, isMovable)
         {
             this.Dialog = dialog;
             this.Visited = false;

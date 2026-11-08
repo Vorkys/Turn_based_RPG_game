@@ -14,12 +14,50 @@ namespace TurnBasedRPG.Source.Quests
 
     public class Quest
     {
+        public struct Reward
+        {
+            public Item Item { get; set; }
+            public int Quantity { get; set; }
+
+            public Reward(Item item, int quantity)
+            {
+                Item = item;
+                Quantity = quantity;
+            }
+
+            //used for deserialization
+            public Reward() { }
+        }
+
         private Status status;
         private List<Quest> prerequisities;
         private string name;
         private string description;
         private List<Objective> objectives;
-        private List<Item> rewards;
+        private List<Reward> rewards;
+        private int rewardMoney;
+
+        public Quest(List<Quest> prerequisities, string name, string description, List<Objective> objectives, List<Reward> rewards, int rewardMoney)
+        {
+            status = Status.Close;
+            this.prerequisities = prerequisities;
+            this.name = name;
+            this.description = description;
+            this.objectives = objectives;
+            this.rewards = rewards;
+            this.rewardMoney = rewardMoney;
+        }
+
+        public Quest(Status status, List<Quest> prerequisities, string name, string description, List<Objective> objectives, List<Reward> rewards, int rewardMoney)
+        {
+            this.status = status;
+            this.prerequisities = prerequisities;
+            this.name = name;
+            this.description = description;
+            this.objectives = objectives;
+            this.rewards = rewards;
+            this.rewardMoney = rewardMoney;
+        }
 
         //used for Deserialization
         public Quest() { }
@@ -29,15 +67,49 @@ namespace TurnBasedRPG.Source.Quests
         public string Name { get => name; set => name = value; }
         public string Description { get => description; set => description = value; }
         public List<Objective> Objectives { get => objectives; set => objectives = value; }
-        public List<Item> Rewards { get => rewards; set => rewards = value; }
+        public List<Reward> Rewards { get => rewards; set => rewards = value; }
+        public int RewardMoney { get => rewardMoney; set => rewardMoney = value; }
 
-        public void CheckStatus()
+        public void RecalculateOpenStatus()
         {
-            foreach (Quest quest in Prerequisities)
-                if (quest.Status != Status.Finished)
-                    return;
+            if (Status != Status.Close)
+                return;
 
-            this.Status = Status.Open;
+            if (prerequisities == null)
+            {
+                Status = Status.Open;
+                return;
+            }
+
+            bool isQuestValid = false;
+
+            //if quest names are same and status isnt Finished then Cant mve status to Open
+            foreach (Quest quest in Prerequisities)
+                foreach (Quest activeQuest in Game.Instance.ActiveQuests)
+                    if (quest.name == activeQuest.name && activeQuest.Status == Status.Finished)
+                        isQuestValid = true;
+
+            if (isQuestValid)
+                Status = Status.Open;
+        }
+
+        public void RecalculateActiveQuestsStatus()
+        {
+            if (Status == Status.Finished)
+                return;
+
+            bool allIsOk = true;
+
+            if (Objectives != null)
+                foreach (Objective obj in Objectives)
+                    if (!obj.IsCompleted)
+                    {
+                        allIsOk = false;
+                        break;
+                    }
+
+            if (allIsOk)
+                Status = Status.Finished;
         }
 
         public bool isOpen()
@@ -47,18 +119,42 @@ namespace TurnBasedRPG.Source.Quests
             else
                 return false;
         }
+        
+        public bool AbleToGetRewards()
+        {
+            if (rewards == null)
+                return true;
+
+            Item[] tmpPlayerInv = Game.Instance.Player.Inventory;
+            bool ableToLoot = true;
+
+            //Test if player can take all quest Items
+            foreach (Reward rewardItem in rewards)
+                if (!Game.Instance.Player.AddItem(rewardItem.Item, rewardItem.Quantity))
+                {
+                    ableToLoot = false;
+                    break;
+                }
+
+            //Put Inv back to its original state
+            Game.Instance.Player.Inventory = tmpPlayerInv;
+
+            return ableToLoot;
+        }
 
         public void GetReward()
         {
             foreach (Objective obj in Objectives)
-                if (!obj.IsCompleted)
+                if (!obj.IsCompleted || !AbleToGetRewards())
                     return;
 
-            //TODO - get reward and close quest
-            foreach (Item item in rewards)
-                Game.Instance.Player.AddItem(item, item.Quantity);
+            Game.Instance.Player.Money += RewardMoney;
 
-            this.status = Status.Close;
+            if (rewards != null)
+                foreach (Reward item in rewards)
+                    Game.Instance.Player.AddItem(item.Item, item.Quantity);
+
+            this.status = Status.Finished;
         }
     }
 }

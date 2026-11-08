@@ -101,7 +101,8 @@ namespace TurnBasedRPG.Source.Core
                     new JsonDerivedType(typeof(DialogNode), nameof(DialogNode)),
                     new JsonDerivedType(typeof(DungeonNode), nameof(DungeonNode)),
                     new JsonDerivedType(typeof(RewardNode), nameof(RewardNode)),
-                    new JsonDerivedType(typeof(TownNode), nameof(TownNode))
+                    new JsonDerivedType(typeof(TownNode), nameof(TownNode)),
+                    new JsonDerivedType(typeof(GateKeepNode), nameof(GateKeepNode))
                 ],
                 [typeof(Entity)] = [
                     new JsonDerivedType(typeof(Player), nameof(Player)),
@@ -110,6 +111,7 @@ namespace TurnBasedRPG.Source.Core
                     new JsonDerivedType(typeof(Merchant), nameof(Merchant)),
                     new JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver)),
                     new JsonDerivedType(typeof(Transporter), nameof(Transporter)),
+                    new JsonDerivedType(typeof(TavernKeeper), nameof(TavernKeeper)),
                     new JsonDerivedType(typeof(Enemy), nameof(Enemy)),
                     new JsonDerivedType(typeof(Slime), nameof(Slime)),
                     new JsonDerivedType(typeof(Goblin), nameof(Goblin)),
@@ -180,8 +182,6 @@ namespace TurnBasedRPG.Source.Core
 
                 var options = new JsonSerializerOptions { WriteIndented = true };
                 var deserializedMap = JsonSerializer.Deserialize<Location>(json, options);
-                //TODO - remove comment; old map = 23, 78, 23, 78 ; new map = 4, 7, 4, 7
-                //Location map = new(deserializedList, 2, 2);
                 Maps.Add(deserializedMap);
             }
             catch (Exception ex)
@@ -211,8 +211,6 @@ namespace TurnBasedRPG.Source.Core
 
                         var options = new JsonSerializerOptions { WriteIndented = true };
                         var deserializedMap = JsonSerializer.Deserialize<Location>(json, options);
-                        //TODO - remove comment; old map = 23, 78, 23, 78 ; new map = 4, 7, 4, 7
-                        //Location map = new(deserializedList, 2, 2);
                         Maps.Add(deserializedMap);
                     }
             }
@@ -297,16 +295,22 @@ namespace TurnBasedRPG.Source.Core
 
         public void NewGame(string _mapFileName = "map.json")
         {
+            Maps = new List<Location>();
+            ActiveMap = 0;
+            Player = EntityManager.Player;
+            ActiveQuests = new List<Quest>();
+
             //check if map exist
             if (Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Maps", "MainStory")))
                 Instance.LoadMaps();
 
-            //TODO - test
             Instance.changeLocation("Campaign");
 
             Instance.Player = EntityManager.Player;
             Instance.Maps[ActiveMap].PlayerX = Instance.Maps[ActiveMap].EntryX;
             Instance.Maps[ActiveMap].PlayerY = Instance.Maps[ActiveMap].EntryY;
+
+            AddQuest(QuestManager.StartQuest);
 
             Instance.ChangeState(GameStateType.Exploration);
         }
@@ -355,11 +359,17 @@ namespace TurnBasedRPG.Source.Core
 
         public void MovePlayer(int destinationX, int destinationY)
         {
+            if (!Instance.Maps[ActiveMap].Map[destinationX][destinationY].IsMovable && Instance.Maps[ActiveMap].Map[destinationX][destinationY] is GateKeepNode)
+            {
+                GateKeepNode castGateKeepNode = (GateKeepNode)Instance.Maps[ActiveMap].Map[destinationX][destinationY];
+                castGateKeepNode.UpdateMovable();
+            }
+
             if (Instance.Maps[ActiveMap].Map[destinationX][destinationY].IsMovable)
             {
                 Instance.Maps[ActiveMap].PlayerX = destinationX;
                 Instance.Maps[ActiveMap].PlayerY = destinationY;
-                Instance.Maps[ActiveMap].Map[destinationX][destinationY].Traverse();
+                Instance.Maps[ActiveMap].Map[destinationX][destinationY].Traverse(); 
             }
         }
 
@@ -515,7 +525,13 @@ namespace TurnBasedRPG.Source.Core
 
         public void AddQuest(Quest quest)
         {
-            //TODO
+            if (quest == null || quest.Status != Status.Open)
+                return;
+
+            if (quest.Objectives == null)
+                quest.Status = Status.Finished;
+
+            ActiveQuests.Add(quest);
         }
 
         public void openShop(List<Item> wares)

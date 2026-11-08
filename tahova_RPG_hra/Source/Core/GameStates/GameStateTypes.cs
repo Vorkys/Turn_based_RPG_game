@@ -9,7 +9,10 @@ using TurnBasedRPG.Source.Entities.AllyRoles;
 using TurnBasedRPG.Source.GameObjects.Items;
 using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
 using TurnBasedRPG.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Quests;
+using TurnBasedRPG.Source.Quests.QuestObjectives;
 using TurnBasedRPG.Source.Utils;
+using static TurnBasedRPG.Source.Core.GameStates.InventoryState;
 
 namespace TurnBasedRPG.Source.Core.GameStates
 {
@@ -381,7 +384,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[W/S/A/D or arrows] - Move", "[I] - Inventory", "[ESC] - Pause"];
+            string[] keybinds = ["[W/S/A/D or arrows] - Move", "[I] - Inventory", "[J] - Journal", "[ESC] - Pause"];
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -539,6 +542,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         private int lastSelectedOption = 0;
         private List<Item> dropTable = new List<Item>();
         private int droppedMoney = 0;
+        private string questInfoText = "";
         private bool renderedItems = false;
 
         public CombatState()
@@ -691,6 +695,8 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
                     Console.SetCursorPosition(2, 1);
                     Console.Write($"Money: {Game.Instance.Player.Money - droppedMoney} + {droppedMoney}");
+                    Console.SetCursorPosition(2, 2);
+                    Console.Write(questInfoText);
 
                     switch (inventorySelected)
                     {
@@ -1107,6 +1113,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         public CombatDialogState CurrentState { get => currentState; set => currentState = value; }
         public int DroppedMoney { get => droppedMoney; set => droppedMoney = value; }
         public List<Item> DropTable { get => dropTable; set => dropTable = value; }
+        public string QuestInfoText { get => questInfoText; set => questInfoText = value; }
     }
 
     class DialogState : GameState
@@ -1730,6 +1737,14 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
     class JournalState : GameState
     {
+        private bool isFocused = false;
+        private int selectedQuest = 0;
+        private int selectedObjective = 0;
+        private int selectedReward = 0;
+        //Print control box
+        string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Select Quest", "[A/< | D/>] - Next/Previous Quest"];
+        string[] keybindsWhenFocused = ["[ESC] - Return", "[A/< | D/>] - Next/Previous Objective", "[W/^ | S/V] - Next/Previous Reward"];
+
         public JournalState()
         {
             InputHandler = new JournalHandler();
@@ -1737,6 +1752,22 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public override void Render()
         {
+            //Make 1st open quest as 1st selection
+            if (Game.Instance != null)
+                if (Game.Instance.ActiveQuests != null)
+                {
+                    for (int _quest = 0; _quest < Game.Instance.ActiveQuests.Count; _quest++)
+                        if (Game.Instance.ActiveQuests[_quest].Status == Status.Open)
+                        {
+                            selectedQuest = _quest;
+                            break;
+                        }
+
+                    //If selected quest is the 1st one then try to show the last one added
+                    if (selectedQuest == 0 && Game.Instance.ActiveQuests.Count > 1)
+                        selectedQuest = Game.Instance.ActiveQuests.Count - 1;
+                }
+
             Console.Clear();
 
             //Print main border
@@ -1751,8 +1782,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 Console.WriteLine();
             }
 
-            //Print control box
-            string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Confirm"];
+            
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)
@@ -1784,16 +1814,361 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 Console.WriteLine();
             }
 
-            throw new NotImplementedException();
+            RerenderQuestInfo();
+            UpdateObjective();
+            UpdateReward();
         }
 
+        //render questinfo, obj and reward
         public override void Update()
         {
+        }
+
+        public void RerenderQuestInfo()
+        {
+            //75% of main box
+            int questInfoMaxRows = GlobalConstants.consoleRenderSizeHeight - (GlobalConstants.consoleRenderSizeHeight / 4) - 1;
+            int questInfoMaxCols = GlobalConstants.consoleRenderSizeWidth - 14;
+
+            //clear previous quest info
+            for (int row = 1; row < questInfoMaxRows; row++)
+            {
+                Console.SetCursorPosition(1, row);
+                Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+            }
+
+            if (Game.Instance.ActiveQuests == null || Game.Instance.ActiveQuests[selectedQuest] == null)
+            {
+                Console.SetCursorPosition(4, 2);
+                Console.Write("No Quests available.");
+                return;
+            }
+
+            //if quest is already complete then show in Gray
+            if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            //Render here
+            string questName = Game.Instance.ActiveQuests[selectedQuest].Name;
+            string questDesc = Game.Instance.ActiveQuests[selectedQuest].Description;
+
+            //If quest name is too long and finished (add " (Completed)" and is longer that max cols
+            if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished && questName.Length + 12 >= questInfoMaxCols)
+            {
+                questName += Game.Instance.ActiveQuests[selectedQuest].Name.Substring(0, questInfoMaxCols - 3) + "...";
+                questName += " (Completed)";
+            }
+            else if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                questName += " (Completed)";
+            else if (questName.Length >= questInfoMaxCols)
+                questName += Game.Instance.ActiveQuests[selectedQuest].Name.Substring(0, questInfoMaxCols - 3) + "...";
+
+            //Print Status
+            Console.SetCursorPosition(4, 1);
+            Console.Write($"<< {selectedQuest + 1}/{Game.Instance.ActiveQuests.Count} | {Game.Instance.ActiveQuests[selectedQuest].Status} >>");
+            //Print name
+            Console.SetCursorPosition(4, 2);
+            Console.Write(questName);
+
+            int start = 0, end = 0;
+            int removeSpaceNextRow = 0;
+            string breakLine = "";
+
+            //print description
+            for (int row = 4; row < questInfoMaxRows; row++)
+            {
+                Console.SetCursorPosition(4, row);
+                breakLine = "";
+
+                //if rest of desc is too long cut text when ' ' is located or letters are more than questInfoMaxCols / 4
+                if (questDesc.Length - start >= questInfoMaxCols)
+                {
+                    int tmpCounter = 0;
+                    end = questInfoMaxCols;
+                    
+                    while (tmpCounter < questInfoMaxCols / 4 && questDesc[start + end] != ' ')
+                    {
+                        end--;
+                        tmpCounter++;
+                    }
+
+                    if (tmpCounter >= questInfoMaxCols / 4)
+                        breakLine = "-";
+
+                    Console.Write(questDesc.Substring(start + removeSpaceNextRow, end) + breakLine);
+
+                    if (tmpCounter >= questInfoMaxCols / 4)
+                        removeSpaceNextRow = 0;
+                    else
+                        removeSpaceNextRow = 1;
+
+                    start = end;
+                }
+                else
+                {
+                    end = questDesc.Length - start;
+                    Console.Write(questDesc.Substring(start + removeSpaceNextRow, end - removeSpaceNextRow));
+                    removeSpaceNextRow = 1;
+                    break;
+                }
+            }
+
+            Console.SetCursorPosition(1, questInfoMaxRows);
+            Console.Write(new string('-', GlobalConstants.consoleRenderSizeWidth));
+
+            UpdateObjective();
+            UpdateReward();
+
+            if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                Console.ResetColor();
+
             //move cursor back to end for better experience
             Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
-
-            throw new NotImplementedException();
         }
+
+        public void UpdateObjective()
+        {
+            int questObjectiveRowStart = GlobalConstants.consoleRenderSizeHeight - (GlobalConstants.consoleRenderSizeHeight / 4);
+            int questbjectiveColStart = 4;
+            int questObjectiveMaxCols = GlobalConstants.consoleRenderSizeWidth / 2 - 4;
+            string objectiveInfo = "";
+
+            //Clear previous obj
+            Console.SetCursorPosition(questbjectiveColStart, questObjectiveRowStart);
+            Console.Write(new string(' ', questObjectiveMaxCols));
+            Console.SetCursorPosition(questbjectiveColStart, questObjectiveRowStart + 2);
+            Console.Write(new string(' ', questObjectiveMaxCols));
+
+            if (Game.Instance.ActiveQuests != null && Game.Instance.ActiveQuests[selectedQuest] != null && Game.Instance.ActiveQuests[selectedQuest].Objectives != null)
+                switch (Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective])
+                {
+                    case KillObjective obj:
+                        if (obj.CurrentKills < obj.RequiredKills)
+                            objectiveInfo = $"{obj.CurrentKills}/{obj.RequiredKills}";
+                        else
+                            objectiveInfo = "(Completed)";
+                        break;
+                    case LootObjective obj:
+                        if (obj.CurrentAmount < obj.RequiredAmount)
+                            objectiveInfo = $"{obj.CurrentAmount}/{obj.RequiredAmount}";
+                        else
+                            objectiveInfo = "(Completed)";
+                        break;
+                }
+            else if (Game.Instance.ActiveQuests != null || Game.Instance.ActiveQuests[selectedQuest] != null && Game.Instance.ActiveQuests[selectedQuest].Objectives == null)
+            {
+                objectiveInfo = "No special Objective";
+                Console.SetCursorPosition(questbjectiveColStart, questObjectiveRowStart);
+
+                //if quest is already complete then show in Gray
+                if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+
+                Console.Write(objectiveInfo);
+
+                if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                    Console.ResetColor();
+
+                return;
+            }
+
+            //if quest is already complete then show in Gray
+            if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            //Print Objective Text
+            Console.SetCursorPosition(questbjectiveColStart, questObjectiveRowStart);
+            Console.Write($"Objective/s ^^ {selectedObjective + 1}/{Game.Instance.ActiveQuests[selectedQuest].Objectives.Count} VV");
+
+            //Print objective info
+            Console.SetCursorPosition(questbjectiveColStart, questObjectiveRowStart + 2);
+            //if obj desc + obj info len is bigger than max then cut obj name
+            if (Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective].Description.Length + objectiveInfo.Length > questObjectiveMaxCols)
+                Console.Write(Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective].Description.Substring(0, questObjectiveMaxCols - objectiveInfo.Length - 3) + "..." + objectiveInfo);
+            //else if obj desc is too small and obj info wouldnt be on right
+            else if (Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective].Description.Length + objectiveInfo.Length < questObjectiveMaxCols)
+                Console.Write(Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective].Description + new string(' ', questObjectiveMaxCols - Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective].Description.Length - objectiveInfo.Length) + objectiveInfo);
+            //obj desc + info is just right
+            else if (Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective].Description.Length + objectiveInfo.Length == questObjectiveMaxCols)
+                Console.Write(Game.Instance.ActiveQuests[selectedQuest].Objectives[selectedObjective].Description + objectiveInfo);
+
+            if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                Console.ResetColor();
+
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+        }
+
+        public void UpdateReward()
+        {
+            int questRewardRowStart = GlobalConstants.consoleRenderSizeHeight - (GlobalConstants.consoleRenderSizeHeight / 4);
+            int questRewardColStart = 4 + GlobalConstants.consoleRenderSizeWidth / 2;
+            int questRewardMaxCols = GlobalConstants.consoleRenderSizeWidth / 2 - 4;
+            string rewardInfo = "";
+
+            //Clear previous obj
+            Console.SetCursorPosition(questRewardColStart, questRewardRowStart);
+            Console.Write(new string(' ', questRewardMaxCols));
+            Console.SetCursorPosition(questRewardColStart, questRewardRowStart + 1);
+            Console.Write(new string(' ', questRewardMaxCols));
+            Console.SetCursorPosition(questRewardColStart, questRewardRowStart + 2);
+            Console.Write(new string(' ', questRewardMaxCols));
+            Console.SetCursorPosition(questRewardColStart, questRewardRowStart + 3);
+            Console.Write(new string(' ', questRewardMaxCols));
+
+            if (Game.Instance.ActiveQuests != null && Game.Instance.ActiveQuests[selectedQuest] != null && Game.Instance.ActiveQuests[selectedQuest].Rewards != null)
+            {
+                rewardInfo = $"{Game.Instance.ActiveQuests[selectedQuest].Rewards[selectedReward].Item.Name} ({Game.Instance.ActiveQuests[selectedQuest].Rewards[selectedReward].Quantity})";
+            }
+            else if (Game.Instance.ActiveQuests != null || Game.Instance.ActiveQuests[selectedQuest] != null && Game.Instance.ActiveQuests[selectedQuest].Rewards == null)
+            {
+                rewardInfo = "No special Reward";
+                Console.SetCursorPosition(questRewardColStart, questRewardRowStart);
+
+                //if quest is already complete then show in Gray
+                if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+
+                Console.Write(rewardInfo);
+                Console.SetCursorPosition(questRewardColStart, questRewardRowStart + 1);
+                Console.Write($"Money: {Game.Instance.ActiveQuests[selectedQuest].RewardMoney}");
+
+                if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                    Console.ResetColor();
+
+                return;
+            }
+
+            //if quest is already complete then show in Gray
+            if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            //Print Reward Text
+            Console.SetCursorPosition(questRewardColStart, questRewardRowStart);
+            Console.Write($"Reward/s << {selectedReward + 1}/{Game.Instance.ActiveQuests[selectedQuest].Rewards.Count} >>");
+
+            //Print reward info
+            Console.SetCursorPosition(questRewardColStart, questRewardRowStart + 2);
+            //Reward info too long
+            if (rewardInfo.Length > questRewardMaxCols)
+                Console.Write(rewardInfo.Substring(0, questRewardMaxCols - 3) + "...");
+            //all is good
+            else
+                Console.Write(rewardInfo);
+
+            Console.SetCursorPosition(questRewardColStart, questRewardRowStart + 3);
+            Console.Write($"Money: {Game.Instance.ActiveQuests[selectedQuest].RewardMoney}");
+
+            if (Game.Instance.ActiveQuests[selectedQuest].Status == Quests.Status.Finished)
+                Console.ResetColor();
+
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+        }
+
+        public void UpdateKeybinds()
+        {
+            //Clear current keybinds
+            for (int row = 0; row < 3; row++)
+            {
+                Console.SetCursorPosition(1, GlobalConstants.consoleRenderSizeHeight);
+                Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+            }
+
+            int tmpId = 0;
+            Console.SetCursorPosition(1, GlobalConstants.consoleRenderSizeHeight);
+
+            for (int column = 0; column < GlobalConstants.consoleRenderSizeWidth; column++)
+            {
+                //print keybind if there is enough place
+                if (!IsFocused)
+                {
+                    if (tmpId < keybinds.Length && (keybinds[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
+                    {
+                        Console.Write($" {keybinds[tmpId]} ");
+                        column += keybinds[tmpId].Length + 1;
+                        tmpId++;
+                    }
+                    else
+                        Console.Write(' ');
+                }
+                else if (IsFocused)
+                {
+                    if (tmpId < keybindsWhenFocused.Length && (keybindsWhenFocused[tmpId].Length < GlobalConstants.consoleRenderSizeWidth - column))
+                    {
+                        Console.Write($" {keybindsWhenFocused[tmpId]} ");
+                        column += keybindsWhenFocused[tmpId].Length + 1;
+                        tmpId++;
+                    }
+                    else
+                        Console.Write(' ');
+                }
+            }
+
+            //move cursor back to end for better experience
+            Console.SetCursorPosition(GlobalConstants.consoleSizeWidth - 1, GlobalConstants.consoleSizeHeight - 1);
+        }
+
+        public bool NextElement(bool changeObjective = true)
+        {
+            if (!isFocused && selectedQuest < Game.Instance.ActiveQuests.Count - 1)
+            {
+                selectedQuest++;
+                SelectedObjective = 0;
+                SelectedReward = 0;
+
+                RerenderQuestInfo();
+                UpdateObjective();
+                UpdateReward();
+            }
+            else if (isFocused && changeObjective && selectedObjective < Game.Instance.ActiveQuests[selectedQuest].Objectives.Count - 1)
+            {
+                selectedObjective++;
+                UpdateObjective();
+            }
+            else if (isFocused && !changeObjective && selectedReward < Game.Instance.ActiveQuests[selectedQuest].Rewards.Count - 1)
+            {
+                selectedReward++;
+                UpdateReward();
+            }
+            else
+                return false;
+
+            return true;
+        }
+
+        public bool PreviousElement(bool changeObjective = true)
+        {
+            if (!isFocused && selectedQuest > 0)
+            {
+                selectedQuest--;
+                SelectedObjective = 0;
+                SelectedReward = 0;
+
+                RerenderQuestInfo();
+                UpdateObjective();
+                UpdateReward();
+            }
+            else if (isFocused && changeObjective && selectedObjective > 0)
+            {
+                selectedObjective--;
+                UpdateObjective();
+            }
+            else if (isFocused && !changeObjective && selectedReward > 0)
+            {
+                selectedObjective--;
+                UpdateReward();
+            }
+            else
+                return false;
+
+            return true;
+        }
+
+        public bool IsFocused { get => isFocused; set { isFocused = value; UpdateKeybinds(); } }
+        public int SelectedOption { get => selectedQuest; set => selectedQuest = value; }
+        public int SelectedObjective { get => selectedObjective; set => selectedObjective = value; }
+        public int SelectedReward { get => selectedReward; set => selectedReward = value; }
     }
 
     class TownState : GameState
@@ -1832,7 +2207,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             TownNode castCurrentNode = (TownNode)Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
 
             //Print control box
-            List<string> keybinds = new List<string> { "[Q] - Tavern (heal)" };
+            List<string> keybinds = new List<string> { };
             int tmpId = 0;
 
             if (castCurrentNode.TownPeople != null)
@@ -1841,6 +2216,10 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 {
                     switch (ally)
                     {
+                        case TavernKeeper:
+                            if (!keybinds.Contains("[Q] - Tavern (heal)"))
+                                keybinds.Add("[Q] - Tavern (heal)");
+                            break;
                         case Merchant:
                             if (!keybinds.Contains("[E] - Sell Items"))
                             {

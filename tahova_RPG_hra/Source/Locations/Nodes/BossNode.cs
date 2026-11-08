@@ -11,7 +11,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         private Enemy boss;
         private bool visited;
 
-        public BossNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> openDialog, List<string> endDialog, Enemy boss) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public BossNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, List<string> openDialog, List<string> endDialog, Enemy boss) : base(nodeChar, backgroundColor, foregroundColor, mapColor, isMovable)
         {
             this.OpenDialog = openDialog;
             this.EndDialog = endDialog;

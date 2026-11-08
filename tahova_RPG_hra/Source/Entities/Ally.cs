@@ -9,6 +9,7 @@ namespace TurnBasedRPG.Source.Entities
     [JsonDerivedType(typeof(ArenaOrganisator), nameof(ArenaOrganisator))]
     [JsonDerivedType(typeof(QuestGiver), nameof(QuestGiver))]
     [JsonDerivedType(typeof(Transporter), nameof(Transporter))]
+    [JsonDerivedType(typeof(TavernKeeper), nameof(TavernKeeper))]
 
     public class Ally : Entity
     {

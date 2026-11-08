@@ -6,7 +6,7 @@ namespace TurnBasedRPG.Source.Locations.Nodes
     {
         private string newLocationName;
 
-        public DungeonNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, string newLocationName) : base(nodeChar, foregroundColor, backgroundColor, mapColor, isMovable)
+        public DungeonNode(char nodeChar, string backgroundColor, string foregroundColor, string mapColor, bool isMovable, string newLocationName) : base(nodeChar, backgroundColor, foregroundColor, mapColor, isMovable)
         {
             this.NewLocationName = newLocationName;
         }

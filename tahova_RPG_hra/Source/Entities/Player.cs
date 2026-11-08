@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using TurnBasedRPG.Source.Core;
 using TurnBasedRPG.Source.Core.GameStates;
 using TurnBasedRPG.Source.GameObjects.Items;
@@ -128,13 +129,15 @@ namespace TurnBasedRPG.Source.Entities
             this.Mana = MaxMana;
         }
 
-        public bool FreeSpaceInInventory()
+        public bool FreeSpaceInInventory(int requiredFreeSpaces = 1)
         {
+            int freeSpaces = 0;
+
             for (int inventoryId = 0; inventoryId < Inventory.Length; inventoryId++)
                 if (Inventory[inventoryId] == null)
-                    return true;
+                    freeSpaces++;
 
-            return false;
+            return freeSpaces >= requiredFreeSpaces ? true : false;
         }
 
         public override int AttackTarget(int damage)

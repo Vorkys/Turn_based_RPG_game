@@ -15,11 +15,8 @@ namespace TurnBasedRPG.Source.Quests
         private bool isCompleted;
         private string description;
 
-        public Objective(bool isCompleted, string description)
-        {
-            this.isCompleted = isCompleted;
-            this.description = description;
-        }
+        //used for Deserialization
+        public Objective() { }
 
         public bool IsCompleted { get => isCompleted; set => isCompleted = value; }
         public string Description { get => description; set => description = value; }

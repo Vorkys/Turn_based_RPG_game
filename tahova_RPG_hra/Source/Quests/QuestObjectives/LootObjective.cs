@@ -1,4 +1,9 @@
 ﻿using System.Collections.Generic;
+using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Core.GameStates;
+using TurnBasedRPG.Source.Entities;
+using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.Utils;
 using static TurnBasedRPG.Source.Entities.Enemy;
 
 namespace TurnBasedRPG.Source.Quests.QuestObjectives
@@ -9,13 +14,16 @@ namespace TurnBasedRPG.Source.Quests.QuestObjectives
         private int requiredAmount;
         private int currentAmount;
 
-        public LootObjective(bool isCompleted, string description, string itemName, int requiredAmount, int currentAmount) : base(isCompleted, description)
+        public LootObjective(string itemName, int requiredAmount)
         {
             this.ItemName = itemName;
             this.RequiredAmount = requiredAmount;
-            this.CurrentAmount = currentAmount;
+            this.CurrentAmount = 0;
             Description = $"Loot {RequiredAmount} {ItemName}(s).";
         }
+
+        //used for Deserialization
+        public LootObjective() { }
 
         public string ItemName { get => itemName; set => itemName = value; }
         public int RequiredAmount { get => requiredAmount; set => requiredAmount = value; }
@@ -26,20 +34,27 @@ namespace TurnBasedRPG.Source.Quests.QuestObjectives
             if (IsCompleted)
                 return;
 
-            foreach (Drop item in items)
+            CombatState castInstanceState = (CombatState)Game.Instance.GameState;
+
+            for (int id = 0; id < items.Count; id++)
             {
-                if (item.Item.Name.ToLower().Contains(ItemName.ToLower()))
+                bool dropRoll = Roll.RollDice(items[id].DropChance);
+
+                //IF item dropped and is quest
+                if (dropRoll && items[id].Item.Name.ToLower().Contains(ItemName.ToLower()))
                 {
-                    if (item.Item.Quantity <= (RequiredAmount - CurrentAmount))
+                    if (items[id].Item.Quantity <= (RequiredAmount - CurrentAmount))
                     {
-                        CurrentAmount += item.Item.Quantity;
-                        item.Item.Quantity = 0;
+                        CurrentAmount += items[id].Item.Quantity;
+                        items[id].Item.Quantity = 0;
                     }
                     else
                     {
                         CurrentAmount += (RequiredAmount - CurrentAmount);
-                        item.Item.Quantity -= (RequiredAmount - CurrentAmount);
+                        items[id].Item.Quantity -= (RequiredAmount - CurrentAmount);
                     }
+
+                    castInstanceState.QuestInfoText = "Quest objective updated!";
 
                     if (CurrentAmount >= RequiredAmount)
                     {

@@ -5,6 +5,7 @@ using TurnBasedRPG.Source.Core;
 using TurnBasedRPG.Source.Core.GameStates;
 using TurnBasedRPG.Source.Entities.EnemyTypes;
 using TurnBasedRPG.Source.GameObjects.Items;
+using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
 using TurnBasedRPG.Source.Locations.Nodes;
 using TurnBasedRPG.Source.Quests;
 using TurnBasedRPG.Source.Spells;
@@ -218,17 +219,20 @@ namespace TurnBasedRPG.Source.Entities
         {
             Node castCurrentNode = Game.Instance.Maps[Game.Instance.ActiveMap].Map[Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX][Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY];
             CombatState castInstanceState = (CombatState)Game.Instance.GameState;
+            castInstanceState.QuestInfoText = "";
 
             //check for quest items/monster type + Arena monsters cant give objective progression; QoL - items dont need to be in players Inv, just need to "encounter" them
             if (castCurrentNode is not TownNode)
                 foreach (Quest quest in Game.Instance.ActiveQuests)
-                    foreach (Objective objective in quest.Objectives)
-                        objective.UpdateObjective(ItemDrops);
+                    if (quest.Objectives != null)
+                        foreach (Objective objective in quest.Objectives)
+                            objective.UpdateObjective(ItemDrops);
 
             if (castCurrentNode is not TownNode)
                 foreach (Quest quest in Game.Instance.ActiveQuests)
-                    foreach (Objective objective in quest.Objectives)
-                        objective.UpdateObjective(this);
+                    if (quest.Objectives != null)
+                        foreach (Objective objective in quest.Objectives)
+                            objective.UpdateObjective(this);
 
             //item drops + Arena monsters cant drop any items
             if (castCurrentNode is not TownNode)
@@ -238,7 +242,7 @@ namespace TurnBasedRPG.Source.Entities
                     {
                         bool dropRoll = Roll.RollDice(ItemDrops[i].DropChance);
 
-                        if (dropRoll)
+                        if (dropRoll && (ItemDrops[i].Item is Equippable || ItemDrops[i].Item is Consumable))
                             castInstanceState.AddItemToDropTable(ItemDrops[i].Item);
                     }
                 }

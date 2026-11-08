@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using TurnBasedRPG.Source.Entities;
 using TurnBasedRPG.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Quests;
 
 namespace TurnBasedRPG.Source.Managers
 {
@@ -501,7 +502,9 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
-                EntityManager.ShopkeeperT1Start
+                EntityManager.TavernKeeper,
+                EntityManager.ShopkeeperT1Start,
+                EntityManager.T0QuestGiver
             ]
         );
         //Plains town
@@ -516,9 +519,11 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
+                EntityManager.TavernKeeper,
                 EntityManager.ShopkeeperT1Plains,
                 EntityManager.OrganisatorT1,
-                EntityManager.PlainsTownToHeaven
+                EntityManager.PlainsTownToHeaven,
+                EntityManager.T1QuestGiver
             ]
         );
         //Forest town
@@ -533,8 +538,10 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
+                EntityManager.TavernKeeper,
                 EntityManager.ShopkeeperT2,
-                EntityManager.OrganisatorT2
+                EntityManager.OrganisatorT2,
+                EntityManager.T2QuestGiver
             ]
         );
         //Desert town
@@ -549,8 +556,10 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
+                EntityManager.TavernKeeper,
                 EntityManager.ShopkeeperT3,
-                EntityManager.OrganisatorT3Desert
+                EntityManager.OrganisatorT3Desert,
+                EntityManager.T3QuestGiver
             ]
         );
         //Savana camp
@@ -565,9 +574,11 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
+                EntityManager.TavernKeeper,
                 EntityManager.ShopkeeperT3,
                 EntityManager.OrganisatorT3Savana,
-                EntityManager.SavanaCampToAshLandCamp
+                EntityManager.SavanaCampToAshLandCamp,
+                EntityManager.SavanaQuestGiver
             ]
         );
         //Ash land camp
@@ -582,8 +593,10 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
+                EntityManager.TavernKeeper,
                 EntityManager.ShopkeeperT4,
-                EntityManager.AshLandCampToSavanaCamp
+                EntityManager.AshLandCampToSavanaCamp,
+                EntityManager.T4QuestGiver
             ]
         );
         //Heaven tavern
@@ -598,13 +611,40 @@ namespace TurnBasedRPG.Source.Managers
             //townSprite not implemented
             townSprite: "hometown.txt",
             townPeople: [
+                EntityManager.TavernKeeper,
                 EntityManager.ShopkeeperT5,
-                EntityManager.HeavenToPlainsTown
+                EntityManager.HeavenToPlainsTown,
+                EntityManager.T5QuestGiver
+            ]
+        );
+        //Last location where game ends
+        public static TownNode AbondonedTemple = new(
+            nodeChar: 'A',
+            backgroundColor: "Magenta",
+            foregroundColor: "Black",
+            mapColor: "Magenta",
+            isMovable: true,
+            name: "Abondoned Temple",
+            description: "This is a long Abondoned Temple. There is nothing other than some people.",
+            //townSprite not implemented
+            townSprite: "hometown.txt",
+            townPeople: [
+                EntityManager.AbondonedTempleQuestGiver
             ]
         );
         #endregion
 
         #region Dungeon
+        public static GateKeepNode DungeonGateKeeper = new(
+            nodeChar: '#',
+            backgroundColor: "Gray",
+            foregroundColor: "Magenta",
+            mapColor: "Magenta",
+            requiredQuests: new List<Quest>() {
+                QuestManager._005
+            }
+        );
+
         public static Node DungeonWallA = new(
             nodeChar: ' ',
             backgroundColor: "DarkGray",
