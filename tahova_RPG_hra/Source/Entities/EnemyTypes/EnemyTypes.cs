@@ -10,7 +10,6 @@ namespace TurnBasedRPG.Source.Entities.EnemyTypes
             this.MaxLevel = maxLevel;
             this.ItemDrops = itemDrops;
             this.GoldDrop = goldDrop;
-            //TODO
             this.SpritePath = spritePath;
         }
 
@@ -28,7 +27,6 @@ namespace TurnBasedRPG.Source.Entities.EnemyTypes
             this.MaxLevel = maxLevel;
             this.ItemDrops = itemDrops;
             this.GoldDrop = goldDrop;
-            //TODO
             this.SpritePath = spritePath;
         }
 

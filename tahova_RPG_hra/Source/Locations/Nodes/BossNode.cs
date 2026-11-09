@@ -24,7 +24,6 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         public bool Visited { get => visited; set => visited = value; }
         public Enemy Boss { get => boss; set => boss = value; }
 
-        //TODO - uncomment when Game implemented
         public override void Traverse()
         {
             if (Visited || Boss.Health <= 0)

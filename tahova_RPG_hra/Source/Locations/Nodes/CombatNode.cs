@@ -25,7 +25,6 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         public int MaxEnemyLvl { get => maxEnemyLvl; set => maxEnemyLvl = value; }
         public List<Enemy> EnemyToSpawn { get => enemyToSpawn; set => enemyToSpawn = value; }
 
-        //TODO
         public override void Traverse()
         {
             base.Traverse();
@@ -37,7 +36,6 @@ namespace TurnBasedRPG.Source.Locations.Nodes
 
             int spawnRoll = rand.Next(1, 101);
 
-            //TODO - implement imune steps after successfull combat
             //enemy spawn roll is positive combat iniciated
             if (spawnRoll <= SpawnRate)
             {

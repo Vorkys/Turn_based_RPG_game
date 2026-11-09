@@ -25,7 +25,6 @@ namespace TurnBasedRPG.Source.Core.GameStates
         private int menuStateLength = 3;
         private MenuState currentState = MenuState.MainMenu;
         private int selectedOption = 0;
-        //TODO - add path of all save files in "Saves"
         private string[] saveFilesPath = [];
         private string[] menuSelections = ["New game", "Continue", "How to play?", "Exit"];
         private string[] manual = ["1. Explore the world", "2. Rest in camps, villages and towns", "3. Become stronger killing enemies", "4. Dont fight stronger enemies!", "5. Complete Quests (Check Journal)"];
@@ -2319,7 +2318,6 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public override void Update()
         {
-            //TODO - implement town rendering using switch case for Merchant and quest giver (Arena Orga needs to be added to end of combat (if end of combat and current node is Town them open town, otherwise explorationState)
             switch (currentState)
             {
                 case TownNodeState.TownInfo:

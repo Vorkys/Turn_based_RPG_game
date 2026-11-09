@@ -41,7 +41,10 @@ namespace TurnBasedRPG.Source.Entities
                 return;
 
             if (EntityXP >= XPtoLevelUp)
+            {
                 EntityXP -= XPtoLevelUp;
+                XPtoLevelUp = 100 * (Level + 1);
+            }
 
             while (numberOfLvls > 0 && Level < MaxLevel)
             {

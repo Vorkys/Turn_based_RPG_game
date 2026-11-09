@@ -18,7 +18,6 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         public bool Visited { get => visited; set => visited = value; }
         public Item[] Rewards { get => rewards; set => rewards = value; }
 
-        //TODO
         public override void Traverse()
         {
             base.Traverse();

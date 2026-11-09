@@ -158,7 +158,6 @@ namespace TurnBasedRPG.Source.Entities
 
         public void LoadSprite()
         {
-            //TODO cache?
             if (Sprite != null)
                 return;
 

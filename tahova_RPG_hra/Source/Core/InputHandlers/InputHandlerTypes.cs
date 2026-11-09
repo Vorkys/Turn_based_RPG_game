@@ -664,10 +664,6 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                             break;
                     }
                     break;
-                //TODO - enemies are null when deserializing
-                //case ConsoleKey.Q:
-                //    EntityManager.Organisator.Talk();
-                //    break;
                 default:
                     return false;
             }

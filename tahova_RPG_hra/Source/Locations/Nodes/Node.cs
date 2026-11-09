@@ -48,8 +48,6 @@ namespace TurnBasedRPG.Source.Locations.Nodes
         public string MapColor { get => mapColor; set => mapColor = value; }
         public bool IsMovable { get => isMovable; set => isMovable = value; }
 
-
-        //TODO possible performance upgrade (dont always store default console colors)
         /// <summary>
         /// Print node when player is exploring.
         /// </summary>

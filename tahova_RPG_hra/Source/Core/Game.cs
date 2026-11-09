@@ -206,8 +206,8 @@ namespace TurnBasedRPG.Source.Core
                 if (files.Length != 0)
                     foreach (FileInfo file in files)
                     {
-                        string test = Path.GetFullPath(file.FullName);
-                        string json = File.ReadAllText(test);
+                        string fileName = Path.GetFullPath(file.FullName);
+                        string json = File.ReadAllText(fileName);
 
                         var options = new JsonSerializerOptions { WriteIndented = true };
                         var deserializedMap = JsonSerializer.Deserialize<Location>(json, options);
@@ -317,7 +317,6 @@ namespace TurnBasedRPG.Source.Core
 
         public void ChangeState(GameStateType stateType, params object[] parameters)
         {
-            //TODO - dynamic values
             GameState newState = stateType switch
             {
                 GameStateType.Menu => new MainMenuState(),
@@ -350,7 +349,6 @@ namespace TurnBasedRPG.Source.Core
 
         public void Resume()
         {
-            //TODO - enemy instead of NULL
             if (Instance.Player.Target != null)
                 Instance.ChangeState(GameStateType.Combat, Instance.Player.Target);
             else
@@ -466,12 +464,6 @@ namespace TurnBasedRPG.Source.Core
 
             bool mapFound = false;
 
-            //test
-            int testX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int testY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int TestX = Game.Instance.Maps[Game.Instance.ActiveMap].EntryX;
-            int TestY = Game.Instance.Maps[Game.Instance.ActiveMap].EntryY;
-
             //store last player place if from Main map
             if (Instance.Maps[ActiveMap].Name == "Campaign")
             {
@@ -496,16 +488,8 @@ namespace TurnBasedRPG.Source.Core
             Instance.Maps[ActiveMap].PlayerX = Instance.Maps[ActiveMap].EntryX;
             Instance.Maps[ActiveMap].PlayerY = Instance.Maps[ActiveMap].EntryY;
 
-            //test
-            int _testX = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerX;
-            int _testY = Game.Instance.Maps[Game.Instance.ActiveMap].PlayerY;
-            int _TestX = Game.Instance.Maps[Game.Instance.ActiveMap].EntryX;
-            int _TestY = Game.Instance.Maps[Game.Instance.ActiveMap].EntryY;
-
             Instance.GameState.Render();
             Instance.GameState.Update();
-
-            //throw new NotImplementedException();
         }
 
         public void openTown(TownNode town)

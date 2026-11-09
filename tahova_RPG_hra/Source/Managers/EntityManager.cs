@@ -18,15 +18,15 @@ namespace TurnBasedRPG.Source.Managers
             inventory: null,
             equipment: null,
             level: 1,
-            xPtoLevelUp: 70,
+            xPtoLevelUp: 100,
             maxHealth: 14,
-            maxMana: 7,
+            maxMana: 9,
             spells: null,
-            damage: 6,
+            damage: 5,
             criticalHitChance: 4,
             missChance: 2,
-            armor: 2,
-            speed: 14,
+            armor: 1,
+            speed: 5,
             money: 0
             );
 

@@ -57,7 +57,6 @@ namespace TurnBasedRPG.Source.Entities
         public int EscapeChance { get => escapeChance; set => escapeChance = value; }
         public int XpDrop { get => xpDrop; set => xpDrop = value; }
 
-        //TODO - when lvl == max/minLevel => break
         public void SetLvl(int setLevel)
         {
             if (setLevel > MaxLevel)

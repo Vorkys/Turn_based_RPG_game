@@ -56,7 +56,6 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         public int Quantity { get => quantity; set => quantity = value; }
         public int MaxQuantity { get => maxQuantity; set => maxQuantity = value; }
 
-        //TODO
         public virtual bool Use() { return false; }
     }
 }

@@ -15,14 +15,12 @@ namespace TurnBasedRPG.Source.Core.GameStates
     [JsonDerivedType(typeof(TradingState), nameof(TradingState))]
     public abstract class GameState
     {
-        //TODO
         private InputHandler inputHandler;
 
         public InputHandler InputHandler { get => inputHandler; set => inputHandler = value; }
 
         public abstract void Render();
 
-        //TODO - after implemented all change "virtual" to "abstract"
         public virtual void Update() { }
     }
 }
