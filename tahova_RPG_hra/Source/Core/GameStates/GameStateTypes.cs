@@ -624,7 +624,13 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     Console.Write(new string('=', entityBarPercent));
                     Console.ResetColor();
                     Console.Write(new string('-', 30 - entityBarPercent));
-                    Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
+                    //Clear HP before
+                    int tmpCursorLeft = Console.CursorLeft;
+                    int tmpCursorTop = Console.CursorTop;
+                    Console.SetCursorPosition(tmpCursorLeft + 1, tmpCursorTop);
+                    Console.Write(new string(' ', (Game.Instance.Player.MaxHealth.ToString().Length * 2) + 6));
+                    //Update HP
+                    Console.SetCursorPosition(tmpCursorLeft + 1, tmpCursorTop);
                     Console.Write($" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
                     //Mana
                     Console.SetCursorPosition(2 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 3);
@@ -843,6 +849,13 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     Console.ResetColor();
                     Console.Write(new string('-', 30 - entityBarPercent));
                     Console.Write('>');
+                    //Clear HP before
+                    int tmpCursorLeft = Console.CursorLeft;
+                    int tmpCursorTop = Console.CursorTop;
+                    Console.SetCursorPosition(tmpCursorLeft, tmpCursorTop);
+                    Console.Write(new string(' ', (Game.Instance.Player.MaxHealth.ToString().Length * 2) + 6));
+                    //Update HP
+                    Console.SetCursorPosition(tmpCursorLeft, tmpCursorTop);
                     Console.Write($" HP: {Game.Instance.Player.Health}/{Game.Instance.Player.MaxHealth}");
                     //Mana
                     Console.SetCursorPosition(1 + Game.Instance.Player.Sprite[0].Length, GlobalConstants.consoleRenderSizeHeight - 3);
