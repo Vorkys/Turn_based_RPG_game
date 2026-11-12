@@ -39,7 +39,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            saveFilesPath = Directory.GetFiles(folderPath)
+            saveFilesPath = Directory.GetFiles(folderPath, "*.json")
                                      .Select(Path.GetFileName)
                                      .OrderBy(filePath => Path.GetFileName(filePath))
                                      .Reverse()
