@@ -10,6 +10,7 @@ using TurnBasedRPG.Source.Locations.Nodes;
 using TurnBasedRPG.Source.Quests;
 using TurnBasedRPG.Source.Spells;
 using TurnBasedRPG.Source.Utils;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TurnBasedRPG.Source.Entities
 {
@@ -385,6 +386,25 @@ namespace TurnBasedRPG.Source.Entities
             }
 
             return spellCasted;
+        }
+
+        public void TryToEscape()
+        {
+            if (Roll.RollDice(EscapeChance))
+                Game.Instance.ChangeState(GameStateType.Exploration);
+            else
+            {
+                CombatState castInstanceState = (CombatState)Game.Instance.GameState;
+                string combatDialogText = "";
+
+                if (EscapeChance == 0)
+                    combatDialogText = "You cannot escape from this enemy. He punished you for trying!";
+                else
+                    combatDialogText = "You failed to escape!";
+
+                castInstanceState.CombatDialog = combatDialogText;
+                castInstanceState.LastTurnWasPlayer = true;
+            }
         }
     }
 }

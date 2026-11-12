@@ -4,6 +4,7 @@ using TurnBasedRPG.Source.Entities;
 using TurnBasedRPG.Source.Entities.AllyRoles;
 using TurnBasedRPG.Source.GameObjects.Items.ItemTypes;
 using TurnBasedRPG.Source.Locations.Nodes;
+using TurnBasedRPG.Source.Utils;
 using static TurnBasedRPG.Source.Core.GameStates.InventoryState;
 
 namespace TurnBasedRPG.Source.Core.InputHandlers
@@ -183,7 +184,10 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                     switch (castInstanceState.CurrentState)
                     {
                         case CombatState.CombatDialogState.DefaultDialog:
-                            return false;
+                            Enemy castEnemy = (Enemy)Game.Instance.Player.Target;
+
+                            castEnemy.TryToEscape();
+                            break;
                         case CombatState.CombatDialogState.SpellDialog:
                             castInstanceState.CurrentState = CombatState.CombatDialogState.DefaultDialog;
                             castInstanceState.SelectedOption = 0;

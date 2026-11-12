@@ -544,7 +544,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         private static int spellNumber = 0;
         private string[][] dialogKeybinds =
         {
-            ["[Q] - Attack enemy", $"[W] - Show spells ({spellNumber})", "[E] - Show items", "[ESC] - Pause"],
+            ["[Q] - Attack enemy", $"[W] - Show spells ({spellNumber})", "[E] - Show items", "[ESC] - Try to Escape"],
             ["[A/<] - Previous selection", "[D/>] - Next selection", "[Spacebar/Enter] - Use", "[ESC] - Back"],
             ["[Spacebar/Enter] - Confirm"],
             ["[A/< | D/>] - Change Table", "[W/^ | S/V] - Select Item", "[Spacebar/Enter] - Take Loot", "[DEL] - Discard Item (only inv)", "[ESC] - Close"]
