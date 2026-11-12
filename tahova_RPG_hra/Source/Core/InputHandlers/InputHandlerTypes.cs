@@ -183,8 +183,7 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                     switch (castInstanceState.CurrentState)
                     {
                         case CombatState.CombatDialogState.DefaultDialog:
-                            Game.Instance.Pause();
-                            break;
+                            return false;
                         case CombatState.CombatDialogState.SpellDialog:
                             castInstanceState.CurrentState = CombatState.CombatDialogState.DefaultDialog;
                             castInstanceState.SelectedOption = 0;
