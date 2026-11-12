@@ -253,6 +253,11 @@ namespace TurnBasedRPG.Source.Core
                     Instance.activeQuests = loadQuests;
                 }
 
+                //Update items owner to player
+                for (int _itemID = 0; _itemID < Game.Instance.Player.Inventory.Length; _itemID++)
+                    if (Instance.Player.Inventory[_itemID] != null)
+                        Instance.Player.Inventory[_itemID].Owner = Instance.Player;
+
                 Instance.ChangeState(GameStateType.Exploration);
             }
             catch (Exception ex)

@@ -241,8 +241,6 @@ namespace TurnBasedRPG.Source.Entities
 
             CombatState castInstanceState = (CombatState)Game.Instance.GameState;
 
-            Inventory[itemInventorySlot].Use();
-
             string combatDialogText = $"You used {Inventory[itemInventorySlot].Name}. ";
 
             //usage of Pattern matching
@@ -264,6 +262,8 @@ namespace TurnBasedRPG.Source.Entities
                     combatDialogText += $"You reduced {myItem.Power} MP to your target.";
                     break;
             }
+
+            Inventory[itemInventorySlot].Use();
 
             castInstanceState.CombatDialog = combatDialogText;
             castInstanceState.LastTurnWasPlayer = true;
