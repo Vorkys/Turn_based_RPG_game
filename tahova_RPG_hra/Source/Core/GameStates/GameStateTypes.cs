@@ -1284,7 +1284,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             }
 
             //Print control box
-            string[] keybinds = ["[A/<] - Previous selection", "[D/>] - Next selection", "[S/v] - Switch to Spells/Inventory", "[ESC] - Resume", "[Spacebar/Enter] - Equip", "[1-6] - Unequip slot (need free Inv space)"];
+            string[] keybinds = ["[A/<] - Previous selection", "[D/>] - Next selection", "[S/v] - Switch to Spells/Inventory", "[ESC] - Resume", "[Spacebar/Enter] - Equip/Use", "[1-6] - Unequip slot (need free Inv space)"];
             int tmpId = 0;
 
             for (int row = 0; row < 4; row++)

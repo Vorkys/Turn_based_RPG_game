@@ -392,6 +392,7 @@ namespace TurnBasedRPG.Source.Entities
         {
             if (Roll.RollDice(EscapeChance))
                 Game.Instance.ChangeState(GameStateType.Exploration);
+
             else
             {
                 CombatState castInstanceState = (CombatState)Game.Instance.GameState;
@@ -401,6 +402,9 @@ namespace TurnBasedRPG.Source.Entities
                     combatDialogText = "You cannot escape from this enemy. He punished you for trying!";
                 else
                     combatDialogText = "You failed to escape!";
+
+                if (Game.Instance.Player.Level - Level >= 8 && escapeChance != 0)
+                    Game.Instance.ChangeState(GameStateType.Exploration);
 
                 castInstanceState.CombatDialog = combatDialogText;
                 castInstanceState.LastTurnWasPlayer = true;
