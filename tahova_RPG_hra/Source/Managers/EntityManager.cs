@@ -905,7 +905,6 @@ namespace TurnBasedRPG.Source.Managers
                 ItemManager.IronShield,
                 ItemManager.GoldRing,
                 ItemManager.IronHelmet,
-                ItemManager.IronHelmet,
                 ItemManager.IronBody,
                 ItemManager.IronLegs,
                 ItemManager.BigGrenade
