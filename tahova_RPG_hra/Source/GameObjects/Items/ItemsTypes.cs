@@ -19,6 +19,22 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         }
     }
 
+    public class BottomlessHealingItem : Consumable
+    {
+        public BottomlessHealingItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power, int quantity = 1) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
+        {
+        }
+
+        //used for deserialization
+        public BottomlessHealingItem() { }
+
+        public override bool Use()
+        {
+            Owner.IncreaseHealth(Power);
+            return true;
+        }
+    }
+
     public class ManaIncreaseItem : Consumable
     {
         public ManaIncreaseItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power, int quantity = 1) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
@@ -32,6 +48,22 @@ namespace TurnBasedRPG.Source.GameObjects.Items
         {
             Owner.IncreaseMana(Power);
             Owner.RemoveItem(this);
+            return true;
+        }
+    }
+
+    public class BottomlessManaIncreaseItem : Consumable
+    {
+        public BottomlessManaIncreaseItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power, int quantity = 1) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
+        {
+        }
+
+        //used for deserialization
+        public BottomlessManaIncreaseItem() { }
+
+        public override bool Use()
+        {
+            Owner.IncreaseMana(Power);
             return true;
         }
     }
@@ -53,6 +85,28 @@ namespace TurnBasedRPG.Source.GameObjects.Items
             Owner.IncreaseHealth(Power);
             Owner.IncreaseMana(ManaIncrease);
             Owner.RemoveItem(this);
+            return true;
+        }
+
+        public int ManaIncrease { get => manaIncrease; set => manaIncrease = value; }
+    }
+
+    public class BottomlessHybridHealingItem : Consumable
+    {
+        private int manaIncrease;
+
+        public BottomlessHybridHealingItem(string name, string description, int buyPrice, int sellPrice, int maxQuantity, int power, int manaIncrease, int quantity = 1) : base(name, description, buyPrice, sellPrice, maxQuantity, power)
+        {
+            this.ManaIncrease = manaIncrease;
+        }
+
+        //used for deserialization
+        public BottomlessHybridHealingItem() { }
+
+        public override bool Use()
+        {
+            Owner.IncreaseHealth(Power);
+            Owner.IncreaseMana(ManaIncrease);
             return true;
         }
 

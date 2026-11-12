@@ -392,7 +392,7 @@ namespace TurnBasedRPG.Source.Managers
             slot: Equippable.EquippableSlot.Ring,
             strength: 40
             );
-        public static HealingItem BottomlessHealthPotion = new(
+        public static BottomlessHealingItem BottomlessHealthPotion = new(
             name: "Bottomless Health potion",
             description: "Glass flask with a red liquid. Provides 30 health.",
             buyPrice: 400,
@@ -400,7 +400,7 @@ namespace TurnBasedRPG.Source.Managers
             maxQuantity: 1,
             power: 30
             );
-        public static ManaIncreaseItem BottomlessManaPotion = new(
+        public static BottomlessManaIncreaseItem BottomlessManaPotion = new(
             name: "Bottomless Mana potion",
             description: "Glass flask with a blue liquid. Provides 30 mana.",
             buyPrice: 400,
@@ -408,7 +408,7 @@ namespace TurnBasedRPG.Source.Managers
             maxQuantity: 1,
             power: 30
             );
-        public static HybridHealingItem BottomlessPinkPotion = new(
+        public static BottomlessHybridHealingItem BottomlessPinkPotion = new(
             name: "Bottomless Pink potion",
             description: "Glass flask with a pink liquid. Provides 22 health & 18 mana.",
             buyPrice: 400,
