@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 using TurnBasedRPG.Source.Core;
 using TurnBasedRPG.Source.GameObjects.Items;
 
@@ -108,8 +109,8 @@ namespace TurnBasedRPG.Source.Quests
                         break;
                     }
 
-            if (allIsOk)
-                Status = Status.Finished;
+            if (allIsOk && AbleToGetRewards())
+                GetReward();
         }
 
         public bool isOpen()
@@ -125,7 +126,9 @@ namespace TurnBasedRPG.Source.Quests
             if (rewards == null)
                 return true;
 
-            Item[] tmpPlayerInv = Game.Instance.Player.Inventory;
+            Item[] tmpPlayerInv = [null, null, null, null, null, null, null, null, null, null];
+            Game.Instance.Player.Inventory.CopyTo(tmpPlayerInv, 0);
+
             bool ableToLoot = true;
 
             //Test if player can take all quest Items
@@ -144,9 +147,13 @@ namespace TurnBasedRPG.Source.Quests
 
         public void GetReward()
         {
-            foreach (Objective obj in Objectives)
-                if (!obj.IsCompleted || !AbleToGetRewards())
-                    return;
+            if (Objectives != null)
+                foreach (Objective obj in Objectives)
+                    if (!obj.IsCompleted || !AbleToGetRewards())
+                        return;
+
+            if (!AbleToGetRewards())
+                return;
 
             Game.Instance.Player.Money += RewardMoney;
 

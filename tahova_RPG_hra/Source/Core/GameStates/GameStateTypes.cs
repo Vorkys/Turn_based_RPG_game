@@ -201,7 +201,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            saveFilesPath = Directory.GetFiles(folderPath)
+            saveFilesPath = Directory.GetFiles(folderPath, "*.json")
                                      .Select(Path.GetFileName)
                                      .OrderBy(filePath => Path.GetFileName(filePath))
                                      .Reverse()
@@ -1783,7 +1783,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         private int selectedReward = 0;
         //Print control box
         string[] keybinds = ["[ESC] - Resume", "[Spacebar/Enter] - Select Quest", "[A/< | D/>] - Next/Previous Quest"];
-        string[] keybindsWhenFocused = ["[ESC] - Return", "[A/< | D/>] - Next/Previous Objective", "[W/^ | S/V] - Next/Previous Reward"];
+        string[] keybindsWhenFocused = ["[ESC] - Return", "[W/^ | S/V] - Next/Previous Objective", "[A/< | D/>] - Next/Previous Reward"];
 
         public JournalState()
         {

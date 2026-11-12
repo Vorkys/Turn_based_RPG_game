@@ -513,7 +513,7 @@ namespace TurnBasedRPG.Source.Core
                 return;
 
             if (quest.Objectives == null)
-                quest.Status = Status.Finished;
+                quest.RecalculateActiveQuestsStatus();
 
             ActiveQuests.Add(quest);
         }
