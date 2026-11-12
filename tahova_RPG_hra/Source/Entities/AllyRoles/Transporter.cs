@@ -28,7 +28,16 @@ namespace TurnBasedRPG.Source.Entities.AllyRoles
 
         public override void Talk()
         {
-            if (this.Cost <= Game.Instance.Player.Money && RequiredQuest == null || RequiredQuest?.Status == Status.Finished)
+            bool requiredQuestDone = false;
+
+            if (Game.Instance.ActiveQuests != null)
+                foreach (Quest quest in Game.Instance.ActiveQuests)
+                    if (RequiredQuest.Name == quest.Name && quest.Status == Status.Finished)
+                    {
+                        requiredQuestDone = true;
+                    }
+
+            if (this.Cost <= Game.Instance.Player.Money && (RequiredQuest == null || requiredQuestDone))
             {
                 Game.Instance.Player.Money -= Cost;
                 Game.Instance.TeleportPlayerToCoordinates(NewX, NewY);
