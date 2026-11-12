@@ -639,8 +639,14 @@ namespace TurnBasedRPG.Source.Core.GameStates
                     Console.Write(new string('~', entityBarPercent));
                     Console.ResetColor();
                     Console.Write(new string('-', 30 - entityBarPercent));
-                    Console.SetCursorPosition(Console.CursorLeft + 1, Console.CursorTop);
-                    Console.Write($" MP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
+                    //Clear MP before
+                    tmpCursorLeft = Console.CursorLeft;
+                    tmpCursorTop = Console.CursorTop;
+                    Console.SetCursorPosition(tmpCursorLeft + 1, tmpCursorTop);
+                    Console.Write(new string(' ', (Game.Instance.Player.MaxMana.ToString().Length * 2) + 6));
+                    //Update MP
+                    Console.SetCursorPosition(tmpCursorLeft + 1, tmpCursorTop);
+                    Console.Write($" HP: {Game.Instance.Player.Mana}/{Game.Instance.Player.MaxMana}");
                     break;
                 case CombatDialogState.SpellDialog:
                     if (Game.Instance.Player.Spells.Count == 0)
