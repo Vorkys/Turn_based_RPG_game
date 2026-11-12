@@ -534,11 +534,11 @@ namespace TurnBasedRPG.Source.Core.InputHandlers
                     break;
                 case ConsoleKey.LeftArrow:
                 case ConsoleKey.A:
-                    castInstanceState.PreviousElement(true);
+                    castInstanceState.PreviousElement(false);
                     break;
                 case ConsoleKey.RightArrow:
                 case ConsoleKey.D:
-                    castInstanceState.NextElement(true);
+                    castInstanceState.NextElement(false);
                     break;
                 case ConsoleKey.Spacebar:
                 case ConsoleKey.Enter:

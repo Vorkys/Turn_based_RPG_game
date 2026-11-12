@@ -803,6 +803,9 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 case CombatDialogState.SpellDialog:
                 case CombatDialogState.ItemDialog:
                 case CombatDialogState.AwaitConfirmDialog:
+                    if (Game.Instance.Player.Target == null)
+                        return;
+
                     Game.Instance.Player.LoadSprite();
                     Game.Instance.Player.Target.LoadSprite();
 
@@ -1921,7 +1924,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 breakLine = "";
 
                 //if rest of desc is too long cut text when ' ' is located or letters are more than questInfoMaxCols / 4
-                if (questDesc.Length - start >= questInfoMaxCols)
+                if (questDesc.Length - start > questInfoMaxCols)
                 {
                     int tmpCounter = 0;
                     end = questInfoMaxCols;
@@ -2161,12 +2164,12 @@ namespace TurnBasedRPG.Source.Core.GameStates
                 UpdateObjective();
                 UpdateReward();
             }
-            else if (isFocused && changeObjective && selectedObjective < Game.Instance.ActiveQuests[selectedQuest].Objectives.Count - 1)
+            else if (isFocused && changeObjective && Game.Instance.ActiveQuests[selectedQuest].Objectives != null && selectedObjective < Game.Instance.ActiveQuests[selectedQuest].Objectives.Count - 1)
             {
                 selectedObjective++;
                 UpdateObjective();
             }
-            else if (isFocused && !changeObjective && selectedReward < Game.Instance.ActiveQuests[selectedQuest].Rewards.Count - 1)
+            else if (isFocused && !changeObjective && Game.Instance.ActiveQuests[selectedQuest].Rewards != null && selectedReward < Game.Instance.ActiveQuests[selectedQuest].Rewards.Count - 1)
             {
                 selectedReward++;
                 UpdateReward();
@@ -2196,7 +2199,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
             }
             else if (isFocused && !changeObjective && selectedReward > 0)
             {
-                selectedObjective--;
+                selectedReward--;
                 UpdateReward();
             }
             else
