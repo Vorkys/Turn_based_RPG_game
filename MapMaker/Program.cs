@@ -335,8 +335,11 @@ namespace MapMaker
                     new JsonDerivedType(typeof(Consumable), nameof(Consumable)),
                     new JsonDerivedType(typeof(Equippable), nameof(Equippable)),
                     new JsonDerivedType(typeof(HealingItem), nameof(HealingItem)),
+                    new JsonDerivedType(typeof(BottomlessHealingItem), nameof(BottomlessHealingItem)),
                     new JsonDerivedType(typeof(ManaIncreaseItem), nameof(ManaIncreaseItem)),
+                    new JsonDerivedType(typeof(BottomlessManaIncreaseItem), nameof(BottomlessManaIncreaseItem)),
                     new JsonDerivedType(typeof(HybridHealingItem), nameof(HybridHealingItem)),
+                    new JsonDerivedType(typeof(BottomlessHybridHealingItem), nameof(BottomlessHybridHealingItem)),
                     new JsonDerivedType(typeof(DamageItem), nameof(DamageItem)),
                     new JsonDerivedType(typeof(ReduceMana), nameof(ReduceMana))
                 ],

@@ -8,8 +8,11 @@ namespace TurnBasedRPG.Source.GameObjects.Items
     [JsonDerivedType(typeof(Consumable), nameof(Consumable))]
     [JsonDerivedType(typeof(Equippable), nameof(Equippable))]
     [JsonDerivedType(typeof(HealingItem), nameof(HealingItem))]
+    [JsonDerivedType(typeof(BottomlessHealingItem), nameof(BottomlessHealingItem))]
     [JsonDerivedType(typeof(ManaIncreaseItem), nameof(ManaIncreaseItem))]
+    [JsonDerivedType(typeof(BottomlessManaIncreaseItem), nameof(BottomlessManaIncreaseItem))]
     [JsonDerivedType(typeof(HybridHealingItem), nameof(HybridHealingItem))]
+    [JsonDerivedType(typeof(BottomlessHybridHealingItem), nameof(BottomlessHybridHealingItem))]
     [JsonDerivedType(typeof(DamageItem), nameof(DamageItem))]
     [JsonDerivedType(typeof(ReduceMana), nameof(ReduceMana))]
 
