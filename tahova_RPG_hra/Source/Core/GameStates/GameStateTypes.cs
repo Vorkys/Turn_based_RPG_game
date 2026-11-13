@@ -2225,6 +2225,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
         }
         private TownNodeState currentState = TownNodeState.TownInfo;
         private int selectedOption = 0;
+        private bool addedQuest = false;
 
         public TownState()
         {
@@ -2270,9 +2271,9 @@ namespace TurnBasedRPG.Source.Core.GameStates
                                 keybinds.Add("[R] - Buy Items");
                             }
                             break;
-                        case QuestGiver:
+                        case QuestGiver _npc:
                             if (!keybinds.Contains("[T] - Quest giver"))
-                                keybinds.Add("[T] - Quest giver");
+                                keybinds.Add($"[T] - Quest giver");
                             break;
                         case Transporter:
                             Transporter tmpAlly = (Transporter)ally;
@@ -2351,6 +2352,12 @@ namespace TurnBasedRPG.Source.Core.GameStates
             {
                 case TownNodeState.TownInfo:
                     RenderTownState();
+
+                    if (AddedQuest)
+                    {
+                        Console.SetCursorPosition(2, 1);
+                        Console.Write("A new Quest was added to your Journal!");
+                    }
                     break;
                 case TownNodeState.MerchantSell:
                     RenderTownState();
@@ -2368,12 +2375,19 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         row++;
                     }
 
+                    //Clear money
+                    Console.SetCursorPosition(1, 1);
+                    Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+                    //Print money
+                    Console.SetCursorPosition(2, 1);
+                    Console.Write($"Your money: {Game.Instance.Player.Money} G");
+
                     //Print name
                     Console.SetCursorPosition(leftSideStart + 1, topSideStart);
                     if (Game.Instance.Player.Inventory[selectedOption] == null)
                         Console.Write("-----");
                     else
-                        Console.Write(Game.Instance.Player.Inventory[selectedOption].Name.Length < maxNameLength ? Game.Instance.Player.Inventory[selectedOption].Name : Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, maxNameLength - 3) + "...");
+                        Console.Write(Game.Instance.Player.Inventory[selectedOption].Name.Length < maxNameLength ? Game.Instance.Player.Inventory[selectedOption].Name + $" ({Game.Instance.Player.Inventory[selectedOption].Quantity})" : Game.Instance.Player.Inventory[selectedOption].Name.Substring(0, maxNameLength - 3) + "..." + $" ({Game.Instance.Player.Inventory[selectedOption].Quantity})");
                     //Print sell price
                     if (Game.Instance.Player.Inventory[selectedOption] != null)
                         Console.Write($" | Sell for: {Game.Instance.Player.Inventory[selectedOption].SellPrice}");
@@ -2456,6 +2470,13 @@ namespace TurnBasedRPG.Source.Core.GameStates
                         Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth - (GlobalConstants.consoleRenderSizeWidth / 4) + 1));
                         row++;
                     }
+
+                    //Clear money
+                    Console.SetCursorPosition(1, 1);
+                    Console.Write(new string(' ', GlobalConstants.consoleRenderSizeWidth));
+                    //Print money
+                    Console.SetCursorPosition(2, 1);
+                    Console.Write($"Your money: {Game.Instance.Player.Money} G");
 
                     //Print name
                     Console.SetCursorPosition(leftSideStart + 1, topSideStart);
@@ -2662,6 +2683,7 @@ namespace TurnBasedRPG.Source.Core.GameStates
 
         public int SelectedOption { get => selectedOption; set => selectedOption = value; }
         internal TownNodeState CurrentState { get => currentState; set => currentState = value; }
+        public bool AddedQuest { get => addedQuest; set => addedQuest = value; }
     }
 
     class TradingState : GameState

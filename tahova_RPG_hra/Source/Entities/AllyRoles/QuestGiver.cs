@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TurnBasedRPG.Source.Core;
+using TurnBasedRPG.Source.Core.GameStates;
 using TurnBasedRPG.Source.Quests;
 
 namespace TurnBasedRPG.Source.Entities.AllyRoles
@@ -17,6 +18,9 @@ namespace TurnBasedRPG.Source.Entities.AllyRoles
 
         public override void Talk()
         {
+            if (quests == null)
+                return;
+
             foreach (Quest quest in Game.Instance.ActiveQuests)
                 quest.RecalculateActiveQuestsStatus();
 
@@ -38,7 +42,12 @@ namespace TurnBasedRPG.Source.Entities.AllyRoles
                         }
 
                     if (isQuestAddable)
+                    {
+                        TownState castTown = (TownState)Game.Instance.GameState;
+
                         Game.Instance.AddQuest(quest);
+                        castTown.AddedQuest = true;
+                    }
                 }
             }
         }

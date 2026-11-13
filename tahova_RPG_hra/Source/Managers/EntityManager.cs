@@ -643,7 +643,8 @@ namespace TurnBasedRPG.Source.Managers
             {
                 new Drop(ItemManager.EnormousHealthPotion, 15),
                 new Drop(ItemManager.EnormousManaPotion, 10),
-                new Drop(ItemManager.EnormousPinkPotion, 10)
+                new Drop(ItemManager.EnormousPinkPotion, 10),
+                new Drop(ItemManager.HolyHeart, 2)
             },
             goldDrop: 250,
             escapeChance: 60,
@@ -669,7 +670,8 @@ namespace TurnBasedRPG.Source.Managers
                 new Drop(ItemManager.EnormousManaPotion, 10),
                 new Drop(ItemManager.HeavenlyHelmet, 3),
                 new Drop(ItemManager.HeavenlyBody, 3),
-                new Drop(ItemManager.HeavenlyLegs, 3)
+                new Drop(ItemManager.HeavenlyLegs, 3),
+                new Drop(ItemManager.HolyHeart, 2)
             },
             goldDrop: 270,
             escapeChance: 70,
@@ -696,7 +698,9 @@ namespace TurnBasedRPG.Source.Managers
                 new Drop(ItemManager.HeavenlyHelmet, 3),
                 new Drop(ItemManager.HeavenlyBody, 3),
                 new Drop(ItemManager.HeavenlyLegs, 3),
-                new Drop(ItemManager.HeavenlySword, 2)
+                new Drop(ItemManager.HeavenlyShield, 2),
+                new Drop(ItemManager.HeavenlySword, 2),
+                new Drop(ItemManager.HolyHeart, 2)
             },
             goldDrop: 300,
             escapeChance: 60,
@@ -723,7 +727,8 @@ namespace TurnBasedRPG.Source.Managers
                 new Drop(ItemManager.HeavenlyHelmet, 3),
                 new Drop(ItemManager.HeavenlyBody, 3),
                 new Drop(ItemManager.HeavenlyLegs, 3),
-                new Drop(ItemManager.HeavenlySword, 2)
+                new Drop(ItemManager.HeavenlySword, 2),
+                new Drop(ItemManager.HolyHeart, 2)
             },
             goldDrop: 330,
             escapeChance: 60,
