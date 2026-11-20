@@ -2277,7 +2277,14 @@ namespace TurnBasedRPG.Source.Core.GameStates
                             break;
                         case Transporter:
                             Transporter tmpAlly = (Transporter)ally;
-                            if (!keybinds.Contains($"[Z] - Transporter (cost: {tmpAlly.Cost} > {tmpAlly.NewLocationName})"))
+                            bool requiredQuestDone = false;
+
+                            if (Game.Instance.ActiveQuests != null)
+                                foreach (Quest quest in Game.Instance.ActiveQuests)
+                                    if (tmpAlly.RequiredQuest.Name == quest.Name && quest.Status == Status.Finished)
+                                        requiredQuestDone = true;
+
+                            if (!keybinds.Contains($"[Z] - Transporter (cost: {tmpAlly.Cost} > {tmpAlly.NewLocationName})") && requiredQuestDone)
                                 keybinds.Add($"[Z] - Transporter ({tmpAlly.Cost}G > {tmpAlly.NewLocationName})");
                             break;
                         case ArenaOrganisator:

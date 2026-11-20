@@ -124,6 +124,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
 
         public override bool Use()
         {
+            if (Owner.Target == null)
+                return false;
+
             Owner.Target.ReduceHealth(Power);
             Owner.RemoveItem(this);
             return true;
@@ -141,6 +144,9 @@ namespace TurnBasedRPG.Source.GameObjects.Items
 
         public override bool Use()
         {
+            if (Owner.Target == null)
+                return false;
+
             Owner.Target.ReduceMana(Power);
             Owner.RemoveItem(this);
             return true;
